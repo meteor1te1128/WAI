@@ -3,21 +3,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { imageBase64, style, userId } = req.body;
+  const { imageBase64, style } = req.body;
 
   if (!imageBase64) {
     return res.status(400).json({ error: '请上传图片' });
   }
-
-  // photomaker-style 的 style_name 对应表
-  const styleMap = {
-    '新海诚': 'Anime',
-    '吉卜力': 'Anime',
-    '赛博朋克': 'Neon Punk',
-    '少年漫画': 'Anime',
-    '黑暗幻想': 'Dark fantasy',
-    '治愈系': 'Cute Colorful',
-  };
 
   const promptMap = {
     '新海诚': 'a photo of a person img, makoto shinkai anime style, beautiful sky background, soft cinematic lighting',
@@ -28,11 +18,19 @@ export default async function handler(req, res) {
     '治愈系': 'a photo of a person img, cute kawaii style, pastel colors, soft warm lighting',
   };
 
-  const styleName = styleMap[style] || 'Anime';
+  const styleMap = {
+    '新海诚': 'Anime',
+    '吉卜力': 'Anime',
+    '赛博朋克': 'Neon Punk',
+    '少年漫画': 'Anime',
+    '黑暗幻想': 'Dark fantasy',
+    '治愈系': 'Cute Colorful',
+  };
+
   const prompt = promptMap[style] || promptMap['新海诚'];
+  const styleName = styleMap[style] || 'Anime';
 
   try {
-    // 发起生成请求
     const startRes = await fetch('https://api.replicate.com/v1/predictions', {
       method: 'POST',
       headers: {
@@ -58,46 +56,8 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: prediction.error });
     }
 
-    // 轮询等待结果
-    let result = prediction;
-    let attempts = 0;
-
-    while (result.status !== 'succeeded' && result.status !== 'failed' && attempts < 30) {
-      await new Promise(r => setTimeout(r, 2000));
-      const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${result.id}`, {
-        headers: {
-          'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
-        },
-      });
-      result = await pollRes.json();
-      attempts++;
-    }
-
-    if (result.status !== 'succeeded') {
-      return res.status(500).json({ error: '生成失败，请重试' });
-    }
-
-    const animeUrl = Array.isArray(result.output) ? result.output[0] : result.output;
-
-    // 存入 Supabase
-    if (userId && animeUrl) {
-      await fetch(`${process.env.SUPABASE_URL}/rest/v1/generations`, {
-        method: 'POST',
-        headers: {
-          'apikey': process.env.SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal',
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          anime_url: animeUrl,
-          style: style || '新海诚',
-        }),
-      });
-    }
-
-    return res.status(200).json({ imageUrl: animeUrl });
+    // 只返回 prediction ID，不等待结果
+    return res.status(200).json({ predictionId: prediction.id });
 
   } catch (err) {
     console.error(err);
