@@ -755,15 +755,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_2mDFFz7GTMBUKS4NHFKvYg_dk_oL9uyWaW';
 // ===== LOAD HISTORY =====
 async function loadHistory(){
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/generations?user_id=eq.${WAI_USER_ID}&order=created_at.desc&limit=12`,
-      {
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-        }
-      }
-    );
+    const res = await fetch(`/api/history?userId=${WAI_USER_ID}`);
     const data = await res.json();
     if(Array.isArray(data) && data.length > 0){
       document.getElementById('historySection').style.display = '';
