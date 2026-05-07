@@ -876,7 +876,6 @@ async function handleGen() {
   btn.style.opacity = '0.7';
   btn.disabled = true;
 
-  // 获取选中的风格
   const selectedPill = document.querySelector('.style-pill.on');
   const style = selectedPill ? selectedPill.textContent.trim() : '新海诚';
 
@@ -884,7 +883,8 @@ async function handleGen() {
   const iv = setInterval(() => { d = (d + 1) % 4; btn.textContent = '⏳ AI 正在生成中' + '.'.repeat(d); }, 400);
 
   try {
-    const response = await fetch('/api/generate', {
+    // 第一步：发起请求，拿 predictionId
+    const startRes = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -894,34 +894,69 @@ async function handleGen() {
       }),
     });
 
-    const data = await response.json();
-    clearInterval(iv);
+    const startData = await startRes.json();
 
-    if (data.imageUrl) {
-      const imgUrl = Array.isArray(data.imageUrl) ? data.imageUrl[0] : data.imageUrl;
-      btn.textContent = '✓ 生成完成！点击重新生成';
-      btn.style.opacity = '1';
-      btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
-      btn.style.boxShadow = '0 8px 28px rgba(5,150,105,0.3)';
-      btn.disabled = false;
-      res.style.background = '';
-      res.innerHTML = `<img src="${imgUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="动漫图">`;
-      // 更新下载按钮
-      const dlBtn = document.querySelector('.dl-btn');
-      if (dlBtn) {
-        dlBtn.onclick = () => {
-          const a = document.createElement('a');
-          a.href = imgUrl;
-          a.download = 'wai-anime.png';
-          a.target = '_blank';
-          a.click();
-        };
-      }
-      // 刷新历史记录
-      setTimeout(loadHistory, 1500);
-    } else {
-      throw new Error(data.error || '生成失败');
+    if (!startData.predictionId) {
+      throw new Error(startData.error || '启动失败');
     }
+
+    // 第二步：前端轮询状态，每3秒问一次，最多问40次（2分钟）
+    let imageUrl = null;
+    for (let i = 0; i < 40; i++) {
+      await new Promise(r => setTimeout(r, 3000));
+      const pollRes = await fetch(`/api/status?id=${startData.predictionId}`);
+      const pollData = await pollRes.json();
+
+      if (pollData.status === 'succeeded') {
+        imageUrl = pollData.imageUrl;
+        break;
+      } else if (pollData.status === 'failed') {
+        throw new Error(pollData.error || '生成失败');
+      }
+      // 还在处理中，继续等
+    }
+
+    if (!imageUrl) throw new Error('生成超时，请重试');
+
+    clearInterval(iv);
+    btn.textContent = '✓ 生成完成！点击重新生成';
+    btn.style.opacity = '1';
+    btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
+    btn.style.boxShadow = '0 8px 28px rgba(5,150,105,0.3)';
+    btn.disabled = false;
+    res.style.background = '';
+    res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="动漫图">`;
+
+    // 存入 Supabase
+    await fetch(`${SUPABASE_URL}/rest/v1/generations`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        user_id: WAI_USER_ID,
+        anime_url: imageUrl,
+        style: style,
+      }),
+    });
+
+    // 更新下载按钮
+    const dlBtn = document.querySelector('.dl-btn');
+    if (dlBtn) {
+      dlBtn.onclick = () => {
+        const a = document.createElement('a');
+        a.href = imageUrl;
+        a.download = 'wai-anime.png';
+        a.target = '_blank';
+        a.click();
+      };
+    }
+    // 刷新历史记录
+    setTimeout(loadHistory, 1500);
+
   } catch (err) {
     clearInterval(iv);
     btn.textContent = '✦ 一键生成动漫形象';
@@ -929,7 +964,6 @@ async function handleGen() {
     btn.style.background = '';
     btn.style.boxShadow = '';
     btn.disabled = false;
-    // 把扣掉的次数还回去
     freeLeft = Math.min(FREE_TOTAL, freeLeft + 1);
     localStorage.setItem('waiFreeLeft', freeLeft);
     renderFreeCount();
