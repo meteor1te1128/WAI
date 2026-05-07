@@ -275,6 +275,18 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .tag-idea{background:rgba(139,92,246,0.08);color:#7c3aed;border:1px solid rgba(139,92,246,0.2);}
 .tag-praise{background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);}
 
+/* ===== HISTORY ===== */
+.history-section{max-width:620px;margin:0 auto 48px;}
+.history-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.history-card{border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 14px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;position:relative;}
+.history-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(139,92,246,0.15);}
+.history-card img{width:100%;height:120px;object-fit:cover;display:block;}
+.history-card-label{padding:8px 10px;display:flex;align-items:center;justify-content:space-between;}
+.history-card-style{font-size:11px;font-weight:600;color:var(--text-muted);}
+.history-card-time{font-size:10px;color:var(--text-faint);}
+.history-empty{text-align:center;padding:32px;color:var(--text-faint);font-size:13px;}
+.history-empty i{font-size:28px;display:block;margin-bottom:8px;opacity:0.3;}
+
 /* ===== FOOTER ===== */
 footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divider);margin-top:16px;transition:border-color var(--transition);}
 .footer-inner{max-width:620px;margin:0 auto;}
@@ -402,6 +414,15 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
         <button class="dl-btn"><i class="ti ti-download"></i> 下载</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="history-section" id="historySection" style="display:none;">
+  <div class="section-title">我的 <span class="grad">历史记录</span></div>
+  <div class="section-desc">你之前生成的动漫图，点击可下载</div>
+  <div class="history-grid" id="historyGrid">
+    <div class="history-empty"><i class="ti ti-photo-off"></i>还没有生成记录</div>
   </div>
 </div>
 
@@ -716,6 +737,67 @@ function draw(){
 }
 draw();
 
+// ===== USER ID (anonymous, persisted) =====
+function getOrCreateUserId(){
+  let uid = localStorage.getItem('waiUserId');
+  if(!uid){
+    uid = 'u_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem('waiUserId', uid);
+  }
+  return uid;
+}
+const WAI_USER_ID = getOrCreateUserId();
+
+// ===== SUPABASE CONFIG =====
+const SUPABASE_URL = 'https://fcotuoaxkaffnslgvtwq.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_2mDFFz7GTMBUKS4NHFKvYg_dk_oL9uyWaW';
+
+// ===== LOAD HISTORY =====
+async function loadHistory(){
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/generations?user_id=eq.${WAI_USER_ID}&order=created_at.desc&limit=12`,
+      {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        }
+      }
+    );
+    const data = await res.json();
+    if(Array.isArray(data) && data.length > 0){
+      document.getElementById('historySection').style.display = '';
+      const grid = document.getElementById('historyGrid');
+      grid.innerHTML = data.map(item => `
+        <div class="history-card" onclick="window.open('${item.anime_url}','_blank')">
+          <img src="${item.anime_url}" alt="${item.style}" loading="lazy">
+          <div class="history-card-label">
+            <span class="history-card-style">${item.style||'动漫'}</span>
+            <span class="history-card-time">${timeAgo(item.created_at)}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+  } catch(e) {
+    console.log('History load failed:', e);
+  }
+}
+
+function timeAgo(dateStr){
+  if(!dateStr) return '';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const m = Math.floor(diff/60000);
+  const h = Math.floor(m/60);
+  const d = Math.floor(h/24);
+  if(d>0) return d+'天前';
+  if(h>0) return h+'小时前';
+  if(m>0) return m+'分钟前';
+  return '刚刚';
+}
+
+// Load history on page load
+loadHistory();
+
 // ===== STYLE PICKER =====
 function pick(el){
   document.querySelectorAll('.style-pill').forEach(p=>p.classList.remove('on'));
@@ -808,6 +890,7 @@ async function handleGen() {
       body: JSON.stringify({
         imageBase64: uploadedImageBase64,
         style: style,
+        userId: WAI_USER_ID,
       }),
     });
 
@@ -834,6 +917,8 @@ async function handleGen() {
           a.click();
         };
       }
+      // 刷新历史记录
+      setTimeout(loadHistory, 1500);
     } else {
       throw new Error(data.error || '生成失败');
     }
