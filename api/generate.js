@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { imageBase64, style } = req.body;
+  const { imageBase64, style, userId } = req.body;
 
   if (!imageBase64) {
     return res.status(400).json({ error: '请上传图片' });
@@ -56,11 +56,31 @@ export default async function handler(req, res) {
       attempts++;
     }
 
-    if (result.status === 'succeeded') {
-      return res.status(200).json({ imageUrl: result.output });
-    } else {
+    if (result.status !== 'succeeded') {
       return res.status(500).json({ error: '生成失败，请重试' });
     }
+
+    const animeUrl = Array.isArray(result.output) ? result.output[0] : result.output;
+
+    // 存入 Supabase
+    if (userId && animeUrl) {
+      await fetch(`${process.env.SUPABASE_URL}/rest/v1/generations`, {
+        method: 'POST',
+        headers: {
+          'apikey': process.env.SUPABASE_SERVICE_KEY,
+          'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          anime_url: animeUrl,
+          style: style || '新海诚',
+        }),
+      });
+    }
+
+    return res.status(200).json({ imageUrl: animeUrl });
 
   } catch (err) {
     console.error(err);
