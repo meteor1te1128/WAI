@@ -9,26 +9,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: '请上传图片' });
   }
 
-  const promptMap = {
-    '新海诚': 'a photo of a person img, makoto shinkai anime style, beautiful sky background, soft cinematic lighting',
-    '吉卜力': 'a photo of a person img, studio ghibli style, hayao miyazaki, warm colors, magical atmosphere',
-    '赛博朋克': 'a photo of a person img, cyberpunk style, neon lights, futuristic city background',
-    '少年漫画': 'a photo of a person img, shonen manga style, bright colors, bold outlines, dynamic',
-    '黑暗幻想': 'a photo of a person img, dark fantasy style, dramatic lighting, mysterious atmosphere',
-    '治愈系': 'a photo of a person img, cute kawaii style, pastel colors, soft warm lighting',
+  const stylePrompts = {
+    '新海诚': 'makoto shinkai anime style, beautiful sky, soft cinematic lighting, detailed',
+    '吉卜力': 'studio ghibli anime style, hayao miyazaki, warm colors, magical',
+    '赛博朋克': 'cyberpunk anime style, neon lights, futuristic city, dark atmosphere',
+    '少年漫画': 'shonen manga anime style, bright colors, dynamic, bold outlines',
+    '黑暗幻想': 'dark fantasy anime style, dramatic lighting, mysterious atmosphere',
+    '治愈系': 'cute healing anime style, pastel colors, kawaii, soft warm lighting',
   };
 
-  const styleMap = {
-    '新海诚': 'Anime',
-    '吉卜力': 'Anime',
-    '赛博朋克': 'Neon Punk',
-    '少年漫画': 'Anime',
-    '黑暗幻想': 'Dark fantasy',
-    '治愈系': 'Cute Colorful',
-  };
-
-  const prompt = promptMap[style] || promptMap['新海诚'];
-  const styleName = styleMap[style] || 'Anime';
+  const prompt = stylePrompts[style] || stylePrompts['新海诚'];
 
   try {
     const startRes = await fetch('https://api.replicate.com/v1/predictions', {
@@ -38,14 +28,10 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        version: '467d062309da518648ba89d226490e02b8ed09b5abc15026e54e31c5a8cd0769',
+        version: '7936c014091521e64f3721090cc878ab1bceb2d5e0deecc4549092fb7f9ba753',
         input: {
-          input_image: imageBase64,
+          image: imageBase64,
           prompt: prompt,
-          style_name: styleName,
-          num_outputs: 1,
-          guidance_scale: 5,
-          num_inference_steps: 20,
         },
       }),
     });
@@ -56,7 +42,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: prediction.error });
     }
 
-    // 只返回 prediction ID，不等待结果
     return res.status(200).json({ predictionId: prediction.id });
 
   } catch (err) {
