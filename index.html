@@ -275,6 +275,22 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .tag-idea{background:rgba(139,92,246,0.08);color:#7c3aed;border:1px solid rgba(139,92,246,0.2);}
 .tag-praise{background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);}
 
+/* ===== LIGHTBOX ===== */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;padding:20px;}
+.lightbox.open{opacity:1;pointer-events:all;}
+.lightbox-img{max-width:90vw;max-height:85vh;border-radius:16px;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,0.6);transform:scale(0.95);transition:transform 0.2s;}
+.lightbox.open .lightbox-img{transform:scale(1);}
+.lightbox-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.lightbox-close:hover{background:rgba(255,255,255,0.2);}
+.lightbox-label{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.5);color:#fff;font-size:13px;font-weight:600;padding:8px 20px;border-radius:20px;backdrop-filter:blur(8px);}
+.lightbox-actions{position:absolute;bottom:24px;right:24px;display:flex;gap:8px;}
+.lightbox-dl{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:10px;padding:8px 16px;color:#fff;font-size:12px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.img-card .img-placeholder{cursor:pointer;}
+.img-card .img-placeholder:hover{opacity:0.9;}
+.img-zoom-hint{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.45);color:#fff;font-size:10px;padding:3px 7px;border-radius:6px;pointer-events:none;opacity:0;transition:opacity 0.2s;}
+.img-card:hover .img-zoom-hint{opacity:1;}
+.img-card{position:relative;}
+
 /* ===== HISTORY ===== */
 .history-section{max-width:620px;margin:0 auto 48px;}
 .history-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
@@ -403,17 +419,29 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <div class="results">
   <div class="results-label">预览对比</div>
   <div class="pair">
-    <div class="img-card">
+    <div class="img-card" onclick="openLightbox('original')">
       <div class="img-placeholder" id="originalPreview"><i class="ti ti-user img-icon"></i><span>上传照片后显示</span></div>
       <div class="img-footer"><span class="img-title">原始照片</span></div>
+      <span class="img-zoom-hint">🔍 点击查看</span>
     </div>
-    <div class="img-card">
+    <div class="img-card" onclick="openLightbox('anime')">
       <div class="img-placeholder anime-side" id="animeResult"><i class="ti ti-sparkles img-icon"></i><span>生成后显示</span></div>
       <div class="img-footer">
         <span class="img-title">动漫版本</span>
-        <button class="dl-btn"><i class="ti ti-download"></i> 下载</button>
+        <button class="dl-btn" onclick="event.stopPropagation();downloadAnime()"><i class="ti ti-download"></i> 下载</button>
       </div>
+      <span class="img-zoom-hint">🔍 点击查看</span>
     </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-label" id="lightboxLabel"></div>
+  <div class="lightbox-actions">
+    <button class="lightbox-dl" id="lightboxDl" onclick="downloadFromLightbox()"><i class="ti ti-download"></i> 下载原图</button>
   </div>
 </div>
 
@@ -737,6 +765,54 @@ function draw(){
 }
 draw();
 
+// ===== LIGHTBOX =====
+let currentAnimeUrl = null;
+
+function openLightbox(type) {
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightboxImg');
+  const label = document.getElementById('lightboxLabel');
+  const dlBtn = document.getElementById('lightboxDl');
+
+  if (type === 'original') {
+    if (!uploadedImageBase64) return;
+    img.src = uploadedImageBase64;
+    label.textContent = '原始照片';
+    dlBtn.style.display = 'none';
+  } else {
+    if (!currentAnimeUrl) return;
+    img.src = currentAnimeUrl;
+    label.textContent = '动漫版本';
+    dlBtn.style.display = '';
+  }
+  lb.classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+function downloadFromLightbox() {
+  if (!currentAnimeUrl) return;
+  const a = document.createElement('a');
+  a.href = currentAnimeUrl;
+  a.download = 'wai-anime.png';
+  a.target = '_blank';
+  a.click();
+}
+
+function downloadAnime() {
+  if (!currentAnimeUrl) return;
+  const a = document.createElement('a');
+  a.href = currentAnimeUrl;
+  a.download = 'wai-anime.png';
+  a.target = '_blank';
+  a.click();
+}
+
+// ESC 关闭灯箱
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
 // ===== USER ID (anonymous, persisted) =====
 function getOrCreateUserId(){
   let uid = localStorage.getItem('waiUserId');
@@ -918,6 +994,7 @@ async function handleGen() {
     btn.disabled = false;
     res.style.background = '';
     res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="动漫图">`;
+    currentAnimeUrl = imageUrl;
 
     // 存入 Supabase
     await fetch(`${SUPABASE_URL}/rest/v1/generations`, {
