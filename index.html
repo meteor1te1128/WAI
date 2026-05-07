@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAI — 把你的脸变成动漫角色</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:#f8f6ff;color:#1a1025;overflow-x:hidden;min-height:100vh;}
+canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+.wrap{position:relative;z-index:1;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;background:rgba(255,255,255,0.7);border-bottom:1px solid rgba(0,0,0,0.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);position:sticky;top:0;z-index:10;}
+.logo{font-size:19px;font-weight:800;letter-spacing:-0.5px;color:#1a1025;}
+.logo .purple{color:#8b5cf6;}
+.nav-pills{display:flex;gap:4px;list-style:none;}
+.nav-pills li{padding:6px 14px;border-radius:20px;font-size:13px;color:rgba(26,16,37,0.45);cursor:pointer;transition:all 0.2s;}
+.nav-pills li:hover{background:rgba(139,92,246,0.08);color:#8b5cf6;}
+.nav-btn{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:20px;padding:9px 22px;color:#fff;font-size:13px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 4px 16px rgba(139,92,246,0.3);}
+.nav-btn:hover{opacity:0.88;transform:scale(1.03);}
+
+/* HERO */
+.hero{padding:60px 32px 40px;text-align:center;max-width:700px;margin:0 auto;}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);color:#7c3aed;font-size:12px;font-weight:600;padding:6px 16px;border-radius:20px;margin-bottom:24px;animation:fadeUp 0.6s ease both;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:#8b5cf6;animation:pulse 1.8s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.6)}}
+h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bottom:16px;color:#1a1025;animation:fadeUp 0.7s 0.1s ease both;}
+h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:shimmer 3s linear infinite;}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+.sub{font-size:16px;color:rgba(26,16,37,0.45);line-height:1.7;margin-bottom:40px;font-weight:300;animation:fadeUp 0.7s 0.2s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* MAIN CARD */
+.card{max-width:620px;margin:0 auto 28px;background:rgba(255,255,255,0.75);border:1px solid rgba(139,92,246,0.12);border-radius:24px;padding:28px;backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);box-shadow:0 0 0 1px rgba(255,255,255,0.9) inset,0 20px 60px rgba(139,92,246,0.1),0 4px 16px rgba(0,0,0,0.06);animation:fadeUp 0.8s 0.3s ease both;}
+.upload-zone{border:1.5px dashed rgba(139,92,246,0.35);border-radius:16px;padding:40px 24px;text-align:center;cursor:pointer;transition:all 0.25s;margin-bottom:22px;position:relative;overflow:hidden;background:rgba(139,92,246,0.02);}
+.upload-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(139,92,246,0.07) 0%,transparent 70%);opacity:0;transition:opacity 0.25s;}
+.upload-zone:hover{border-color:rgba(139,92,246,0.7);background:rgba(139,92,246,0.04);}
+.upload-zone:hover::before{opacity:1;}
+.upload-icon-wrap{width:56px;height:56px;margin:0 auto 14px;border-radius:50%;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;transition:transform 0.2s;}
+.upload-zone:hover .upload-icon-wrap{transform:scale(1.1);}
+.upload-icon-wrap i{font-size:22px;color:#8b5cf6;}
+.upload-zone h3{font-size:15px;font-weight:600;margin-bottom:5px;color:#1a1025;}
+.upload-zone p{font-size:13px;color:rgba(26,16,37,0.35);font-weight:300;}
+.section-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:rgba(26,16,37,0.3);margin-bottom:12px;}
+.style-row{display:flex;gap:10px;margin-bottom:22px;overflow-x:auto;padding-bottom:2px;}
+.style-row::-webkit-scrollbar{display:none;}
+.style-pill{flex-shrink:0;padding:10px 18px;border-radius:40px;border:1px solid rgba(0,0,0,0.1);background:#fff;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(26,16,37,0.5);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.style-pill:hover{border-color:rgba(139,92,246,0.4);color:#8b5cf6;}
+.style-pill.on{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(236,72,153,0.06));border-color:rgba(139,92,246,0.5);color:#7c3aed;font-weight:600;}
+.gen-btn{width:100%;padding:16px;border-radius:14px;border:none;background:linear-gradient(135deg,#8b5cf6 0%,#ec4899 60%,#f59e0b 100%);color:#fff;font-size:15px;font-family:'Outfit',sans-serif;font-weight:700;cursor:pointer;letter-spacing:0.3px;position:relative;overflow:hidden;transition:transform 0.15s,opacity 0.2s;margin-bottom:6px;box-shadow:0 8px 28px rgba(139,92,246,0.35);}
+.gen-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transform:translateX(-100%);transition:transform 0.5s;}
+.gen-btn:hover{transform:scale(1.01);opacity:0.93;}
+.gen-btn:hover::after{transform:translateX(100%);}
+.gen-btn:active{transform:scale(0.99);}
+.hint{text-align:center;font-size:12px;color:rgba(26,16,37,0.25);font-weight:300;}
+
+/* RESULTS */
+.results{max-width:620px;margin:0 auto 28px;animation:fadeUp 0.8s 0.4s ease both;}
+.results-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:rgba(26,16,37,0.25);margin-bottom:14px;padding:0 4px;}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.img-card{border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,0.07);background:#fff;box-shadow:0 4px 20px rgba(0,0,0,0.07);transition:transform 0.2s,box-shadow 0.2s;}
+.img-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(139,92,246,0.15);}
+.img-placeholder{height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:13px;color:rgba(26,16,37,0.25);background:#fafafa;}
+.img-placeholder.anime-side{background:radial-gradient(ellipse at 30% 40%,rgba(139,92,246,0.1) 0%,transparent 60%),radial-gradient(ellipse at 70% 65%,rgba(236,72,153,0.08) 0%,transparent 60%),#fafafa;}
+.img-icon{font-size:34px;opacity:0.2;}
+.img-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid rgba(0,0,0,0.05);}
+.img-title{font-size:12px;color:rgba(26,16,37,0.35);}
+.dl-btn{display:flex;align-items:center;gap:5px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:8px;color:#8b5cf6;font-size:11px;font-family:'Outfit',sans-serif;font-weight:600;padding:5px 10px;cursor:pointer;transition:all 0.2s;}
+.dl-btn:hover{background:rgba(139,92,246,0.15);}
+
+/* STATS */
+.stats-row{max-width:620px;margin:0 auto 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.stat-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:16px;padding:20px 14px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.05);transition:transform 0.2s;}
+.stat-card:hover{transform:translateY(-2px);}
+.stat-n{font-size:24px;font-weight:800;background:linear-gradient(90deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:4px;}
+.stat-d{font-size:12px;color:rgba(26,16,37,0.3);font-weight:300;}
+
+/* SECTIONS */
+.section{max-width:620px;margin:0 auto 48px;}
+.section-title{font-size:24px;font-weight:800;letter-spacing:-0.8px;margin-bottom:6px;color:#1a1025;}
+.section-title .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.section-desc{font-size:14px;color:rgba(26,16,37,0.4);font-weight:300;margin-bottom:24px;}
+
+/* EXAMPLES */
+.examples-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.ex-card{border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,0.07);background:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;}
+.ex-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(139,92,246,0.15);}
+.ex-before-after{display:grid;grid-template-columns:1fr 1fr;}
+.ex-half{height:110px;display:flex;align-items:center;justify-content:center;font-size:28px;}
+.ex-half.before{background:#f0eff5;}
+.ex-half.after-ghibli{background:radial-gradient(ellipse at 40% 50%,rgba(16,185,129,0.2),rgba(139,92,246,0.1)),#eefaf4;}
+.ex-half.after-cyber{background:radial-gradient(ellipse at 40% 50%,rgba(6,182,212,0.25),rgba(139,92,246,0.15)),#eafaff;}
+.ex-half.after-shonen{background:radial-gradient(ellipse at 40% 50%,rgba(245,158,11,0.2),rgba(236,72,153,0.12)),#fff8ee;}
+.ex-half.after-makoto{background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.25),rgba(236,72,153,0.12)),#f5f0ff;}
+.ex-half.after-dark{background:radial-gradient(ellipse at 40% 50%,rgba(55,48,163,0.3),rgba(17,24,39,0.2)),#e8e8f5;}
+.ex-half.after-cute{background:radial-gradient(ellipse at 40% 50%,rgba(251,113,133,0.2),rgba(251,207,232,0.3)),#fff0f5;}
+.ex-label{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid rgba(0,0,0,0.05);}
+.ex-name{font-size:12px;font-weight:600;color:#1a1025;}
+.ex-tag{font-size:10px;color:#8b5cf6;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);padding:3px 8px;border-radius:6px;font-weight:600;}
+
+/* REVIEWS */
+.reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.review-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:16px;padding:18px;box-shadow:0 4px 16px rgba(0,0,0,0.05);transition:transform 0.2s;}
+.review-card:hover{transform:translateY(-2px);}
+.review-stars{color:#f59e0b;font-size:13px;margin-bottom:10px;letter-spacing:1px;}
+.review-text{font-size:13px;color:rgba(26,16,37,0.65);line-height:1.6;margin-bottom:14px;font-weight:300;}
+.review-author{display:flex;align-items:center;gap:10px;}
+.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.av1{background:rgba(139,92,246,0.12);color:#8b5cf6;}
+.av2{background:rgba(236,72,153,0.12);color:#ec4899;}
+.av3{background:rgba(16,185,129,0.12);color:#059669;}
+.av4{background:rgba(245,158,11,0.12);color:#d97706;}
+.author-name{font-size:13px;font-weight:600;color:#1a1025;}
+.author-sub{font-size:11px;color:rgba(26,16,37,0.35);}
+
+/* PRICING */
+.pricing-tabs{display:flex;gap:8px;margin-bottom:20px;background:rgba(139,92,246,0.06);border-radius:12px;padding:5px;}
+.ptab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;color:rgba(26,16,37,0.4);border-radius:9px;cursor:pointer;transition:all 0.2s;border:none;background:transparent;font-family:'Outfit',sans-serif;}
+.ptab.on{background:#fff;color:#7c3aed;box-shadow:0 2px 8px rgba(139,92,246,0.15);}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.price-card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:20px;padding:22px;box-shadow:0 4px 16px rgba(0,0,0,0.05);transition:transform 0.2s,box-shadow 0.2s;position:relative;}
+.price-card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(139,92,246,0.12);}
+.price-card.featured{border:2px solid rgba(139,92,246,0.4);box-shadow:0 8px 32px rgba(139,92,246,0.15);}
+.popular-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff;font-size:10px;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap;}
+.price-plan{font-size:12px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:rgba(26,16,37,0.35);margin-bottom:8px;}
+.price-amount{font-size:32px;font-weight:800;letter-spacing:-1px;color:#1a1025;margin-bottom:2px;}
+.price-amount span{font-size:14px;font-weight:400;color:rgba(26,16,37,0.4);letter-spacing:0;}
+.price-save{display:inline-block;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#059669;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;}
+.price-desc{font-size:12px;color:rgba(26,16,37,0.4);margin-bottom:16px;}
+.price-features{list-style:none;margin-bottom:18px;}
+.price-features li{font-size:13px;color:rgba(26,16,37,0.6);padding:4px 0;display:flex;align-items:center;gap:8px;}
+.price-features li i{font-size:14px;color:#8b5cf6;}
+.price-features li.muted i{color:rgba(26,16,37,0.2);}
+.price-features li.muted{color:rgba(26,16,37,0.3);}
+.price-btn{width:100%;padding:11px;border-radius:10px;border:none;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.price-btn.outline{background:transparent;border:1px solid rgba(139,92,246,0.3);color:#8b5cf6;}
+.price-btn.outline:hover{background:rgba(139,92,246,0.06);}
+.price-btn.fill{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;box-shadow:0 4px 16px rgba(139,92,246,0.3);}
+.price-btn.fill:hover{opacity:0.88;}
+
+/* FEEDBACK */
+.feedback-board{background:#fff;border:1px solid rgba(139,92,246,0.12);border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.06);}
+.feedback-input-row{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.fb-input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);font-family:'Outfit',sans-serif;font-size:13px;color:#1a1025;background:#fff;outline:none;transition:border-color 0.2s;}
+.fb-input:focus{border-color:rgba(139,92,246,0.5);}
+.textarea-wrap{position:relative;}
+.fb-textarea{width:100%;padding:11px 14px;padding-right:72px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);font-family:'Outfit',sans-serif;font-size:13px;color:#1a1025;background:#fff;outline:none;resize:none;height:100px;transition:border-color 0.2s;line-height:1.5;}
+.fb-textarea:focus{border-color:rgba(139,92,246,0.5);}
+.pikachu-wrap{position:absolute;bottom:-2px;right:10px;width:62px;pointer-events:none;user-select:none;}
+.fb-submit{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:10px;padding:11px 24px;color:#fff;font-size:13px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.15s;align-self:flex-end;box-shadow:0 4px 14px rgba(139,92,246,0.3);}
+.fb-submit:hover{opacity:0.88;transform:scale(1.02);}
+.fb-submit:active{transform:scale(0.98);}
+.fb-divider{height:1px;background:rgba(0,0,0,0.06);margin-bottom:18px;}
+.fb-list{display:flex;flex-direction:column;gap:12px;max-height:320px;overflow-y:auto;padding-right:4px;}
+.fb-list::-webkit-scrollbar{width:3px;}
+.fb-list::-webkit-scrollbar-track{background:transparent;}
+.fb-list::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.2);border-radius:2px;}
+.fb-item{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:12px;padding:14px;}
+.fb-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.fb-item-name{font-size:13px;font-weight:600;color:#1a1025;}
+.fb-item-time{font-size:11px;color:rgba(26,16,37,0.3);}
+.fb-item-text{font-size:13px;color:rgba(26,16,37,0.6);line-height:1.6;font-weight:300;}
+.fb-item-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;margin-top:8px;}
+.tag-bug{background:rgba(239,68,68,0.08);color:#dc2626;border:1px solid rgba(239,68,68,0.2);}
+.tag-idea{background:rgba(139,92,246,0.08);color:#7c3aed;border:1px solid rgba(139,92,246,0.2);}
+.tag-praise{background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);}
+
+/* FOOTER */
+footer{text-align:center;padding:32px;font-size:12px;color:rgba(26,16,37,0.25);border-top:1px solid rgba(0,0,0,0.06);margin-top:16px;}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="wrap">
+
+<!-- NAV -->
+<nav>
+  <div class="logo">W<span class="purple">AI</span></div>
+  <ul class="nav-pills">
+    <li onclick="document.getElementById('examples').scrollIntoView({behavior:'smooth'})">样例</li>
+    <li onclick="document.getElementById('reviews').scrollIntoView({behavior:'smooth'})">好评</li>
+    <li onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">定价</li>
+    <li onclick="document.getElementById('feedback').scrollIntoView({behavior:'smooth'})">留言</li>
+  </ul>
+  <button class="nav-btn">免费开始 →</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge"><span class="badge-dot"></span>AI 动漫生成引擎 v3.0</div>
+  <h1>把你的脸<br>变成<span class="grad">动漫角色</span></h1>
+  <p class="sub">上传一张照片，8 秒内生成专属动漫形象<br>支持吉卜力、新海诚、赛博朋克等 12 种风格</p>
+</section>
+
+<!-- UPLOAD CARD -->
+<div class="card">
+  <div class="upload-zone" id="uz" onclick="handleUploadClick()">
+    <div class="upload-icon-wrap"><i class="ti ti-upload"></i></div>
+    <h3>拖拽或点击上传照片</h3>
+    <p>支持 JPG / PNG / WEBP · 最大 20MB</p>
+  </div>
+  <div class="section-label">选择风格</div>
+  <div class="style-row">
+    <div class="style-pill on" onclick="pick(this)"><span>🌸</span>新海诚</div>
+    <div class="style-pill" onclick="pick(this)"><span>🌿</span>吉卜力</div>
+    <div class="style-pill" onclick="pick(this)"><span>⚡</span>赛博朋克</div>
+    <div class="style-pill" onclick="pick(this)"><span>🎌</span>少年漫画</div>
+    <div class="style-pill" onclick="pick(this)"><span>🌙</span>黑暗幻想</div>
+    <div class="style-pill" onclick="pick(this)"><span>🎀</span>治愈系</div>
+  </div>
+  <button class="gen-btn" id="genBtn" onclick="handleGen()">✦ 一键生成动漫形象</button>
+  <p class="hint">每天免费 3 次 · 无需注册</p>
+</div>
+
+<!-- RESULTS -->
+<div class="results">
+  <div class="results-label">预览对比</div>
+  <div class="pair">
+    <div class="img-card">
+      <div class="img-placeholder"><i class="ti ti-user img-icon"></i><span>上传照片后显示</span></div>
+      <div class="img-footer"><span class="img-title">原始照片</span></div>
+    </div>
+    <div class="img-card">
+      <div class="img-placeholder anime-side" id="animeResult"><i class="ti ti-sparkles img-icon"></i><span>生成后显示</span></div>
+      <div class="img-footer">
+        <span class="img-title">动漫版本</span>
+        <button class="dl-btn"><i class="ti ti-download"></i> 下载</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-card"><span class="stat-n">320万+</span><span class="stat-d">已生成图片</span></div>
+  <div class="stat-card"><span class="stat-n">~8秒</span><span class="stat-d">平均生成时间</span></div>
+  <div class="stat-card"><span class="stat-n">12种</span><span class="stat-d">动漫风格</span></div>
+</div>
+
+<!-- EXAMPLES -->
+<div class="section" id="examples">
+  <div class="section-title">样例 <span class="grad">展示</span></div>
+  <div class="section-desc">真实用户上传，AI 一键生成</div>
+  <div class="examples-grid">
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-makoto">🌸</div></div><div class="ex-label"><span class="ex-name">新海诚风</span><span class="ex-tag">最受欢迎</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👨</div><div class="ex-half after-ghibli">🌿</div></div><div class="ex-label"><span class="ex-name">吉卜力风</span><span class="ex-tag">治愈系</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧑</div><div class="ex-half after-cyber">⚡</div></div><div class="ex-label"><span class="ex-name">赛博朋克</span><span class="ex-tag">科幻</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👧</div><div class="ex-half after-cute">🎀</div></div><div class="ex-label"><span class="ex-name">治愈系</span><span class="ex-tag">可爱</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👦</div><div class="ex-half after-shonen">🎌</div></div><div class="ex-label"><span class="ex-name">少年漫画</span><span class="ex-tag">热血</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧔</div><div class="ex-half after-dark">🌙</div></div><div class="ex-label"><span class="ex-name">黑暗幻想</span><span class="ex-tag">神秘</span></div></div>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<div class="section" id="reviews">
+  <div class="section-title">用户 <span class="grad">好评</span></div>
+  <div class="section-desc">来自全球超过 32 万用户的真实反馈</div>
+  <div class="reviews-grid">
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">生成速度太快了，上传照片不到10秒就出来了，效果真的很像！朋友都以为我请人手绘的。</div><div class="review-author"><div class="avatar av1">小</div><div><div class="author-name">小雨</div><div class="author-sub">设计师 · 上海</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">新海诚风格真的绝了，感觉自己变成了《你的名字》里的角色，已经换成头像了，好多人来问从哪做的。</div><div class="review-author"><div class="avatar av2">阿</div><div><div class="author-name">阿Ken</div><div class="author-sub">内容创作者 · 广州</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">Pro版性价比超高，每天30次完全够用，无水印高清图直接发社媒，粉丝互动率明显上来了。</div><div class="review-author"><div class="avatar av3">M</div><div><div class="author-name">Miku_art</div><div class="author-sub">插画师 · 成都</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★☆</div><div class="review-text">试了好几个同类产品，WAI 的效果是最自然的，脸部细节保留得很好，不像其他的感觉变了个人。</div><div class="review-author"><div class="avatar av4">Z</div><div><div class="author-name">ZephyrLee</div><div class="author-sub">游戏玩家 · 北京</div></div></div></div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="section" id="pricing">
+  <div class="section-title">简单透明的 <span class="grad">定价</span></div>
+  <div class="section-desc">免费体验，随时升级，无隐藏费用</div>
+  <div style="margin-bottom:16px;">
+    <div style="font-size:12px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:rgba(26,16,37,0.3);margin-bottom:10px;">MAX 套餐周期</div>
+    <div class="pricing-tabs">
+      <button class="ptab on" onclick="switchMax(this,'39','月','')">月付 $39</button>
+      <button class="ptab" onclick="switchMax(this,'99','3个月','省 $18')">季付 $99</button>
+      <button class="ptab" onclick="switchMax(this,'169','半年','省 $65')">半年 $169</button>
+      <button class="ptab" onclick="switchMax(this,'288','年','省 $180')">年付 $288</button>
+    </div>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-plan">Free</div>
+      <div class="price-amount">$0</div>
+      <div class="price-desc">永久免费，每日刷新</div>
+      <ul class="price-features">
+        <li><i class="ti ti-check"></i>每天 3 次生成</li>
+        <li><i class="ti ti-check"></i>6 种基础风格</li>
+        <li class="muted"><i class="ti ti-x"></i>含水印</li>
+        <li class="muted"><i class="ti ti-x"></i>仅标准清晰度</li>
+      </ul>
+      <button class="price-btn outline">免费开始</button>
+    </div>
+    <div class="price-card featured">
+      <div class="popular-badge">🔥 最受欢迎</div>
+      <div class="price-plan">Pro</div>
+      <div class="price-amount">$19<span>/月</span></div>
+      <div class="price-desc">适合个人创作者</div>
+      <ul class="price-features">
+        <li><i class="ti ti-check"></i>每天 30 次生成</li>
+        <li><i class="ti ti-check"></i>12 种全风格</li>
+        <li><i class="ti ti-check"></i>无水印</li>
+        <li><i class="ti ti-check"></i>高清下载</li>
+      </ul>
+      <button class="price-btn fill">订阅 Pro</button>
+    </div>
+    <div class="price-card" id="maxCard" style="grid-column:1/-1;">
+      <div class="price-plan">MAX</div>
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:2px;">
+        <div class="price-amount" id="maxPrice">$39<span id="maxPeriod">/月</span></div>
+        <div class="price-save" id="maxSave" style="display:none;"></div>
+      </div>
+      <div class="price-desc">无限次数，全功能解锁</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px;">
+        <div style="font-size:12px;color:rgba(26,16,37,0.6);display:flex;align-items:center;gap:6px;"><i class="ti ti-infinity" style="font-size:14px;color:#8b5cf6;"></i>无限次数</div>
+        <div style="font-size:12px;color:rgba(26,16,37,0.6);display:flex;align-items:center;gap:6px;"><i class="ti ti-bolt" style="font-size:14px;color:#8b5cf6;"></i>优先队列</div>
+        <div style="font-size:12px;color:rgba(26,16,37,0.6);display:flex;align-items:center;gap:6px;"><i class="ti ti-palette" style="font-size:14px;color:#8b5cf6;"></i>全风格解锁</div>
+        <div style="font-size:12px;color:rgba(26,16,37,0.6);display:flex;align-items:center;gap:6px;"><i class="ti ti-photo" style="font-size:14px;color:#8b5cf6;"></i>4K 高清</div>
+      </div>
+      <button class="price-btn fill" style="max-width:240px;">立即升级 MAX</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEEDBACK -->
+<div class="section" id="feedback">
+  <div class="section-title">用户 <span class="grad">留言板</span></div>
+  <div class="section-desc">有问题、想法、或只是想说声好——都欢迎留言</div>
+  <div class="feedback-board">
+    <div class="feedback-input-row">
+      <input class="fb-input" id="fbName" placeholder="你的昵称（可选）" maxlength="20">
+      <div class="textarea-wrap">
+        <textarea class="fb-textarea" id="fbText" placeholder="说点什么吧，比如遇到的问题、想要的功能、或者好看的效果…"></textarea>
+        <div class="pikachu-wrap">
+          <svg viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="18,28 8,4 28,20" fill="#f5c518"/>
+            <polygon points="12,24 8,8 22,18" fill="#2a1a00" opacity="0.85"/>
+            <polygon points="58,28 72,4 52,20" fill="#f5c518"/>
+            <polygon points="66,24 72,8 58,18" fill="#2a1a00" opacity="0.85"/>
+            <ellipse cx="40" cy="72" rx="26" ry="18" fill="#f5c518"/>
+            <ellipse cx="40" cy="40" rx="26" ry="24" fill="#f5c518"/>
+            <ellipse cx="22" cy="46" rx="7" ry="5" fill="#f87171" opacity="0.85"/>
+            <ellipse cx="58" cy="46" rx="7" ry="5" fill="#f87171" opacity="0.85"/>
+            <ellipse cx="31" cy="35" rx="5" ry="5.5" fill="#1a1025"/>
+            <ellipse cx="49" cy="35" rx="5" ry="5.5" fill="#1a1025"/>
+            <ellipse cx="32.5" cy="33.5" rx="1.8" ry="1.8" fill="#fff"/>
+            <ellipse cx="50.5" cy="33.5" rx="1.8" ry="1.8" fill="#fff"/>
+            <ellipse cx="40" cy="41" rx="2" ry="1.2" fill="#2a1a00" opacity="0.6"/>
+            <path d="M34,45 Q40,51 46,45" stroke="#2a1a00" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+            <ellipse cx="16" cy="68" rx="7" ry="5" fill="#f5c518" transform="rotate(-20,16,68)"/>
+            <ellipse cx="64" cy="68" rx="7" ry="5" fill="#f5c518" transform="rotate(20,64,68)"/>
+            <ellipse cx="30" cy="87" rx="9" ry="5" fill="#f5c518"/>
+            <ellipse cx="50" cy="87" rx="9" ry="5" fill="#f5c518"/>
+            <path d="M64,74 Q76,66 72,58 Q68,50 76,44" stroke="#f5c518" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <polygon points="76,44 82,38 78,42 84,34 76,40 80,36" fill="#f5c518" stroke="#c8960c" stroke-width="0.8"/>
+          </svg>
+        </div>
+      </div>
+      <button class="fb-submit" onclick="submitFeedback()">发送留言 →</button>
+    </div>
+    <div class="fb-divider"></div>
+    <div class="fb-list" id="fbList"></div>
+  </div>
+</div>
+
+<footer>© 2026 WAI · 把每张脸变成动漫角色</footer>
+
+</div><!-- end .wrap -->
+
+<script>
+// === BACKGROUND BLOBS ===
+const canvas=document.getElementById('bg');
+const ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+const blobs=[
+  {x:0.1,y:0.2,vx:0.00028,vy:0.00018,r:320,color:'rgba(139,92,246,0.1)'},
+  {x:0.85,y:0.15,vx:-0.00022,vy:0.00026,r:260,color:'rgba(236,72,153,0.08)'},
+  {x:0.5,y:0.75,vx:0.00020,vy:-0.00022,r:300,color:'rgba(99,179,237,0.07)'},
+  {x:0.88,y:0.72,vx:-0.00026,vy:-0.00016,r:220,color:'rgba(245,158,11,0.06)'},
+];
+let t=0;
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);t+=0.012;
+  blobs.forEach((b,i)=>{
+    const cx=canvas.width*b.x+Math.sin(t*b.vx*1000+i)*110;
+    const cy=canvas.height*b.y+Math.cos(t*b.vy*1000+i)*75;
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,b.r);
+    g.addColorStop(0,b.color);g.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(cx,cy,b.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+// === STYLE PICKER ===
+function pick(el){
+  document.querySelectorAll('.style-pill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// === GENERATE ===
+let busy=false;
+function handleGen(){
+  if(busy)return;busy=true;
+  const btn=document.getElementById('genBtn');
+  const res=document.getElementById('animeResult');
+  btn.style.opacity='0.7';
+  let d=0;
+  const iv=setInterval(()=>{d=(d+1)%4;btn.textContent='⏳ AI 正在生成中'+'.'.repeat(d);},400);
+  setTimeout(()=>{
+    clearInterval(iv);
+    btn.textContent='✓ 生成完成！点击重新生成';
+    btn.style.opacity='1';
+    btn.style.background='linear-gradient(135deg,#059669,#10b981)';
+    btn.style.boxShadow='0 8px 28px rgba(5,150,105,0.3)';
+    res.style.background='radial-gradient(ellipse at 30% 40%,rgba(139,92,246,0.15) 0%,transparent 55%),radial-gradient(ellipse at 70% 65%,rgba(236,72,153,0.12) 0%,transparent 55%),#fafafa';
+    res.innerHTML='<span style="font-size:46px">✨</span><span style="font-size:13px;color:rgba(26,16,37,0.4);margin-top:8px">动漫形象已生成</span>';
+    setTimeout(()=>{busy=false;},1500);
+  },2600);
+}
+
+function handleUploadClick(){
+  const uz=document.getElementById('uz');
+  uz.querySelector('h3').textContent='已选择：portrait.jpg';
+  uz.querySelector('p').textContent='点击可重新选择';
+}
+
+// === PRICING TABS ===
+function switchMax(el,price,period,save){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('maxPrice').innerHTML='$'+price+'<span id="maxPeriod">/'+period+'</span>';
+  const saveEl=document.getElementById('maxSave');
+  if(save){saveEl.style.display='';saveEl.textContent=save;}
+  else{saveEl.style.display='none';}
+}
+
+// === FEEDBACK ===
+const seedFeedback=[
+  {name:'柠檬茶不加糖',text:'希望能加个批量上传功能，一次传多张就好了！',tag:'idea',time:'2分钟前'},
+  {name:'匿名用户',text:'赛博朋克风格有时候脸会变形，鼻子有点奇怪，其他都很好',tag:'bug',time:'18分钟前'},
+  {name:'Aki_design',text:'吉卜力风真的太美了，已经给全家人都做了一遍哈哈',tag:'praise',time:'1小时前'},
+  {name:'夜风',text:'能不能支持全身照？现在只能用脸部特写，想要全身动漫效果',tag:'idea',time:'3小时前'},
+];
+const tagMap={
+  bug:{label:'Bug 反馈',cls:'tag-bug'},
+  idea:{label:'功能建议',cls:'tag-idea'},
+  praise:{label:'好评',cls:'tag-praise'}
+};
+function renderFeedback(list){
+  document.getElementById('fbList').innerHTML=list.map(f=>`
+    <div class="fb-item">
+      <div class="fb-item-header">
+        <span class="fb-item-name">${f.name||'匿名用户'}</span>
+        <span class="fb-item-time">${f.time}</span>
+      </div>
+      <div class="fb-item-text">${f.text}</div>
+      <span class="fb-item-tag ${tagMap[f.tag].cls}">${tagMap[f.tag].label}</span>
+    </div>
+  `).join('');
+}
+let feedbacks=[...seedFeedback];
+renderFeedback(feedbacks);
+function guessTag(text){
+  if(/bug|问题|崩|错误|变形|奇怪|卡|慢/i.test(text))return'bug';
+  if(/希望|建议|能不能|加个|支持|功能/i.test(text))return'idea';
+  return'praise';
+}
+function submitFeedback(){
+  const nameEl=document.getElementById('fbName');
+  const textEl=document.getElementById('fbText');
+  const text=textEl.value.trim();
+  if(!text)return;
+  feedbacks=[{name:nameEl.value.trim()||'匿名用户',text,tag:guessTag(text),time:'刚刚'},...feedbacks];
+  renderFeedback(feedbacks);
+  nameEl.value='';textEl.value='';
+  document.getElementById('fbList').scrollTop=0;
+}
+</script>
+</body>
+</html>
