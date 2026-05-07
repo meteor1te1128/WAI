@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WAI — 把你的脸变成动漫角色</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;}
+html{}
 
 /* ===== DARK MODE VARIABLES ===== */
 :root{
@@ -197,29 +198,40 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .author-sub{font-size:11px;color:var(--text-faint);}
 
 /* ===== PRICING ===== */
-.pricing-tabs{display:flex;gap:8px;margin-bottom:20px;background:rgba(139,92,246,0.06);border-radius:12px;padding:5px;}
-.ptab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;color:var(--text-muted);border-radius:9px;cursor:pointer;transition:all 0.2s;border:none;background:transparent;font-family:'Outfit',sans-serif;}
-.ptab.on{background:var(--white-card);color:#7c3aed;box-shadow:0 2px 8px rgba(139,92,246,0.15);}
-.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.price-card{background:var(--white-card);border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:0 4px 16px rgba(0,0,0,0.05);transition:transform 0.2s,box-shadow 0.2s,background var(--transition);}
-.price-card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(139,92,246,0.12);}
-.price-card.featured{border:2px solid rgba(139,92,246,0.4);box-shadow:0 8px 32px rgba(139,92,246,0.15);}
-.popular-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff;font-size:10px;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap;}
-.price-plan{font-size:12px;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);margin-bottom:8px;}
-.price-amount{font-size:32px;font-weight:800;letter-spacing:-1px;color:var(--text);margin-bottom:2px;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch;}
+.price-card{background:var(--white-card);border:1px solid var(--border);border-radius:24px;padding:28px 24px 24px;box-shadow:0 4px 16px rgba(0,0,0,0.04);transition:transform 0.25s,box-shadow 0.25s,background var(--transition);display:flex;flex-direction:column;position:relative;}
+.price-card:hover{transform:translateY(-4px);box-shadow:0 20px 48px rgba(139,92,246,0.13);}
+.price-card.featured{border:2px solid #8b5cf6;box-shadow:0 8px 40px rgba(139,92,246,0.22);background:linear-gradient(160deg,rgba(139,92,246,0.06) 0%,var(--white-card) 60%);}
+.price-card.featured:hover{box-shadow:0 24px 60px rgba(139,92,246,0.28);}
+.popular-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff;font-size:10px;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap;letter-spacing:0.5px;}
+.price-plan{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px;}
+.price-plan.accent{color:#8b5cf6;}
+.price-amount{font-size:36px;font-weight:800;letter-spacing:-1.5px;color:var(--text);line-height:1;}
 .price-amount span{font-size:14px;font-weight:400;color:var(--text-muted);letter-spacing:0;}
-.price-save{display:inline-block;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#059669;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;}
-.price-desc{font-size:12px;color:var(--text-muted);margin-bottom:16px;}
-.price-features{list-style:none;margin-bottom:18px;}
-.price-features li{font-size:13px;color:var(--text-muted);padding:4px 0;display:flex;align-items:center;gap:8px;}
-.price-features li i{font-size:14px;color:#8b5cf6;}
+.price-save{display:inline-block;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#059669;font-size:10px;font-weight:700;padding:2px 9px;border-radius:6px;margin-left:6px;vertical-align:middle;}
+.price-desc{font-size:12.5px;color:var(--text-muted);margin:8px 0 20px;line-height:1.5;}
+.price-features{list-style:none;margin-bottom:20px;flex:1;}
+.price-features li{font-size:13px;color:var(--text-muted);padding:5px 0;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--divider);}
+.price-features li:last-child{border-bottom:none;}
+.price-features li i{font-size:14px;color:#8b5cf6;flex-shrink:0;}
 .price-features li.muted i{color:var(--text-faint);}
 .price-features li.muted{color:var(--text-faint);}
-.price-btn{width:100%;padding:11px;border-radius:10px;border:none;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
-.price-btn.outline{background:transparent;border:1px solid rgba(139,92,246,0.3);color:#8b5cf6;}
-.price-btn.outline:hover{background:rgba(139,92,246,0.06);}
-.price-btn.fill{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;box-shadow:0 4px 16px rgba(139,92,246,0.3);}
-.price-btn.fill:hover{opacity:0.88;}
+.price-btn{width:100%;padding:12px;border-radius:12px;border:none;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px;}
+.price-btn.outline{background:transparent;border:1.5px solid rgba(139,92,246,0.3);color:#8b5cf6;}
+.price-btn.outline:hover{background:rgba(139,92,246,0.07);border-color:#8b5cf6;}
+.price-btn.fill{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;box-shadow:0 4px 18px rgba(139,92,246,0.35);}
+.price-btn.fill:hover{opacity:0.88;transform:translateY(-1px);box-shadow:0 8px 24px rgba(139,92,246,0.4);}
+/* Max billing tabs — inside card */
+.max-tabs{display:flex;gap:5px;margin:16px 0 4px;background:rgba(139,92,246,0.06);border-radius:10px;padding:4px;}
+.mtab{flex:1;padding:6px 4px;text-align:center;font-size:11px;font-weight:600;color:var(--text-muted);border-radius:7px;cursor:pointer;transition:all 0.18s;border:none;background:transparent;font-family:'Outfit',sans-serif;line-height:1.3;}
+.mtab.on{background:var(--white-card);color:#7c3aed;box-shadow:0 2px 8px rgba(139,92,246,0.18);}
+.mtab small{display:block;font-size:9px;font-weight:500;color:#10b981;margin-top:1px;}
+.mtab.on small{color:#10b981;}
+.price-divider{height:1px;background:var(--divider);margin:18px 0 14px;}
+/* responsive */
+@media(max-width:640px){
+  .pricing-grid{grid-template-columns:1fr;}
+}
 
 /* ===== STAR RATING ===== */
 .star-rating-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
@@ -328,6 +340,28 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 .modal-body h3{font-size:14px;font-weight:700;color:var(--text);margin:14px 0 6px;}
 .modal-body p{margin-bottom:10px;}
 
+/* ===== AUTH MODAL ===== */
+.auth-tabs{display:flex;gap:0;margin-bottom:22px;border-bottom:1px solid var(--border);}
+.auth-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Outfit',sans-serif;}
+.auth-tab.on{color:#8b5cf6;border-bottom-color:#8b5cf6;}
+.auth-input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;margin-bottom:10px;outline:none;transition:border-color 0.2s;}
+.auth-input:focus{border-color:#8b5cf6;}
+.auth-submit{width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s;margin-top:4px;}
+.auth-submit:hover{opacity:0.88;}
+.auth-submit:disabled{opacity:0.5;cursor:not-allowed;}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--text-faint);font-size:12px;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.auth-google{width:100%;padding:11px;border-radius:10px;border:1px solid var(--border);background:var(--white-card);color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.auth-google:hover{border-color:#8b5cf6;background:rgba(139,92,246,0.04);}
+.auth-msg{font-size:12px;color:#ef4444;margin-top:8px;min-height:18px;}
+.auth-msg.ok{color:#10b981;}
+/* Nav auth area */
+.nav-auth{display:flex;align-items:center;gap:8px;}
+.nav-user{font-size:12px;color:var(--text-muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.nav-logout{padding:6px 12px;border-radius:16px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:12px;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.2s;}
+.nav-logout:hover{border-color:#ef4444;color:#ef4444;}
+.nav-plan-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;margin-left:4px;}
+
 /* ===== RESPONSIVE ===== */
 @media(max-width:600px){
   nav{padding:14px 16px;}
@@ -345,8 +379,6 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   .examples-grid{grid-template-columns:1fr 1fr;}
   .reviews-grid{grid-template-columns:1fr;}
   .pricing-grid{grid-template-columns:1fr;}
-  .pricing-tabs{flex-wrap:wrap;}
-  .ptab{flex:none;width:calc(50% - 4px);font-size:12px;}
   .comparison-height{height:160px;}
   footer{padding:28px 16px 24px;}
   .footer-links{gap:8px;}
@@ -380,14 +412,17 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
     <li onclick="smoothTo('pricing')">定价</li>
     <li onclick="smoothTo('feedback')">留言</li>
   </ul>
-  <button class="nav-btn">免费开始 →</button>
+  <div class="nav-auth" id="navAuth">
+    <!-- 未登录时显示 -->
+    <button class="nav-btn" id="navLoginBtn" onclick="openAuthModal()">登录 / 注册</button>
+  </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="badge"><span class="badge-dot"></span>AI 动漫生成引擎 v3.0</div>
+  <div class="badge"><span class="badge-dot"></span>✨ 动漫生成引擎 v3.0 已就绪</div>
   <h1>把你的脸<br>变成<span class="grad">动漫角色</span></h1>
-  <p class="sub">上传一张照片，8 秒内生成专属动漫形象<br>支持吉卜力、新海诚、赛博朋克等 12 种风格</p>
+  <p class="sub">丢一张自拍进来，8 秒后你就是动漫主角了✨<br>吉卜力 · 新海诚 · 赛博朋克 等 12 种风格随便选</p>
 </section>
 
 <!-- UPLOAD CARD -->
@@ -395,8 +430,8 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handleFileChange(this)">
   <div class="upload-zone" id="uz" onclick="document.getElementById('fileInput').click()">
     <div class="upload-icon-wrap"><i class="ti ti-upload"></i></div>
-    <h3>拖拽或点击上传照片</h3>
-    <p>支持 JPG / PNG / WEBP · 最大 20MB</p>
+    <h3>把照片拖进来，或者点这里</h3>
+    <p>JPG / PNG / WEBP 都行 · 最大 20MB</p>
   </div>
   <div class="section-label">选择风格</div>
   <div class="style-row">
@@ -448,7 +483,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <!-- HISTORY -->
 <div class="history-section" id="historySection" style="display:none;">
   <div class="section-title">我的 <span class="grad">历史记录</span></div>
-  <div class="section-desc">你之前生成的动漫图，点击可下载</div>
+  <div class="section-desc">之前变过的角色们，点一下就能下载回来~</div>
   <div class="history-grid" id="historyGrid">
     <div class="history-empty"><i class="ti ti-photo-off"></i>还没有生成记录</div>
   </div>
@@ -463,7 +498,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 
 <!-- BEFORE/AFTER COMPARISON SLIDER -->
 <div class="comparison-section">
-  <div class="comparison-label">拖动查看 · 原图 VS 动漫效果</div>
+  <div class="comparison-label">👆 拖一下看看变身效果</div>
   <div class="comparison-wrapper comparison-height" id="compWrapper">
     <!-- Before layer -->
     <div class="comparison-before" style="z-index:1;">
@@ -490,7 +525,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <!-- EXAMPLES -->
 <div class="section" id="examples">
   <div class="section-title">样例 <span class="grad">展示</span></div>
-  <div class="section-desc">真实用户上传，AI 一键生成</div>
+  <div class="section-desc">真实用户丢进来的照片，AI 一键变身，效果都是真的</div>
   <div class="examples-grid">
     <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-makoto">🌸</div></div><div class="ex-label"><span class="ex-name">新海诚风</span><span class="ex-tag">最受欢迎</span></div></div>
     <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👨</div><div class="ex-half after-ghibli">🌿</div></div><div class="ex-label"><span class="ex-name">吉卜力风</span><span class="ex-tag">治愈系</span></div></div>
@@ -504,7 +539,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <!-- REVIEWS -->
 <div class="section" id="reviews">
   <div class="section-title">用户 <span class="grad">好评</span></div>
-  <div class="section-desc">来自全球超过 32 万用户的真实反馈</div>
+  <div class="section-desc">32 万+用户都说好，不信你看看 👀</div>
   <div class="reviews-grid">
     <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">生成速度太快了，上传照片不到10秒就出来了，效果真的很像！朋友都以为我请人手绘的。</div><div class="review-author"><div class="avatar av1">小</div><div><div class="author-name">小雨</div><div class="author-sub">设计师 · 上海</div></div></div></div>
     <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">新海诚风格真的绝了，感觉自己变成了《你的名字》里的角色，已经换成头像了，好多人来问从哪做的。</div><div class="review-author"><div class="avatar av2">阿</div><div><div class="author-name">阿Ken</div><div class="author-sub">内容创作者 · 广州</div></div></div></div>
@@ -515,68 +550,83 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 
 <!-- PRICING -->
 <div class="section" id="pricing">
-  <div class="section-title">简单透明的 <span class="grad">定价</span></div>
-  <div class="section-desc">免费体验，随时升级，无隐藏费用</div>
-  <div style="margin-bottom:16px;">
-    <div style="font-size:12px;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;color:var(--text-faint);margin-bottom:10px;">Max 套餐周期</div>
-    <div class="pricing-tabs">
-      <button class="ptab on" onclick="switchMax(this,'39','月','')">月付 $39</button>
-      <button class="ptab" onclick="switchMax(this,'99','3个月','省 $18')">季付 $99</button>
-      <button class="ptab" onclick="switchMax(this,'169','半年','省 $65')">半年 $169</button>
-      <button class="ptab" onclick="switchMax(this,'299','年','省 $169')">年付 $299</button>
-    </div>
-  </div>
+  <div class="section-title">价格很 <span class="grad">良心</span>，真的</div>
+  <div class="section-desc">免费够用，付费解锁更多，没有套路隐藏费用那种</div>
   <div class="pricing-grid">
+
+    <!-- FREE -->
     <div class="price-card">
       <div class="price-plan">Free</div>
       <div class="price-amount">$0</div>
-      <div class="price-desc">永久免费，每日刷新</div>
+      <div class="price-desc">先玩玩看，不用绑卡，每天刷新</div>
+      <div class="price-divider"></div>
       <ul class="price-features">
-        <li><i class="ti ti-check"></i>每天 3 次生成</li>
+        <li><i class="ti ti-check"></i>每天 3 次，够玩了</li>
         <li><i class="ti ti-check"></i>6 种基础风格</li>
-        <li class="muted"><i class="ti ti-x"></i>含水印</li>
+        <li class="muted"><i class="ti ti-x"></i>图片带水印</li>
         <li class="muted"><i class="ti ti-x"></i>仅标准清晰度</li>
+        <li class="muted"><i class="ti ti-x"></i>没有历史记录</li>
       </ul>
-      <button class="price-btn outline">免费开始</button>
+      <button class="price-btn outline">先免费试试</button>
     </div>
-    <div class="price-card featured" style="position:relative;">
-      <div class="popular-badge">🔥 最受欢迎</div>
-      <div class="price-plan">Pro</div>
-      <div class="price-amount">$19<span>/月</span></div>
-      <div class="price-desc">适合个人创作者</div>
+
+    <!-- PRO -->
+    <div class="price-card featured">
+      <div class="popular-badge">🔥 大多数人选这个</div>
+      <div class="price-plan accent">Pro</div>
+      <div style="display:flex;align-items:baseline;gap:6px;">
+        <div class="price-amount">$19<span>/月</span></div>
+      </div>
+      <div class="price-desc">每天变身 30 次，够发一周 ins 了</div>
+      <div class="price-divider"></div>
       <ul class="price-features">
-        <li><i class="ti ti-check"></i>每天 30 次生成</li>
-        <li><i class="ti ti-check"></i>12 种全风格</li>
-        <li><i class="ti ti-check"></i>无水印</li>
-        <li><i class="ti ti-check"></i>高清下载</li>
+        <li><i class="ti ti-check"></i>每天 <strong>30 次</strong>，随便造</li>
+        <li><i class="ti ti-check"></i>12 种风格全解锁</li>
+        <li><i class="ti ti-check"></i>无水印，发朋友圈不丢脸</li>
+        <li><i class="ti ti-check"></i>最高 <strong>2K</strong> 高清下载</li>
+        <li><i class="ti ti-check"></i>30 天历史记录</li>
+        <li><i class="ti ti-check"></i>ZIP 批量打包下载</li>
+        <li class="muted"><i class="ti ti-x"></i>商业授权</li>
       </ul>
-      <button class="price-btn fill">订阅 Pro</button>
+      <button class="price-btn fill" onclick="handleSubscribe('pro')">解锁 Pro ✦</button>
     </div>
-    <div class="price-card" id="maxCard" style="grid-column:1/-1;">
+
+    <!-- MAX -->
+    <div class="price-card" id="maxCard">
       <div class="price-plan">Max</div>
-      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:2px;">
+      <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;">
         <div class="price-amount" id="maxPrice">$39<span id="maxPeriod">/月</span></div>
         <div class="price-save" id="maxSave" style="display:none;"></div>
       </div>
-      <div class="price-desc">无限次数，全功能解锁</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px;">
-        <div style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px;"><i class="ti ti-infinity" style="font-size:14px;color:#8b5cf6;"></i>无限次数</div>
-        <div style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px;"><i class="ti ti-bolt" style="font-size:14px;color:#8b5cf6;"></i>优先队列</div>
-        <div style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px;"><i class="ti ti-palette" style="font-size:14px;color:#8b5cf6;"></i>全风格解锁</div>
-        <div style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px;"><i class="ti ti-photo" style="font-size:14px;color:#8b5cf6;"></i>4K 高清</div>
+      <div class="price-desc">无限变身，发小红书接单都够用</div>
+      <!-- billing tabs inside card -->
+      <div class="max-tabs">
+        <button class="mtab on" onclick="switchMax(this,'39','/月','')">月付<small>&nbsp;</small></button>
+        <button class="mtab" onclick="switchMax(this,'99','/季','省 $18')">季付<small>省$18</small></button>
+        <button class="mtab" onclick="switchMax(this,'169','/半年','省 $65')">半年<small>省$65</small></button>
+        <button class="mtab" onclick="switchMax(this,'299','/年','省 $169')">年付<small>省$169</small></button>
       </div>
-      <button class="price-btn fill" style="max-width:240px;">立即升级 Max</button>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><i class="ti ti-infinity"></i><strong>无限次数</strong>，想生多少生多少</li>
+        <li><i class="ti ti-photo"></i>最高 <strong>4K</strong> 超清，打印出来也好看</li>
+        <li><i class="ti ti-history"></i>历史记录永久保存，不怕找不到</li>
+        <li><i class="ti ti-shield-check"></i>商业授权，发 ins / 小红书随便用</li>
+        <li><i class="ti ti-sparkles"></i>新风格第一批体验</li>
+      </ul>
+      <button class="price-btn fill" onclick="handleSubscribe('max')">解锁 Max ✦</button>
     </div>
+
   </div>
 </div>
 
 <!-- FEEDBACK -->
 <div class="section" id="feedback">
-  <div class="section-title">用户 <span class="grad">留言板</span></div>
-  <div class="section-desc">有问题、想法、或只是想说声好——都欢迎留言</div>
+  <div class="section-title">来 <span class="grad">唠两句</span></div>
+  <div class="section-desc">bug、想法、还是纯粹想夸一句——都可以扔进来</div>
   <div class="feedback-board">
     <div class="feedback-input-row">
-      <input class="fb-input" id="fbName" placeholder="你的昵称（可选）" maxlength="20">
+      <input class="fb-input" id="fbName" placeholder="叫我什么好（可不填）" maxlength="20">
       <!-- Star Rating -->
       <div class="star-rating-row">
         <span class="star-rating-label">评分</span>
@@ -584,9 +634,9 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
         <span class="star-value-display" id="starValueDisplay">—</span>
       </div>
       <div class="textarea-wrap">
-        <textarea class="fb-textarea" id="fbText" placeholder="哇这风格太好看了 / 哎这里有个bug / 希望以后能支持xx"></textarea>
+        <textarea class="fb-textarea" id="fbText" placeholder="这风格绝了！/ 哎这里有bug / 能不能加个xx风格～"></textarea>
       </div>
-      <button class="fb-submit" onclick="submitFeedback()">发送留言 →</button>
+      <button class="fb-submit" onclick="submitFeedback()">投出去 →</button>
     </div>
     <div class="fb-divider"></div>
     <div class="fb-list" id="fbList"></div>
@@ -610,6 +660,30 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 </div><!-- end .wrap -->
 
 <!-- MODALS -->
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="modalAuth" onclick="if(event.target===this)closeAuthModal()">
+  <div class="modal-box" style="max-width:380px;">
+    <div class="modal-header">
+      <div class="modal-title" id="authModalTitle">👋 欢迎回来</div>
+      <button class="modal-close" onclick="closeAuthModal()">✕</button>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="tabLogin" onclick="switchAuthTab('login')">登录</button>
+      <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">注册</button>
+    </div>
+    <input class="auth-input" id="authEmail" type="email" placeholder="邮箱地址">
+    <input class="auth-input" id="authPassword" type="password" placeholder="密码（至少 6 位）">
+    <button class="auth-submit" id="authSubmitBtn" onclick="handleAuth()">登录</button>
+    <div class="auth-msg" id="authMsg"></div>
+    <div class="auth-divider">或者</div>
+    <button class="auth-google" onclick="handleGoogleLogin()">
+      <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      使用 Google 账号登录
+    </button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modalTos" onclick="if(event.target===this)closeModal('tos')">
   <div class="modal-box">
     <div class="modal-header">
@@ -659,9 +733,10 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 function smoothTo(id){
   const el=document.getElementById(id);
   if(!el)return;
-  const navH=document.querySelector('nav').offsetHeight||72;
-  const y=el.getBoundingClientRect().top+window.pageYOffset-navH-8;
-  window.scrollTo({top:y,behavior:'smooth'});
+  const navH=document.querySelector('nav')?.offsetHeight||64;
+  let top=0,node=el;
+  while(node){top+=node.offsetTop;node=node.offsetParent;}
+  window.scrollTo({top:top-navH-12,behavior:'smooth'});
 }
 
 // ===== THEME =====
@@ -929,7 +1004,7 @@ async function handleGen() {
     return;
   }
   if (freeLeft <= 0) {
-    alert('今日免费次数已用完！每天北京时间凌晨 4:00 刷新，或者升级 Pro 解锁更多次数 ✦');
+    alert('今天的配额烧完啦！每天凌晨 4:00（北京时间）刷新，或者升级 Pro 无限造 ✦');
     return;
   }
 
@@ -1044,9 +1119,9 @@ async function handleGen() {
 
 // ===== PRICING TABS =====
 function switchMax(el,price,period,save){
-  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));
   el.classList.add('on');
-  document.getElementById('maxPrice').innerHTML='$'+price+'<span id="maxPeriod">/'+period+'</span>';
+  document.getElementById('maxPrice').innerHTML='$'+price+'<span id="maxPeriod">'+period+'</span>';
   const saveEl=document.getElementById('maxSave');
   if(save){saveEl.style.display='';saveEl.textContent=save;}
   else{saveEl.style.display='none';}
@@ -1251,6 +1326,193 @@ function submitFeedback(){
   document.getElementById('starValueDisplay').textContent='—';
   document.getElementById('fbList').scrollTop=0;
 }
+
+// ===== SUPABASE CLIENT (SDK) =====
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ===== AUTH STATE =====
+let currentUser = null;
+let currentPlan = 'free'; // 'free' | 'pro' | 'max'
+
+async function initAuth() {
+  const { data: { session } } = await _supabase.auth.getSession();
+  if (session?.user) {
+    currentUser = session.user;
+    await refreshUserPlan();
+    renderNavAuth();
+    checkPaymentResult();
+  }
+  // 监听登录/登出变化
+  _supabase.auth.onAuthStateChange(async (event, session) => {
+    currentUser = session?.user || null;
+    if (currentUser) {
+      await refreshUserPlan();
+      checkPaymentResult();
+    } else {
+      currentPlan = 'free';
+    }
+    renderNavAuth();
+  });
+}
+
+async function refreshUserPlan() {
+  if (!currentUser) { currentPlan = 'free'; return; }
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${currentUser.id}&select=plan,status,current_period_end&limit=1`,
+      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    const rows = await res.json();
+    if (rows.length && rows[0].status === 'active' && new Date(rows[0].current_period_end) > new Date()) {
+      currentPlan = rows[0].plan; // 'pro' or 'max'
+    } else {
+      currentPlan = 'free';
+    }
+  } catch(e) { currentPlan = 'free'; }
+}
+
+function renderNavAuth() {
+  const nav = document.getElementById('navAuth');
+  if (!currentUser) {
+    nav.innerHTML = `<button class="nav-btn" onclick="openAuthModal()">登录 / 注册</button>`;
+  } else {
+    const email = currentUser.email || '';
+    const short = email.length > 14 ? email.slice(0, 14) + '…' : email;
+    const badge = currentPlan !== 'free' ? `<span class="nav-plan-badge">${currentPlan.toUpperCase()}</span>` : '';
+    nav.innerHTML = `
+      <span class="nav-user">${short}${badge}</span>
+      <button class="nav-logout" onclick="handleLogout()">退出</button>`;
+  }
+}
+
+// ===== AUTH MODAL =====
+let authMode = 'login';
+
+function openAuthModal() {
+  document.getElementById('modalAuth').classList.add('open');
+  document.getElementById('authMsg').textContent = '';
+}
+function closeAuthModal() {
+  document.getElementById('modalAuth').classList.remove('open');
+  document.getElementById('authMsg').textContent = '';
+}
+
+function switchAuthTab(mode) {
+  authMode = mode;
+  document.getElementById('tabLogin').classList.toggle('on', mode === 'login');
+  document.getElementById('tabSignup').classList.toggle('on', mode === 'signup');
+  document.getElementById('authSubmitBtn').textContent = mode === 'login' ? '登录' : '注册';
+  document.getElementById('authModalTitle').textContent = mode === 'login' ? '👋 欢迎回来' : '✨ 创建账号';
+  document.getElementById('authMsg').textContent = '';
+}
+
+async function handleAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const btn = document.getElementById('authSubmitBtn');
+  const msg = document.getElementById('authMsg');
+
+  if (!email || !password) { msg.textContent = '邮箱和密码不能为空'; return; }
+  if (password.length < 6) { msg.textContent = '密码至少 6 位哦'; return; }
+
+  btn.disabled = true;
+  btn.textContent = '处理中...';
+  msg.textContent = '';
+
+  try {
+    let result;
+    if (authMode === 'login') {
+      result = await _supabase.auth.signInWithPassword({ email, password });
+    } else {
+      result = await _supabase.auth.signUp({ email, password });
+    }
+
+    if (result.error) {
+      // 友好错误提示
+      const errMap = {
+        'Invalid login credentials': '邮箱或密码不对，再想想～',
+        'User already registered': '这个邮箱已经注册过了，直接登录吧',
+        'Email not confirmed': '先去邮箱点一下确认链接哦',
+        'Password should be at least 6 characters': '密码至少 6 位哦',
+      };
+      msg.textContent = errMap[result.error.message] || result.error.message;
+    } else {
+      if (authMode === 'signup' && !result.data.session) {
+        msg.className = 'auth-msg ok';
+        msg.textContent = '📬 注册成功！去邮箱点一下确认链接就好了～';
+      } else {
+        closeAuthModal();
+      }
+    }
+  } catch(e) {
+    msg.textContent = '网络错误，请稍后重试';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = authMode === 'login' ? '登录' : '注册';
+  }
+}
+
+async function handleGoogleLogin() {
+  await _supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin }
+  });
+}
+
+async function handleLogout() {
+  await _supabase.auth.signOut();
+  currentPlan = 'free';
+  renderNavAuth();
+}
+
+// ===== STRIPE 订阅 =====
+async function handleSubscribe(plan) {
+  if (!currentUser) {
+    openAuthModal();
+    return;
+  }
+  const btn = event.currentTarget;
+  const orig = btn.textContent;
+  btn.textContent = '跳转中...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: currentUser.id, userEmail: currentUser.email, plan }),
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('出错了：' + (data.error || '请稍后重试'));
+      btn.textContent = orig;
+      btn.disabled = false;
+    }
+  } catch(e) {
+    alert('网络错误，请稍后重试');
+    btn.textContent = orig;
+    btn.disabled = false;
+  }
+}
+
+function checkPaymentResult() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('payment') === 'success') {
+    setTimeout(async () => {
+      await refreshUserPlan();
+      renderNavAuth();
+      alert('🎉 订阅成功！Pro 权益已激活，随便造吧～');
+    }, 1500); // 稍等 webhook 写入
+    window.history.replaceState({}, '', '/');
+  } else if (params.get('payment') === 'cancel') {
+    window.history.replaceState({}, '', '/');
+  }
+}
+
+// 初始化
+initAuth();
 
 // ===== MODALS =====
 function openModal(type){
