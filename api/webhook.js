@@ -52,21 +52,64 @@ async function verifySignature(rawBody, sigHeader, secret) {
 
 async function upsertSubscription(data) {
   console.log('Upserting to Supabase:', JSON.stringify(data));
-  const res = await fetch(`${process.env.SUPABASE_URL}/rest/v1/subscriptions`, {
-    method: 'POST',
-    headers: {
-      'apikey': process.env.SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': 'resolution=merge-duplicates',
-    },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    console.error('Supabase upsert failed:', res.status, text);
-  } else {
-    console.log('Supabase upsert success');
+  const baseUrl = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  const headers = {
+    'apikey': key,
+    'Authorization': `Bearer ${key}`,
+    'Content-Type': 'application/json',
+  };
+
+  try {
+    // 先查是否已有该用户的订阅记录
+    const checkRes = await fetch(
+      `${baseUrl}/rest/v1/subscriptions?user_id=eq.${data.user_id}&select=id&limit=1`,
+      { headers }
+    );
+    const existing = await checkRes.json();
+    console.log('Existing records:', JSON.stringify(existing));
+
+    if (Array.isArray(existing) && existing.length > 0) {
+      // 已有记录 → PATCH 更新
+      console.log('Updating existing record for user:', data.user_id);
+      const updateRes = await fetch(
+        `${baseUrl}/rest/v1/subscriptions?user_id=eq.${data.user_id}`,
+        {
+          method: 'PATCH',
+          headers,
+          body: JSON.stringify({
+            plan: data.plan,
+            status: data.status,
+            stripe_customer_id: data.stripe_customer_id,
+            stripe_subscription_id: data.stripe_subscription_id,
+            current_period_end: data.current_period_end,
+          }),
+        }
+      );
+      if (!updateRes.ok) {
+        console.error('Supabase PATCH failed:', updateRes.status, await updateRes.text());
+      } else {
+        console.log('Supabase PATCH success');
+      }
+    } else {
+      // 没有记录 → POST 插入
+      console.log('Inserting new record for user:', data.user_id);
+      const insertRes = await fetch(
+        `${baseUrl}/rest/v1/subscriptions`,
+        {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(data),
+        }
+      );
+      if (!insertRes.ok) {
+        console.error('Supabase POST failed:', insertRes.status, await insertRes.text());
+      } else {
+        console.log('Supabase POST success');
+      }
+    }
+  } catch (e) {
+    console.error('upsertSubscription error:', e);
   }
 }
 
