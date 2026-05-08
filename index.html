@@ -304,16 +304,38 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .img-card{position:relative;}
 
 /* ===== HISTORY ===== */
-.history-section{max-width:620px;margin:0 auto 48px;}
-.history-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.history-card{border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 14px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;position:relative;}
-.history-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(139,92,246,0.15);}
-.history-card img{width:100%;height:120px;object-fit:cover;display:block;}
-.history-card-label{padding:8px 10px;display:flex;align-items:center;justify-content:space-between;}
-.history-card-style{font-size:11px;font-weight:600;color:var(--text-muted);}
-.history-card-time{font-size:10px;color:var(--text-faint);}
-.history-empty{text-align:center;padding:32px;color:var(--text-faint);font-size:13px;}
-.history-empty i{font-size:28px;display:block;margin-bottom:8px;opacity:0.3;}
+.history-section{max-width:620px;margin:0 auto 32px;animation:fadeUp 0.5s ease both;}
+.history-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px;}
+.history-title{font-size:14px;font-weight:700;color:var(--text);}
+.history-subtitle{font-size:11px;color:var(--text-faint);}
+.history-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory;}
+.history-scroll::-webkit-scrollbar{height:3px;}
+.history-scroll::-webkit-scrollbar-track{background:transparent;}
+.history-scroll::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.3);border-radius:2px;}
+.history-card{flex-shrink:0;width:120px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 14px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;scroll-snap-align:start;}
+.history-card:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 12px 28px rgba(139,92,246,0.2);}
+.history-card img{width:100%;height:100px;object-fit:cover;display:block;}
+.history-card-label{padding:6px 8px;}
+.history-card-style{font-size:10px;font-weight:600;color:var(--text-muted);display:block;}
+.history-card-time{font-size:9px;color:var(--text-faint);}
+
+/* ===== UI UPGRADES ===== */
+/* style pill 发光hover */
+.style-pill{transition:all 0.2s;position:relative;}
+.style-pill:hover{border-color:rgba(139,92,246,0.6);color:#7c3aed;box-shadow:0 0 12px rgba(139,92,246,0.2);transform:translateY(-1px);}
+.style-pill.on{box-shadow:0 0 16px rgba(139,92,246,0.3);}
+/* 生成按钮等待时呼吸动画 */
+@keyframes breathe{0%,100%{box-shadow:0 8px 28px rgba(139,92,246,0.35)}50%{box-shadow:0 8px 40px rgba(139,92,246,0.6),0 0 0 6px rgba(139,92,246,0.1)}}
+.gen-btn.breathing{animation:breathe 1.8s ease-in-out infinite;}
+/* 结果图片淡入放大 */
+@keyframes resultReveal{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+.result-revealed{animation:resultReveal 0.4s ease both;}
+/* nav user badge hover弹出小卡片 */
+.nav-user-wrap{position:relative;}
+.nav-user-wrap:hover .nav-user-tooltip{opacity:1;pointer-events:all;transform:translateY(0);}
+.nav-user-tooltip{position:absolute;top:calc(100% + 8px);right:0;background:var(--white-card);border:1px solid var(--card-border);border-radius:12px;padding:12px 16px;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,0.1);opacity:0;pointer-events:none;transform:translateY(-4px);transition:all 0.2s;z-index:20;font-size:12px;color:var(--text-muted);}
+.nav-user-tooltip .tip-plan{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.nav-user-tooltip .tip-expire{font-size:11px;color:var(--text-faint);}
 
 /* ===== FOOTER ===== */
 footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divider);margin-top:16px;transition:border-color var(--transition);}
@@ -459,7 +481,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <section class="hero">
   <div class="badge"><span class="badge-dot"></span>✨ 动漫生成引擎 v3.0 已就绪</div>
   <h1>把你的脸<br>变成<span class="grad">动漫角色</span></h1>
-  <p class="sub">丢一张自拍进来，8 秒后你就是动漫主角了✨<br>吉卜力 · 新海诚 · 赛博朋克 等 6 种风格随便选</p>
+  <p class="sub">丢一张自拍进来，8 秒后你就是变身达人了✨<br>3D · 像素 · 游戏角色 · 黏土 · 玩具 · 表情包 等 6 种风格随便选</p>
 </section>
 
 <!-- UPLOAD CARD -->
@@ -470,6 +492,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
     <div class="member-banner-left">
       <span class="member-banner-badge" id="memberBadgeText">PRO</span>
       <span class="member-banner-desc" id="memberBannerDesc">变身券不设上限，随便造 ✦</span>
+      <span id="memberExpire" style="font-size:11px;color:var(--text-muted);margin-left:6px;"></span>
     </div>
     <button class="member-banner-manage" onclick="openManageSubscription()">管理订阅 →</button>
   </div>
@@ -480,14 +503,14 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
   <div class="section-label">选择风格</div>
   <div class="style-row">
-    <div class="style-pill on" onclick="pick(this)"><span>🌸</span>新海诚</div>
-    <div class="style-pill" onclick="pick(this)"><span>🌿</span>吉卜力</div>
-    <div class="style-pill" onclick="pick(this)"><span>⚡</span>赛博朋克</div>
-    <div class="style-pill" onclick="pick(this)"><span>🎌</span>少年漫画</div>
-    <div class="style-pill" onclick="pick(this)"><span>🌙</span>黑暗幻想</div>
-    <div class="style-pill" onclick="pick(this)"><span>🎀</span>治愈系</div>
+    <div class="style-pill on" onclick="pick(this)"><span>🎮</span>3D建模</div>
+    <div class="style-pill" onclick="pick(this)"><span>😄</span>表情包</div>
+    <div class="style-pill" onclick="pick(this)"><span>⚔️</span>游戏角色</div>
+    <div class="style-pill" onclick="pick(this)"><span>👾</span>像素风</div>
+    <div class="style-pill" onclick="pick(this)"><span>🏺</span>黏土风</div>
+    <div class="style-pill" onclick="pick(this)"><span>🧸</span>玩具风</div>
   </div>
-  <button class="gen-btn" id="genBtn" onclick="handleGen()">✦ 一键生成动漫形象</button>
+  <button class="gen-btn" id="genBtn" onclick="handleGen()">✦ 一键变身</button>
   <!-- Free count bar -->
   <div class="free-count-bar" id="freeCountBar">
     <div class="free-count-dots" id="freeCountDots"></div>
@@ -525,13 +548,13 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
 </div>
 
-<!-- HISTORY -->
+<!-- HISTORY — 紧跟在生成结果下方 -->
 <div class="history-section" id="historySection" style="display:none;">
-  <div class="section-title">我的 <span class="grad">历史记录</span></div>
-  <div class="section-desc">之前变过的角色们，点一下就能下载回来~</div>
-  <div class="history-grid" id="historyGrid">
-    <div class="history-empty"><i class="ti ti-photo-off"></i>还没有生成记录</div>
+  <div class="history-header">
+    <div class="history-title">✦ 我的变身历史</div>
+    <span class="history-subtitle">点击图片可下载</span>
   </div>
+  <div class="history-scroll" id="historyGrid"></div>
 </div>
 
 <!-- STATS -->
@@ -931,22 +954,25 @@ function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
 }
 
-function downloadFromLightbox() {
+async function downloadAnime() {
   if (!currentAnimeUrl) return;
-  const a = document.createElement('a');
-  a.href = currentAnimeUrl;
-  a.download = 'wai-anime.png';
-  a.target = '_blank';
-  a.click();
+  try {
+    const response = await fetch(currentAnimeUrl);
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'wai-result.png';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+  } catch(e) {
+    // 降级：直接打开新标签
+    window.open(currentAnimeUrl, '_blank');
+  }
 }
 
-function downloadAnime() {
-  if (!currentAnimeUrl) return;
-  const a = document.createElement('a');
-  a.href = currentAnimeUrl;
-  a.download = 'wai-anime.png';
-  a.target = '_blank';
-  a.click();
+async function downloadFromLightbox() {
+  await downloadAnime();
 }
 
 // ESC 关闭灯箱
@@ -977,10 +1003,10 @@ async function loadHistory(){
       document.getElementById('historySection').style.display = '';
       const grid = document.getElementById('historyGrid');
       grid.innerHTML = data.map(item => `
-        <div class="history-card" onclick="window.open('${item.anime_url}','_blank')">
-          <img src="${item.anime_url}" alt="${item.style}" loading="lazy">
+        <div class="history-card" onclick="downloadHistoryItem('${item.anime_url}')">
+          <img src="${item.anime_url}" alt="${item.style||'变身'}" loading="lazy">
           <div class="history-card-label">
-            <span class="history-card-style">${item.style||'动漫'}</span>
+            <span class="history-card-style">${item.style||'变身'}</span>
             <span class="history-card-time">${timeAgo(item.created_at)}</span>
           </div>
         </div>
@@ -988,6 +1014,21 @@ async function loadHistory(){
     }
   } catch(e) {
     console.log('History load failed:', e);
+  }
+}
+
+async function downloadHistoryItem(url) {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = 'wai-result.png';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 3000);
+  } catch(e) {
+    window.open(url, '_blank');
   }
 }
 
@@ -1126,7 +1167,8 @@ async function handleGen() {
   const style = selectedPill ? selectedPill.textContent.trim() : '新海诚';
 
   let d = 0;
-  const iv = setInterval(() => { d = (d + 1) % 4; btn.textContent = '⏳ AI 正在生成中' + '.'.repeat(d); }, 400);
+  const iv = setInterval(() => { d = (d + 1) % 4; btn.textContent = '⏳ AI 正在变身中' + '.'.repeat(d); }, 400);
+  btn.classList.add('breathing');
 
   try {
     // 第一步：发起请求，拿 predictionId
@@ -1165,44 +1207,51 @@ async function handleGen() {
     if (!imageUrl) throw new Error('生成超时，请重试');
 
     clearInterval(iv);
-    btn.textContent = '✓ 生成完成！点击重新生成';
+    btn.classList.remove('breathing');
+    btn.textContent = '✓ 变身完成！点击重新生成';
     btn.style.opacity = '1';
     btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
     btn.style.boxShadow = '0 8px 28px rgba(5,150,105,0.3)';
     btn.disabled = false;
     res.style.background = '';
-    res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="动漫图" id="animeImg">`;
+    res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="变身图" id="animeImg" class="result-revealed">`;
     currentAnimeUrl = imageUrl;
 
     // 免费用户加水印
     if (currentPlan === 'free') {
-      const img = document.getElementById('animeImg');
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.naturalWidth || img.width;
-        canvas.height = img.naturalHeight || img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        // 斜向重复水印
-        ctx.save();
-        ctx.globalAlpha = 0.18;
-        ctx.fillStyle = '#ffffff';
-        const fontSize = Math.max(18, canvas.width * 0.045);
-        ctx.font = `bold ${fontSize}px sans-serif`;
-        ctx.rotate(-Math.PI / 6);
-        const step = fontSize * 5;
-        for (let y = -canvas.height; y < canvas.height * 2; y += step) {
-          for (let x = -canvas.width; x < canvas.width * 2; x += step) {
-            ctx.fillText('WAI', x, y);
+      try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          ctx.save();
+          ctx.globalAlpha = 0.22;
+          ctx.fillStyle = '#ffffff';
+          const fontSize = Math.max(18, canvas.width * 0.045);
+          ctx.font = `bold ${fontSize}px sans-serif`;
+          ctx.rotate(-Math.PI / 6);
+          const step = fontSize * 5;
+          for (let y = -canvas.height; y < canvas.height * 2; y += step) {
+            for (let x = -canvas.width; x < canvas.width * 2; x += step) {
+              ctx.fillText('WAI.app', x, y);
+            }
           }
-        }
-        ctx.restore();
-        const watermarked = canvas.toDataURL('image/jpeg', 0.9);
-        img.src = watermarked;
-        currentAnimeUrl = watermarked;
-      };
-      // 如果图片已加载
-      if (img.complete) img.onload();
+          ctx.restore();
+          const watermarked = canvas.toDataURL('image/jpeg', 0.9);
+          document.getElementById('animeResult').innerHTML = `<img src="${watermarked}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="动漫图">`;
+          currentAnimeUrl = watermarked;
+          URL.revokeObjectURL(blobUrl);
+        };
+        img.src = blobUrl;
+      } catch(e) {
+        console.warn('Watermark failed:', e);
+      }
     }
 
     // 存入 Supabase
@@ -1237,7 +1286,8 @@ async function handleGen() {
 
   } catch (err) {
     clearInterval(iv);
-    btn.textContent = '✦ 一键生成动漫形象';
+    btn.classList.remove('breathing');
+    btn.textContent = '✦ 一键变身';
     btn.style.opacity = '1';
     btn.style.background = '';
     btn.style.boxShadow = '';
