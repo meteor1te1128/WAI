@@ -1150,7 +1150,7 @@ async function handleGen() {
     let imageUrl = null;
     for (let i = 0; i < 40; i++) {
       await new Promise(r => setTimeout(r, 3000));
-      const pollRes = await fetch(`/api/status?id=${startData.predictionId}`);
+      const pollRes = await fetch(`/api/status?id=${startData.predictionId}&tmpFile=${encodeURIComponent(startData.tmpFile||'')}`);
       const pollData = await pollRes.json();
 
       if (pollData.status === 'succeeded') {
