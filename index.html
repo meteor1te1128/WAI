@@ -140,7 +140,7 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .upload-zone h3{font-size:15px;font-weight:600;margin-bottom:5px;color:var(--text);}
 .upload-zone p{font-size:13px;color:var(--text-faint);font-weight:300;}
 .section-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:12px;}
-.style-row{display:flex;gap:10px;margin-bottom:22px;overflow-x:auto;padding-bottom:2px;}
+.style-row{display:flex;gap:10px;margin-bottom:22px;overflow-x:auto;overflow-y:visible;padding-bottom:2px;padding-top:4px;}
 .style-row::-webkit-scrollbar{display:none;}
 .style-pill{flex-shrink:0;padding:10px 18px;border-radius:40px;border:1px solid var(--border);background:var(--white-card);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
 .style-pill:hover{border-color:rgba(139,92,246,0.4);color:#8b5cf6;}
@@ -1325,7 +1325,7 @@ async function handleGen() {
         'Prefer': 'return=minimal',
       },
       body: JSON.stringify({
-        user_id: WAI_USER_ID,
+        user_id: currentUser ? currentUser.id : WAI_USER_ID,
         anime_url: imageUrl,
         style: style,
       }),
@@ -1619,19 +1619,21 @@ async function initAuth() {
 }
 
 async function refreshUserPlan() {
-  if (!currentUser) { currentPlan = 'free'; return; }
+  if (!currentUser) { currentPlan = 'free'; currentPeriodEnd = null; return; }
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${currentUser.id}&select=plan,status,current_period_end&limit=1`,
+      `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${currentUser.id}&select=plan,status,current_period_end&order=current_period_end.desc&limit=1`,
       { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
     );
     const rows = await res.json();
     if (rows.length && rows[0].status === 'active' && new Date(rows[0].current_period_end) > new Date()) {
-      currentPlan = rows[0].plan; // 'pro' or 'max'
+      currentPlan = rows[0].plan;
+      currentPeriodEnd = rows[0].current_period_end;
     } else {
       currentPlan = 'free';
+      currentPeriodEnd = null;
     }
-  } catch(e) { currentPlan = 'free'; }
+  } catch(e) { currentPlan = 'free'; currentPeriodEnd = null; }
 }
 
 function renderNavAuth() {
@@ -1772,6 +1774,21 @@ function renderPricingByPlan() {
   const descEl = document.getElementById('memberBannerDesc');
   if (descEl) descEl.textContent =
     plan === 'max' ? '变身券无限张，随便造 ✦' : '变身券每天 30 张，享受无水印 ✦';
+
+  // 显示到期倒计时
+  const expireEl = document.getElementById('memberExpire');
+  if (expireEl && currentPeriodEnd) {
+    const end = new Date(currentPeriodEnd);
+    const diffDays = Math.ceil((end - new Date()) / (1000*60*60*24));
+    const yyyy = end.getFullYear();
+    const mm = String(end.getMonth()+1).padStart(2,'0');
+    const dd = String(end.getDate()).padStart(2,'0');
+    expireEl.textContent = diffDays > 0
+      ? `· 到期 ${yyyy}-${mm}-${dd}（剩 ${diffDays} 天）`
+      : '· 已到期';
+  } else if (expireEl) {
+    expireEl.textContent = '';
+  }
 
   // 显示管理订阅区
   manageSection?.classList.add('show');
