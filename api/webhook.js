@@ -143,13 +143,18 @@ export default async function handler(req, res) {
         const subscription = await getStripeSubscription(session.subscription);
         if (!subscription) break;
 
+        // current_period_end 可能为 null，用 30 天后作为默认值
+        const periodEnd = subscription.current_period_end
+          ? new Date(subscription.current_period_end * 1000).toISOString()
+          : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
         await upsertSubscription({
           user_id: userId,
           plan,
           status: 'active',
           stripe_customer_id: session.customer,
           stripe_subscription_id: session.subscription,
-          current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+          current_period_end: periodEnd,
         });
         console.log(`✅ ${plan} 订阅激活：user ${userId}`);
         break;
@@ -178,7 +183,7 @@ export default async function handler(req, res) {
           status: 'active',
           stripe_customer_id: invoice.customer,
           stripe_subscription_id: invoice.subscription,
-          current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+          current_period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : new Date(Date.now() + 30*24*60*60*1000).toISOString(),
         });
         console.log(`🔄 续费成功：user ${userId}`);
         break;
@@ -198,7 +203,7 @@ export default async function handler(req, res) {
           status: 'past_due',
           stripe_customer_id: invoice.customer,
           stripe_subscription_id: invoice.subscription,
-          current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+          current_period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : new Date(Date.now() + 30*24*60*60*1000).toISOString(),
         });
         console.log(`⚠️ 付款失败：user ${userId}`);
         break;
@@ -215,7 +220,7 @@ export default async function handler(req, res) {
           status: 'cancelled',
           stripe_customer_id: subscription.customer,
           stripe_subscription_id: subscription.id,
-          current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+          current_period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : new Date(Date.now() + 30*24*60*60*1000).toISOString(),
         });
         console.log(`❌ 订阅取消：user ${userId}`);
         break;
