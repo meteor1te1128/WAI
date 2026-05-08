@@ -77,6 +77,54 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 3
 h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bottom:16px;color:var(--text);animation:fadeUp 0.7s 0.1s ease both;}
 h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:shimmer 3s linear infinite;}
 @keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+
+/* ===== 单字hover变色 ===== */
+.h1-char{
+  display:inline-block;
+  color:var(--text);
+  transition:color 0s;
+  cursor:default;
+  position:relative;
+}
+.h1-char::after{
+  content:attr(data-char);
+  position:absolute;
+  left:0;top:0;
+  background:linear-gradient(135deg,#8b5cf6 0%,#ec4899 50%,#f59e0b 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  opacity:0;
+  transition:opacity 0.35s cubic-bezier(0.4,0,0.2,1);
+  pointer-events:none;
+}
+.h1-char:hover::after{opacity:1;}
+/* 邻字扩散效果 */
+.h1-char:hover{
+  transform:scale(1.08) translateY(-2px);
+  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.h1-word:hover .h1-char::after{opacity:0.35;}
+.h1-word:hover .h1-char:hover::after{opacity:1;}
+.h1-word .h1-char{transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;}
+
+/* sub-tag hover */
+.sub-tags{display:inline;}
+.sub-tag{
+  display:inline-block;
+  transition:color 0.3s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  cursor:default;
+}
+.sub-tag:hover{
+  color:#8b5cf6;
+  transform:scale(1.15) translateY(-1px);
+}
+
+/* stat-card 数字发光 */
+.stat-card{transition:transform 0.2s,background var(--transition),box-shadow 0.3s;}
+.stat-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(139,92,246,0.2);}
+.stat-n{transition:filter 0.3s ease;}
+.stat-card:hover .stat-n{filter:drop-shadow(0 0 8px rgba(139,92,246,0.6));}
 .sub{font-size:16px;color:var(--text-muted);line-height:1.7;margin-bottom:40px;font-weight:300;animation:fadeUp 0.7s 0.2s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
@@ -480,8 +528,16 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <!-- HERO -->
 <section class="hero">
   <div class="badge"><span class="badge-dot"></span>✨ 动漫生成引擎 v3.0 已就绪</div>
-  <h1>把你的脸<br>变成<span class="grad">动漫角色</span></h1>
-  <p class="sub">丢一张自拍进来，8 秒后你就是变身达人了✨<br>3D · 像素 · 游戏角色 · 黏土 · 玩具 · 表情包 等 6 种风格随便选</p>
+  <h1 id="heroTitle">
+    <span class="h1-word">
+      <span class="h1-char" style="--i:0">把</span><span class="h1-char" style="--i:1">你</span><span class="h1-char" style="--i:2">的</span><span class="h1-char" style="--i:3">脸</span>
+    </span>
+    <br>
+    <span class="h1-word">
+      <span class="h1-char" style="--i:4">变</span><span class="h1-char" style="--i:5">成</span>
+    </span><span class="grad">动漫角色</span>
+  </h1>
+  <p class="sub" id="heroSub">丢一张自拍进来，8 秒后你就是变身达人了✨<br><span class="sub-tags"><span class="sub-tag">3D</span> · <span class="sub-tag">像素</span> · <span class="sub-tag">游戏角色</span> · <span class="sub-tag">黏土</span> · <span class="sub-tag">玩具</span> · <span class="sub-tag">表情包</span></span> 等 6 种风格随便选</p>
 </section>
 
 <!-- UPLOAD CARD -->
@@ -780,6 +836,11 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 </div>
 
 <script>
+// ===== HERO CHAR HOVER =====
+document.querySelectorAll('.h1-char').forEach(el => {
+  el.setAttribute('data-char', el.textContent);
+});
+
 // ===== SMOOTH SCROLL =====
 function smoothTo(id){
   const el=document.getElementById(id);
