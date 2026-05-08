@@ -1477,27 +1477,26 @@ async function initAuth() {
   const { data: { session } } = await _supabase.auth.getSession();
   if (session?.user) {
     currentUser = session.user;
-    try { await refreshUserPlan(); } catch(e) { console.warn('initAuth refreshUserPlan:', e); }
-    try { renderNavAuth(); } catch(e) { console.warn('initAuth renderNavAuth:', e); }
-    try { renderPricingByPlan(); } catch(e) { console.warn('initAuth renderPricingByPlan:', e); }
-    try { renderFreeCount(); } catch(e) { console.warn('initAuth renderFreeCount:', e); }
-    try { checkPaymentResult(); } catch(e) { console.warn('initAuth checkPaymentResult:', e); }
+    try { await refreshUserPlan(); } catch(e) { console.warn('initAuth:', e); }
+    try { renderNavAuth(); } catch(e) { console.warn('initAuth:', e); }
+    try { renderPricingByPlan(); } catch(e) { console.warn('initAuth:', e); }
+    try { renderFreeCount(); } catch(e) { console.warn('initAuth:', e); }
+    try { checkPaymentResult(); } catch(e) { console.warn('initAuth:', e); }
   }
   // 监听登录/登出变化
   _supabase.auth.onAuthStateChange(async (event, session) => {
     try {
       currentUser = session?.user || null;
       if (currentUser) {
-        // 登录成功 — 关闭登录弹窗（唯一关弹窗的地方）
         try { closeAuthModal(); } catch(e) {}
-        try { await refreshUserPlan(); } catch(e) { console.warn('refreshUserPlan failed:', e); }
-        try { checkPaymentResult(); } catch(e) { console.warn('checkPaymentResult failed:', e); }
+        try { await refreshUserPlan(); } catch(e) { console.warn('onAuth:', e); }
+        try { checkPaymentResult(); } catch(e) { console.warn('onAuth:', e); }
       } else {
         currentPlan = 'free';
       }
-      try { renderNavAuth(); } catch(e) { console.warn(e); }
-      try { renderPricingByPlan(); } catch(e) { console.warn(e); }
-      try { renderFreeCount(); } catch(e) { console.warn(e); }
+      try { renderNavAuth(); } catch(e) { console.warn('onAuth:', e); }
+      try { renderPricingByPlan(); } catch(e) { console.warn('onAuth:', e); }
+      try { renderFreeCount(); } catch(e) { console.warn('onAuth:', e); }
     } catch(e) {
       console.warn('onAuthStateChange error:', e);
     }
@@ -1651,10 +1650,10 @@ function renderPricingByPlan() {
 
   // 有订阅 — 显示横幅
   banner?.classList.add('show');
-  const badgeText = document.getElementById('memberBadgeText');
-  if (badgeText) badgeText.textContent = plan.toUpperCase();
-  const bannerDesc = document.getElementById('memberBannerDesc');
-  if (bannerDesc) bannerDesc.textContent =
+  const badgeEl = document.getElementById('memberBadgeText');
+  if (badgeEl) badgeEl.textContent = plan.toUpperCase();
+  const descEl = document.getElementById('memberBannerDesc');
+  if (descEl) descEl.textContent =
     plan === 'max' ? '变身券无限张，随便造 ✦' : '变身券每天 30 张，享受无水印 ✦';
 
   // 显示管理订阅区
@@ -1739,20 +1738,18 @@ async function handleAuth() {
       btn.disabled = false;
       btn.textContent = authMode === 'login' ? '登录' : '注册';
     } else if (authMode === 'signup' && !result.data.session) {
-      // 注册成功但需要邮箱确认
       msg.className = 'auth-msg ok';
       msg.textContent = '📬 注册成功！去邮箱点一下确认链接就好了～';
       btn.disabled = false;
       btn.textContent = '注册';
     }
-    // 登录成功的情况：什么都不做！
-    // onAuthStateChange 会自动检测到 SIGNED_IN，然后关弹窗、渲染导航栏等
+    // 登录成功：不做任何事！onAuthStateChange 会自动关弹窗+渲染UI
   } catch(e) {
-    // 真正的网络错误：先检查是不是其实已经登录成功了
+    // 检查是否其实已经登录成功了
     const { data: { session } } = await _supabase.auth.getSession().catch(() => ({ data: { session: null } }));
     if (!session) {
       console.error('Auth error:', e);
-      msg.textContent = '网络错误，请稍后重试';
+      msg.textContent = '登录失败：' + (e.message || '网络错误，请稍后重试');
     }
     btn.disabled = false;
     btn.textContent = authMode === 'login' ? '登录' : '注册';
