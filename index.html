@@ -450,11 +450,6 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
     <div class="logo">W<span class="purple">AI</span></div>
     <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="切换夜间/白天模式">☀️</button>
   </div>
-  <ul class="nav-pills">
-    <li onclick="smoothTo('examples')">样例</li>
-    <li onclick="smoothTo('reviews')">好评</li>
-    <li onclick="smoothTo('feedback')">留言</li>
-  </ul>
   <div class="nav-auth" id="navAuth">
     <button class="nav-btn" id="navLoginBtn" onclick="openAuthModal()">登录 / 注册</button>
   </div>
@@ -1694,11 +1689,11 @@ function checkPaymentResult() {
 // 用户从 Stripe 按返回键回来时重置按钮（浏览器 bfcache）
 window.addEventListener('pageshow', (e) => {
   if (e.persisted) {
-    document.querySelectorAll('.price-btn.fill').forEach(btn => {
-      btn.disabled = false;
-      if (btn.getAttribute('onclick')?.includes("'pro'")) btn.textContent = '解锁 Pro ✦';
-      if (btn.getAttribute('onclick')?.includes("'max'")) btn.textContent = '解锁 Max ✦';
-    });
+    // 重置升级 Modal 里的按钮
+    const proBtn = document.getElementById('upgradeProBtn');
+    const maxBtn = document.getElementById('upgradeMaxBtn');
+    if (proBtn && !proBtn.textContent.includes('已')) { proBtn.disabled = false; proBtn.textContent = '解锁 Pro ✦'; }
+    if (maxBtn && !maxBtn.textContent.includes('已')) { maxBtn.disabled = false; maxBtn.textContent = '解锁 Max ✦'; }
   }
 });
 
