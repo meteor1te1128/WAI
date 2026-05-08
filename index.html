@@ -828,6 +828,33 @@ function renderFreeCount(){
   const dotsEl=document.getElementById('freeCountDots');
   const textEl=document.getElementById('freeCountText');
   dotsEl.innerHTML='';
+
+  if(currentPlan==='max'){
+    textEl.textContent='变身券无限张，随便造 ✦';
+    textEl.style.color='#8b5cf6';
+    return;
+  }
+
+  if(currentPlan==='pro'){
+    const used=parseInt(localStorage.getItem('waiProUsed')||'0');
+    const left=Math.max(0,PRO_DAILY-used);
+    // 显示5个点代表满血状态，pro太多不好展示
+    for(let i=0;i<5;i++){
+      const d=document.createElement('div');
+      d.className='count-dot'+(i>=Math.ceil(left/6)?' used':'');
+      dotsEl.appendChild(d);
+    }
+    if(left<=0){
+      textEl.textContent='今天 30 张变身券用完啦，凌晨 4 点续杯 (´;ω;`)';
+      textEl.style.maxWidth='260px';
+    }else{
+      textEl.textContent='变身券剩余：'+left+' 张';
+      textEl.style.color='';
+    }
+    return;
+  }
+
+  // Free 用户
   for(let i=0;i<FREE_TOTAL;i++){
     const d=document.createElement('div');
     d.className='count-dot'+(i>=freeLeft?' used':'')+(i===freeLeft-1&&freeLeft>0?' active':'');
@@ -1024,23 +1051,61 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ===== GENERATE =====
+const PRO_DAILY = 30;
 let busy = false;
+
+function getDailyLimit() {
+  if (currentPlan === 'max') return Infinity;
+  if (currentPlan === 'pro') return PRO_DAILY;
+  return FREE_TOTAL;
+}
+
+function getUsedToday() {
+  const today = getBeijing4amTimestamp();
+  const savedDay = localStorage.getItem('waiFreeDay');
+  if (savedDay !== today) return 0;
+  const plan = currentPlan;
+  if (plan === 'pro') return parseInt(localStorage.getItem('waiProUsed') || '0');
+  return FREE_TOTAL - (parseInt(localStorage.getItem('waiFreeLeft') || FREE_TOTAL));
+}
+
+function incrementUsed() {
+  const today = getBeijing4amTimestamp();
+  if (currentPlan === 'pro') {
+    const used = parseInt(localStorage.getItem('waiProUsed') || '0');
+    localStorage.setItem('waiProUsed', used + 1);
+    localStorage.setItem('waiFreeDay', today);
+  } else if (currentPlan === 'free') {
+    freeLeft = Math.max(0, freeLeft - 1);
+    localStorage.setItem('waiFreeLeft', freeLeft);
+    localStorage.setItem('waiFreeDay', today);
+  }
+  renderFreeCount();
+}
+
 async function handleGen() {
   if (busy) return;
   if (!uploadedImageBase64) {
     alert('请先上传一张照片！');
     return;
   }
-  if (freeLeft <= 0) {
-    alert('今天的配额烧完啦！每天凌晨 4:00（北京时间）刷新，或者升级 Pro 无限造 ✦');
-    return;
+
+  // 次数检查
+  if (currentPlan !== 'max') {
+    const limit = getDailyLimit();
+    const used = getUsedToday();
+    if (used >= limit) {
+      if (currentPlan === 'pro') {
+        alert('今天 30 张变身券用完啦！凌晨 4 点刷新，或者升级 Max 无限造 ✦');
+      } else {
+        alert('今天的配额烧完啦！每天凌晨 4:00（北京时间）刷新，或者升级 Pro 无限造 ✦');
+      }
+      return;
+    }
   }
 
   busy = true;
-  freeLeft = Math.max(0, freeLeft - 1);
-  localStorage.setItem('waiFreeLeft', freeLeft);
-  localStorage.setItem('waiFreeDay', getBeijing4amTimestamp());
-  renderFreeCount();
+  incrementUsed();
 
   const btn = document.getElementById('genBtn');
   const res = document.getElementById('animeResult');
@@ -1096,8 +1161,39 @@ async function handleGen() {
     btn.style.boxShadow = '0 8px 28px rgba(5,150,105,0.3)';
     btn.disabled = false;
     res.style.background = '';
-    res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="动漫图">`;
+    res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="动漫图" id="animeImg">`;
     currentAnimeUrl = imageUrl;
+
+    // 免费用户加水印
+    if (currentPlan === 'free') {
+      const img = document.getElementById('animeImg');
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        // 斜向重复水印
+        ctx.save();
+        ctx.globalAlpha = 0.18;
+        ctx.fillStyle = '#ffffff';
+        const fontSize = Math.max(18, canvas.width * 0.045);
+        ctx.font = `bold ${fontSize}px sans-serif`;
+        ctx.rotate(-Math.PI / 6);
+        const step = fontSize * 5;
+        for (let y = -canvas.height; y < canvas.height * 2; y += step) {
+          for (let x = -canvas.width; x < canvas.width * 2; x += step) {
+            ctx.fillText('WAI', x, y);
+          }
+        }
+        ctx.restore();
+        const watermarked = canvas.toDataURL('image/jpeg', 0.9);
+        img.src = watermarked;
+        currentAnimeUrl = watermarked;
+      };
+      // 如果图片已加载
+      if (img.complete) img.onload();
+    }
 
     // 存入 Supabase
     await fetch(`${SUPABASE_URL}/rest/v1/generations`, {
@@ -1138,6 +1234,11 @@ async function handleGen() {
     btn.disabled = false;
     freeLeft = Math.min(FREE_TOTAL, freeLeft + 1);
     localStorage.setItem('waiFreeLeft', freeLeft);
+    if (currentPlan === 'pro') {
+      const used = parseInt(localStorage.getItem('waiProUsed') || '1');
+      localStorage.setItem('waiProUsed', Math.max(0, used - 1));
+    }
+    renderFreeCount();
     renderFreeCount();
     alert('生成失败：' + err.message + '\n请稍后重试');
   }
@@ -1371,6 +1472,7 @@ async function initAuth() {
     await refreshUserPlan();
     renderNavAuth();
     renderPricingByPlan();
+    renderFreeCount();
     checkPaymentResult();
   }
   // 监听登录/登出变化
@@ -1384,7 +1486,7 @@ async function initAuth() {
     }
     renderNavAuth();
     renderPricingByPlan();
-  });
+    renderFreeCount();
 }
 
 async function refreshUserPlan() {
