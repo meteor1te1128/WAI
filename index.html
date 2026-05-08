@@ -470,6 +470,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
     <div class="member-banner-left">
       <span class="member-banner-badge" id="memberBadgeText">PRO</span>
       <span class="member-banner-desc" id="memberBannerDesc">变身券不设上限，随便造 ✦</span>
+      <span class="member-banner-expire" id="memberExpire" style="font-size:12px;opacity:0.8;margin-left:8px;"></span>
     </div>
     <button class="member-banner-manage" onclick="openManageSubscription()">管理订阅 →</button>
   </div>
@@ -1503,31 +1504,34 @@ async function initAuth() {
   });
 }
 
+let currentPeriodEnd = null;
+
 async function refreshUserPlan() {
-  if (!currentUser) { currentPlan = 'free'; return; }
+  if (!currentUser) { currentPlan = 'free'; currentPeriodEnd = null; return; }
   try {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${currentUser.id}&select=plan,status,current_period_end&order=current_period_end.desc`,
       { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
     );
     const rows = await res.json();
-    if (!Array.isArray(rows) || !rows.length) { currentPlan = 'free'; return; }
+    if (!Array.isArray(rows) || !rows.length) { currentPlan = 'free'; currentPeriodEnd = null; return; }
     
-    // 过滤出有效的订阅（status=active 且未过期）
     const now = new Date();
     const activeRows = rows.filter(r => r.status === 'active' && new Date(r.current_period_end) > now);
     
-    if (!activeRows.length) { currentPlan = 'free'; return; }
+    if (!activeRows.length) { currentPlan = 'free'; currentPeriodEnd = null; return; }
     
-    // 优先取 max，其次 pro
     const hasMax = activeRows.find(r => r.plan === 'max');
     const hasPro = activeRows.find(r => r.plan === 'pro');
-    currentPlan = hasMax ? 'max' : (hasPro ? 'pro' : 'free');
+    const bestRow = hasMax || hasPro;
+    currentPlan = bestRow.plan;
+    currentPeriodEnd = bestRow.current_period_end;
     
-    console.log('refreshUserPlan result:', currentPlan, activeRows);
+    console.log('refreshUserPlan result:', currentPlan, 'expires:', currentPeriodEnd);
   } catch(e) { 
     console.warn('refreshUserPlan error:', e);
     currentPlan = 'free'; 
+    currentPeriodEnd = null;
   }
 }
 
@@ -1588,18 +1592,30 @@ function renderUpgradeModal() {
   status.style.display = 'none';
   btnRow.style.display = 'grid';
 
+  // 构建到期信息
+  let expireInfo = '';
+  if (currentPeriodEnd) {
+    const end = new Date(currentPeriodEnd);
+    const diffDays = Math.ceil((end - new Date()) / (1000 * 60 * 60 * 24));
+    const yyyy = end.getFullYear();
+    const mm = String(end.getMonth() + 1).padStart(2, '0');
+    const dd = String(end.getDate()).padStart(2, '0');
+    expireInfo = diffDays > 0 ? `（到期：${yyyy}-${mm}-${dd}，剩余 ${diffDays} 天）` : '（已到期）';
+  }
+
   if (currentPlan === 'pro') {
     proCard.classList.add('subscribed');
     proBtn.disabled = true; proBtn.textContent = '已是 Pro 啦 ✦';
     status.style.display = 'block';
-    status.textContent = '你已经是 Pro 用户了，可以升级到 Max 解锁无限变身 ✦';
+    status.textContent = `你已经是 Pro 用户了${expireInfo}，可以升级到 Max 解锁无限变身 ✦`;
   } else if (currentPlan === 'max') {
     proCard.classList.add('subscribed');
     maxCard.classList.add('subscribed');
     proBtn.disabled = true; proBtn.textContent = '已包含 ✦';
-    maxBtn.disabled = true; maxBtn.textContent = '已是 Max 啦 ✦';
+    // Max 用户可以续费，按钮改为"续费"
+    maxBtn.disabled = false; maxBtn.textContent = '续费 Max ✦';
     status.style.display = 'block';
-    status.textContent = '你已经是 Max 传奇玩家了，所有权益全解锁！✦';
+    status.textContent = `你已经是 Max 传奇玩家了${expireInfo}，续费可叠加时长！✦`;
   }
 }
 
@@ -1671,6 +1687,23 @@ function renderPricingByPlan() {
   if (descEl) descEl.textContent =
     plan === 'max' ? '变身券无限张，随便造 ✦' : '变身券每天 30 张，享受无水印 ✦';
 
+  // 显示到期倒计时
+  const expireEl = document.getElementById('memberExpire');
+  if (expireEl && currentPeriodEnd) {
+    const end = new Date(currentPeriodEnd);
+    const now = new Date();
+    const diffMs = end - now;
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    if (diffDays > 0) {
+      const yyyy = end.getFullYear();
+      const mm = String(end.getMonth() + 1).padStart(2, '0');
+      const dd = String(end.getDate()).padStart(2, '0');
+      expireEl.textContent = `· 到期：${yyyy}-${mm}-${dd}（剩余 ${diffDays} 天）`;
+    } else {
+      expireEl.textContent = '· 已到期';
+    }
+  }
+
   // 显示管理订阅区
   manageSection?.classList.add('show');
   if (manageTitle) manageTitle.textContent = plan === 'max' ? '✦ 你已经是 Max 传奇玩家了！' : '✦ 你已经是 Pro 啦';
@@ -1678,7 +1711,7 @@ function renderPricingByPlan() {
     ? '最高权益全解锁，下面是各套餐对比供参考～'
     : '订阅正常有效，还想再进一步？可以升级到 Max～';
 
-  // 当前套餐卡片变色 + 按钮置灰
+  // 当前套餐卡片变色 + 按钮
   if (plan === 'pro') {
     proCard?.classList.add('subscribed');
     if (proPlanBtn) { proPlanBtn.disabled = true; proPlanBtn.textContent = '已是 Pro 啦 ✦'; proPlanBtn.onclick = null; }
@@ -1686,7 +1719,8 @@ function renderPricingByPlan() {
   } else if (plan === 'max') {
     maxCard?.classList.add('subscribed');
     proCard?.classList.add('subscribed');
-    if (maxPlanBtn) { maxPlanBtn.disabled = true; maxPlanBtn.textContent = '已是 Max 啦 ✦'; maxPlanBtn.onclick = null; }
+    // Max 用户可以续费（叠加时长），按钮改为"续费"
+    if (maxPlanBtn) { maxPlanBtn.disabled = false; maxPlanBtn.textContent = '续费 Max ✦'; }
     if (proPlanBtn) { proPlanBtn.disabled = true; proPlanBtn.textContent = '已是 Pro ✦'; proPlanBtn.onclick = null; }
     if (freePlanBtn) freePlanBtn.disabled = true;
   }
