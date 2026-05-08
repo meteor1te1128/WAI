@@ -2,7 +2,7 @@ export const config = {
   api: { bodyParser: false },
 };
 
-async function getRawBody(req) {
+function getRawBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
     req.on('data', chunk => chunks.push(chunk));
@@ -11,29 +11,47 @@ async function getRawBody(req) {
   });
 }
 
-// 手动验证 Stripe webhook 签名（不依赖 stripe 包）
-async function verifyStripeSignature(rawBody, signature, secret) {
-  const [, timestampPart, , v1Part] = signature.split(/[=,]/);
-  const timestamp = timestampPart;
-  const v1 = v1Part;
+async function verifySignature(rawBody, sigHeader, secret) {
+  // 解析 Stripe 签名头: t=timestamp,v1=signature
+  const parts = {};
+  sigHeader.split(',').forEach(item => {
+    const [key, value] = item.split('=');
+    parts[key.trim()] = value.trim();
+  });
 
-  const signedPayload = `${timestamp}.${rawBody.toString()}`;
+  if (!parts.t || !parts.v1) {
+    console.error('Missing t or v1 in signature header:', sigHeader);
+    return false;
+  }
 
+  // 构造签名负载
+  const signedPayload = `${parts.t}.${rawBody.toString()}`;
+
+  // 用 HMAC-SHA256 计算期望签名
   const encoder = new TextEncoder();
-  const keyData = encoder.encode(secret);
-  const messageData = encoder.encode(signedPayload);
-
-  const cryptoKey = await crypto.subtle.importKey(
-    'raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
   );
-  const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
-  const expectedSig = Array.from(new Uint8Array(signatureBuffer))
-    .map(b => b.toString(16).padStart(2, '0')).join('');
+  const sigBuffer = await crypto.subtle.sign('HMAC', key, encoder.encode(signedPayload));
+  const expected = Array.from(new Uint8Array(sigBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 
-  return expectedSig === v1;
+  const isValid = expected === parts.v1;
+  if (!isValid) {
+    console.error('Signature mismatch!');
+    console.error('Expected:', expected);
+    console.error('Received:', parts.v1);
+  }
+  return isValid;
 }
 
 async function upsertSubscription(data) {
+  console.log('Upserting to Supabase:', JSON.stringify(data));
   const res = await fetch(`${process.env.SUPABASE_URL}/rest/v1/subscriptions`, {
     method: 'POST',
     headers: {
@@ -44,61 +62,87 @@ async function upsertSubscription(data) {
     },
     body: JSON.stringify(data),
   });
-  if (!res.ok) console.error('Supabase upsert failed:', await res.text());
+  if (!res.ok) {
+    const text = await res.text();
+    console.error('Supabase upsert failed:', res.status, text);
+  } else {
+    console.log('Supabase upsert success');
+  }
 }
 
-async function getSubscription(subscriptionId) {
+async function getStripeSubscription(subscriptionId) {
   const res = await fetch(`https://api.stripe.com/v1/subscriptions/${subscriptionId}`, {
     headers: { 'Authorization': `Bearer ${process.env.STRIPE_SECRET_KEY}` },
   });
+  if (!res.ok) {
+    console.error('Stripe fetch subscription failed:', res.status, await res.text());
+    return null;
+  }
   return res.json();
 }
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-
-  const rawBody = await getRawBody(req);
-  const sig = req.headers['stripe-signature'];
-
-  // 解析签名头
-  const sigParts = {};
-  sig.split(',').forEach(part => {
-    const [k, v] = part.split('=');
-    sigParts[k] = v;
-  });
-
-  const signedPayload = `${sigParts.t}.${rawBody.toString()}`;
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(process.env.STRIPE_WEBHOOK_SECRET);
-  const messageData = encoder.encode(signedPayload);
-
-  try {
-    const cryptoKey = await crypto.subtle.importKey(
-      'raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
-    );
-    const sigBuffer = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
-    const expectedSig = Array.from(new Uint8Array(sigBuffer))
-      .map(b => b.toString(16).padStart(2, '0')).join('');
-
-    if (expectedSig !== sigParts.v1) {
-      return res.status(400).json({ error: 'Invalid signature' });
-    }
-  } catch (err) {
-    console.error('Signature verification error:', err);
-    return res.status(400).json({ error: 'Signature error' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  console.log('=== Webhook received ===');
+
+  let rawBody;
+  try {
+    rawBody = await getRawBody(req);
+  } catch (err) {
+    console.error('Failed to read body:', err);
+    return res.status(400).json({ error: 'Bad request' });
+  }
+
+  const sig = req.headers['stripe-signature'];
+  if (!sig) {
+    console.error('No stripe-signature header');
+    return res.status(400).json({ error: 'No signature' });
+  }
+
+  // 验证签名
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error('STRIPE_WEBHOOK_SECRET not set!');
+    return res.status(500).json({ error: 'Server config error' });
+  }
+
+  const valid = await verifySignature(rawBody, sig, webhookSecret);
+  if (!valid) {
+    console.error('Invalid signature');
+    return res.status(400).json({ error: 'Invalid signature' });
+  }
+
+  console.log('Signature valid ✅');
+
   const event = JSON.parse(rawBody.toString());
+  console.log('Event type:', event.type);
 
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
+        console.log('Session metadata:', JSON.stringify(session.metadata));
+        console.log('Session subscription:', session.subscription);
+        console.log('Session customer:', session.customer);
+
         const userId = session.metadata?.supabase_user_id;
         const plan = session.metadata?.plan || 'pro';
-        if (!userId) break;
 
-        const subscription = await getSubscription(session.subscription);
+        if (!userId) {
+          console.error('No supabase_user_id in metadata!');
+          break;
+        }
+        if (!session.subscription) {
+          console.error('No subscription ID in session!');
+          break;
+        }
+
+        const subscription = await getStripeSubscription(session.subscription);
+        if (!subscription) break;
+
         await upsertSubscription({
           user_id: userId,
           plan,
@@ -113,11 +157,20 @@ export default async function handler(req, res) {
 
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object;
-        if (invoice.billing_reason !== 'subscription_cycle') break;
-        const subscription = await getSubscription(invoice.subscription);
+        if (invoice.billing_reason !== 'subscription_cycle') {
+          console.log('Skipping non-cycle invoice');
+          break;
+        }
+
+        const subscription = await getStripeSubscription(invoice.subscription);
+        if (!subscription) break;
+
         const userId = subscription.metadata?.supabase_user_id;
         const plan = subscription.metadata?.plan || 'pro';
-        if (!userId) break;
+        if (!userId) {
+          console.error('No supabase_user_id in subscription metadata');
+          break;
+        }
 
         await upsertSubscription({
           user_id: userId,
@@ -133,7 +186,9 @@ export default async function handler(req, res) {
 
       case 'invoice.payment_failed': {
         const invoice = event.data.object;
-        const subscription = await getSubscription(invoice.subscription);
+        const subscription = await getStripeSubscription(invoice.subscription);
+        if (!subscription) break;
+
         const userId = subscription.metadata?.supabase_user_id;
         if (!userId) break;
 
@@ -145,6 +200,7 @@ export default async function handler(req, res) {
           stripe_subscription_id: invoice.subscription,
           current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
         });
+        console.log(`⚠️ 付款失败：user ${userId}`);
         break;
       }
 
@@ -164,11 +220,14 @@ export default async function handler(req, res) {
         console.log(`❌ 订阅取消：user ${userId}`);
         break;
       }
+
+      default:
+        console.log('Unhandled event type:', event.type);
     }
 
     return res.status(200).json({ received: true });
   } catch (err) {
-    console.error('Webhook error:', err);
-    return res.status(500).json({ error: '处理失败' });
+    console.error('Webhook processing error:', err);
+    return res.status(500).json({ error: 'Processing failed' });
   }
 }
