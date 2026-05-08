@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAI — 把你的脸变成动漫角色</title>
+<title>WAI — AI 一键变身，6 种风格随便选</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
@@ -140,8 +140,15 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .upload-zone h3{font-size:15px;font-weight:600;margin-bottom:5px;color:var(--text);}
 .upload-zone p{font-size:13px;color:var(--text-faint);font-weight:300;}
 .section-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:12px;}
-.style-row{display:flex;gap:10px;margin-bottom:22px;overflow-x:auto;overflow-y:visible;padding-bottom:2px;padding-top:4px;}
+.style-row-wrap{position:relative;margin-bottom:22px;}
+.style-row{display:flex;gap:10px;overflow-x:auto;overflow-y:visible;padding-bottom:2px;padding-top:4px;margin-bottom:0;}
 .style-row::-webkit-scrollbar{display:none;}
+.style-row-fade{position:absolute;top:0;right:0;height:100%;width:64px;background:linear-gradient(to right,transparent,var(--card-bg) 80%);pointer-events:none;display:flex;align-items:center;justify-content:flex-end;padding-right:4px;transition:opacity 0.3s;}
+.style-row-arrow{font-size:20px;color:#8b5cf6;font-weight:700;animation:arrowPulse 1.4s ease-in-out infinite;line-height:1;}
+@keyframes arrowPulse{0%,100%{transform:translateX(0);opacity:1;}50%{transform:translateX(4px);opacity:0.5;}}
+.style-row-wrap:hover .style-row-fade{opacity:0;}
+/* 滚动到底时隐藏箭头 */
+.style-row-fade.hidden{opacity:0;}
 .style-pill{flex-shrink:0;padding:10px 18px;border-radius:40px;border:1px solid var(--border);background:var(--white-card);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
 .style-pill:hover{border-color:rgba(139,92,246,0.4);color:#8b5cf6;}
 .style-pill.on{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(236,72,153,0.06));border-color:rgba(139,92,246,0.5);color:#7c3aed;font-weight:600;}
@@ -527,7 +534,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 
 <!-- HERO -->
 <section class="hero">
-  <div class="badge"><span class="badge-dot"></span>✨ 动漫生成引擎 v3.0 已就绪</div>
+  <div class="badge"><span class="badge-dot"></span>✨ AI 变身引擎 v3.0 已就绪</div>
   <h1 id="heroTitle">
     <span class="h1-word">
       <span class="h1-char" style="--i:0">把</span><span class="h1-char" style="--i:1">你</span><span class="h1-char" style="--i:2">的</span><span class="h1-char" style="--i:3">脸</span>
@@ -558,13 +565,18 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
     <p>JPG / PNG / WEBP 都行 · 最大 20MB</p>
   </div>
   <div class="section-label">选择风格</div>
-  <div class="style-row">
-    <div class="style-pill on" onclick="pick(this)"><span>🎮</span>3D建模</div>
-    <div class="style-pill" onclick="pick(this)"><span>😄</span>表情包</div>
-    <div class="style-pill" onclick="pick(this)"><span>⚔️</span>游戏角色</div>
-    <div class="style-pill" onclick="pick(this)"><span>👾</span>像素风</div>
-    <div class="style-pill" onclick="pick(this)"><span>🏺</span>黏土风</div>
-    <div class="style-pill" onclick="pick(this)"><span>🧸</span>玩具风</div>
+  <div class="style-row-wrap" id="styleRowWrap">
+    <div class="style-row" id="styleRow">
+      <div class="style-pill on" onclick="pick(this)"><span>🎮</span>3D建模</div>
+      <div class="style-pill" onclick="pick(this)"><span>😄</span>表情包</div>
+      <div class="style-pill" onclick="pick(this)"><span>⚔️</span>游戏角色</div>
+      <div class="style-pill" onclick="pick(this)"><span>👾</span>像素风</div>
+      <div class="style-pill" onclick="pick(this)"><span>🏺</span>黏土风</div>
+      <div class="style-pill" onclick="pick(this)"><span>🧸</span>玩具风</div>
+    </div>
+    <div class="style-row-fade" id="styleRowFade">
+      <span class="style-row-arrow">›</span>
+    </div>
   </div>
   <button class="gen-btn" id="genBtn" onclick="handleGen()">✦ 一键变身</button>
   <!-- Free count bar -->
@@ -651,12 +663,12 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   <div class="section-title">样例 <span class="grad">展示</span></div>
   <div class="section-desc">真实用户丢进来的照片，AI 一键变身，效果都是真的</div>
   <div class="examples-grid">
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-makoto">🌸</div></div><div class="ex-label"><span class="ex-name">新海诚风</span><span class="ex-tag">最受欢迎</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👨</div><div class="ex-half after-ghibli">🌿</div></div><div class="ex-label"><span class="ex-name">吉卜力风</span><span class="ex-tag">治愈系</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧑</div><div class="ex-half after-cyber">⚡</div></div><div class="ex-label"><span class="ex-name">赛博朋克</span><span class="ex-tag">科幻</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👧</div><div class="ex-half after-cute">🎀</div></div><div class="ex-label"><span class="ex-name">治愈系</span><span class="ex-tag">可爱</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👦</div><div class="ex-half after-shonen">🎌</div></div><div class="ex-label"><span class="ex-name">少年漫画</span><span class="ex-tag">热血</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧔</div><div class="ex-half after-dark">🌙</div></div><div class="ex-label"><span class="ex-name">黑暗幻想</span><span class="ex-tag">神秘</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-makoto">🎮</div></div><div class="ex-label"><span class="ex-name">3D建模</span><span class="ex-tag">最受欢迎</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👨</div><div class="ex-half after-ghibli">🏺</div></div><div class="ex-label"><span class="ex-name">黏土风</span><span class="ex-tag">超可爱</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧑</div><div class="ex-half after-cyber">👾</div></div><div class="ex-label"><span class="ex-name">像素风</span><span class="ex-tag">复古</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👧</div><div class="ex-half after-cute">😄</div></div><div class="ex-label"><span class="ex-name">表情包</span><span class="ex-tag">搞笑</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👦</div><div class="ex-half after-shonen">⚔️</div></div><div class="ex-label"><span class="ex-name">游戏角色</span><span class="ex-tag">热血</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧔</div><div class="ex-half after-dark">🧸</div></div><div class="ex-label"><span class="ex-name">玩具风</span><span class="ex-tag">收藏级</span></div></div>
   </div>
 </div>
 
@@ -665,10 +677,10 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   <div class="section-title">用户 <span class="grad">好评</span></div>
   <div class="section-desc">32 万+用户都说好，不信你看看 👀</div>
   <div class="reviews-grid">
-    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">生成速度太快了，上传照片不到10秒就出来了，效果真的很像！朋友都以为我请人手绘的。</div><div class="review-author"><div class="avatar av1">小</div><div><div class="author-name">小雨</div><div class="author-sub">设计师 · 上海</div></div></div></div>
-    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">新海诚风格真的绝了，感觉自己变成了《你的名字》里的角色，已经换成头像了，好多人来问从哪做的。</div><div class="review-author"><div class="avatar av2">阿</div><div><div class="author-name">阿Ken</div><div class="author-sub">内容创作者 · 广州</div></div></div></div>
-    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">Pro版性价比超高，每天30次完全够用，无水印高清图直接发社媒，粉丝互动率明显上来了。</div><div class="review-author"><div class="avatar av3">M</div><div><div class="author-name">Miku_art</div><div class="author-sub">插画师 · 成都</div></div></div></div>
-    <div class="review-card"><div class="review-stars">★★★★☆</div><div class="review-text">试了好几个同类产品，WAI 的效果是最自然的，脸部细节保留得很好，不像其他的感觉变了个人。</div><div class="review-author"><div class="avatar av4">Z</div><div><div class="author-name">ZephyrLee</div><div class="author-sub">游戏玩家 · 北京</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">3D建模风格太绝了！上传一张普通自拍，出来的效果像专业建模师做的，直接设成头像，朋友都以为我花钱定制的哈哈。</div><div class="review-author"><div class="avatar av1">小</div><div><div class="author-name">小雨</div><div class="author-sub">设计师 · 上海</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">黏土风简直爱了！脸捏得圆圆的超可爱，发小红书互动率直接翻倍，好多人问哪里做的，WAI 拿捏！</div><div class="review-author"><div class="avatar av2">阿</div><div><div class="author-name">阿Ken</div><div class="author-sub">内容创作者 · 广州</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">Pro版真的值！6种风格都试了一遍，像素风和游戏角色是我最爱，无水印直接发帖，粉丝互动率肉眼可见地涨。</div><div class="review-author"><div class="avatar av3">M</div><div><div class="author-name">Miku_art</div><div class="author-sub">插画师 · 成都</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★☆</div><div class="review-text">试了好几个同类工具，WAI 脸部保留是最准的，换了游戏角色风格还是能认出是我，不像其他的感觉换了个人。</div><div class="review-author"><div class="avatar av4">Z</div><div><div class="author-name">ZephyrLee</div><div class="author-sub">游戏玩家 · 北京</div></div></div></div>
   </div>
 </div>
 
@@ -699,7 +711,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">W<span class="purple">AI</span></div>
-    <div class="footer-tagline">把每张脸变成动漫角色 · Powered by AI</div>
+    <div class="footer-tagline">AI 一键变身 · 6 种风格随便选 · Powered by AI</div>
     <div class="footer-links">
       <a href="#" onclick="openModal('tos');return false;">Terms of Service</a>
       <span class="footer-sep">·</span>
@@ -841,6 +853,25 @@ document.querySelectorAll('.h1-char').forEach(el => {
   el.setAttribute('data-char', el.textContent);
 });
 
+// ===== STYLE ROW FADE ARROW =====
+(function(){
+  const row = document.getElementById('styleRow');
+  const fade = document.getElementById('styleRowFade');
+  if(!row||!fade) return;
+  function checkScroll(){
+    const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 8;
+    fade.classList.toggle('hidden', atEnd);
+  }
+  row.addEventListener('scroll', checkScroll, {passive:true});
+  // 点击箭头区域时向右滚动
+  fade.style.pointerEvents = 'auto';
+  fade.style.cursor = 'pointer';
+  fade.addEventListener('click', () => {
+    row.scrollBy({left: 120, behavior:'smooth'});
+  });
+  setTimeout(checkScroll, 200);
+})();
+
 // ===== SMOOTH SCROLL =====
 function smoothTo(id){
   const el=document.getElementById(id);
@@ -895,12 +926,12 @@ function initFreeCount(){
 
 let freeLeft=initFreeCount();
 const funnyLines=[
-  '今天的二次元配额已耗尽，北京时间凌晨 4:00 再来补给！',
-  '老子刷了一天二次元，今天的次数烧完了 (´;ω;`)',
-  '三次机会已用完，追番去吧，凌晨 4 点见！',
-  '今日份的异世界传送券已售罄，北京时间凌晨 4:00 刷新 ✦',
-  '喂喂！你已经变成动漫人了三次了！凌晨 4 点继续哦~',
-  '这么能生成，是资深宅吗？次数用完啦，明天凌晨 4 点见 (≧▽≦)',
+  '今天的变身配额已用完，明天再来继续造 (≧▽≦)',
+  '三次机会都用完啦！明天刷新，追番去吧 (´;ω;`)',
+  '变身券售罄！休息一下，明天继续变身 ✦',
+  '哇你好能变啊！今天配额烧完了，明天再来 (≧▽≦)',
+  '喂喂！你已经变了三次了！明天再来哦～ (＾▽＾)',
+  '这么能造，是资深变身达人吧？明天见 ヾ(≧▽≦*)o',
 ];
 const normalLines=[
   '变身券剩余：',
@@ -1507,9 +1538,9 @@ buildStars();
 // ===== FEEDBACK =====
 const seedFeedback=[
   {name:'柠檬茶不加糖',text:'希望能加个批量上传功能，一次传多张就好了！',tag:'idea',time:'2分钟前',stars:4.5},
-  {name:'匿名用户',text:'赛博朋克风格有时候脸会变形，鼻子有点奇怪，其他都很好',tag:'bug',time:'18分钟前',stars:3.5},
-  {name:'Aki_design',text:'吉卜力风真的太美了，已经给全家人都做了一遍哈哈',tag:'praise',time:'1小时前',stars:5},
-  {name:'夜风',text:'能不能支持全身照？现在只能用脸部特写，想要全身动漫效果',tag:'idea',time:'3小时前',stars:4},
+  {name:'匿名用户',text:'像素风有时候脸会有点模糊，其他几个风格都很好',tag:'bug',time:'18分钟前',stars:3.5},
+  {name:'Aki_design',text:'黏土风真的太可爱了，已经给全家人都做了一遍哈哈',tag:'praise',time:'1小时前',stars:5},
+  {name:'夜风',text:'能不能支持全身照？现在只能用脸部特写，想要全身变身效果',tag:'idea',time:'3小时前',stars:4},
 ];
 const tagMap={
   bug:{label:'Bug 反馈',cls:'tag-bug'},
