@@ -656,7 +656,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
           <li><i class="ti ti-check"></i>30 天历史记录</li>
           <li><i class="ti ti-check"></i>ZIP 批量下载</li>
         </ul>
-        <button class="upgrade-card-btn fill" id="upgradeProBtn" onclick="handleSubscribeFromModal('pro')">解锁 Pro ✦</button>
+        <button class="upgrade-card-btn fill" id="upgradeProBtn" style="display:none"></button>
       </div>
 
       <!-- MAX -->
@@ -665,10 +665,10 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
         <div class="upgrade-card-price" id="upgradeMaxPrice">$39<span id="upgradeMaxPeriod">/月</span></div>
         <div class="upgrade-card-desc">无限变身，发小红书接单都够用</div>
         <div class="upgrade-max-tabs">
-          <button class="umtab on" onclick="switchUpgradeMax(this,'39','/月',3900)">月付<small>&nbsp;</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'99','/季',9900)">季付<small>省$18</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'169','/半年',16900)">半年<small>省$65</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'299','/年',29900)">年付<small>省$169</small></button>
+          <button class="umtab on" onclick="switchUpgradeMax(this,'39','/月',3900,'month')">月付<small>&nbsp;</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'99','/季',9900,'quarter')">季付<small>省$18</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'169','/半年',16900,'halfyear')">半年<small>省$65</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'299','/年',29900,'year')">年付<small>省$169</small></button>
         </div>
         <ul class="upgrade-card-features">
           <li><i class="ti ti-infinity"></i>变身券无限张</li>
@@ -677,11 +677,15 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
           <li><i class="ti ti-shield-check"></i>商业授权</li>
           <li><i class="ti ti-sparkles"></i>新风格优先体验</li>
         </ul>
-        <button class="upgrade-card-btn fill" id="upgradeMaxBtn" onclick="handleSubscribeFromModal('max')">解锁 Max ✦</button>
+        <button class="upgrade-card-btn fill" id="upgradeMaxBtn" style="display:none"></button>
       </div>
 
     </div>
     <div id="upgradeSubStatus" style="display:none;text-align:center;margin-top:14px;font-size:12px;color:#8b5cf6;font-weight:600;"></div>
+    <div id="upgradeBtnRow" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;">
+      <button class="upgrade-card-btn fill" id="upgradeProBtnBottom" onclick="handleSubscribeFromModal('pro')" style="border-radius:12px;padding:12px;font-size:13px;">解锁 Pro ✦</button>
+      <button class="upgrade-card-btn fill" id="upgradeMaxBtnBottom" onclick="handleSubscribeFromModal('max')" style="border-radius:12px;padding:12px;font-size:13px;">解锁 Max ✦</button>
+    </div>
   </div>
 </div>
 
@@ -1419,6 +1423,7 @@ function renderNavAuth() {
 
 // ===== UPGRADE MODAL =====
 let upgradeMaxAmount = 3900;
+let upgradeMaxInterval = 'month';
 
 function openUpgradeModal() {
   renderUpgradeModal();
@@ -1428,19 +1433,21 @@ function closeUpgradeModal() {
   document.getElementById('modalUpgrade').classList.remove('open');
 }
 
-function switchUpgradeMax(el, price, period, amount) {
+function switchUpgradeMax(el, price, period, amount, interval) {
   document.querySelectorAll('.umtab').forEach(t => t.classList.remove('on'));
   el.classList.add('on');
   document.getElementById('upgradeMaxPrice').innerHTML = '$' + price + '<span id="upgradeMaxPeriod">' + period + '</span>';
   upgradeMaxAmount = amount;
+  upgradeMaxInterval = interval;
 }
 
 function renderUpgradeModal() {
-  const proBtn = document.getElementById('upgradeProBtn');
-  const maxBtn = document.getElementById('upgradeMaxBtn');
   const proCard = document.getElementById('upgradeProCard');
   const maxCard = document.getElementById('upgradeMaxCard');
   const status = document.getElementById('upgradeSubStatus');
+  const proBtn = document.getElementById('upgradeProBtnBottom');
+  const maxBtn = document.getElementById('upgradeMaxBtnBottom');
+  const btnRow = document.getElementById('upgradeBtnRow');
 
   // 重置
   proCard.classList.remove('subscribed');
@@ -1448,6 +1455,7 @@ function renderUpgradeModal() {
   proBtn.disabled = false; proBtn.textContent = '解锁 Pro ✦';
   maxBtn.disabled = false; maxBtn.textContent = '解锁 Max ✦';
   status.style.display = 'none';
+  btnRow.style.display = 'grid';
 
   if (currentPlan === 'pro') {
     proCard.classList.add('subscribed');
@@ -1481,6 +1489,7 @@ async function handleSubscribeFromModal(plan) {
         userEmail: currentUser.email,
         plan,
         amount: plan === 'max' ? upgradeMaxAmount : undefined,
+        interval: plan === 'max' ? upgradeMaxInterval : undefined,
       }),
     });
     const data = await res.json();
@@ -1689,9 +1698,8 @@ function checkPaymentResult() {
 // 用户从 Stripe 按返回键回来时重置按钮（浏览器 bfcache）
 window.addEventListener('pageshow', (e) => {
   if (e.persisted) {
-    // 重置升级 Modal 里的按钮
-    const proBtn = document.getElementById('upgradeProBtn');
-    const maxBtn = document.getElementById('upgradeMaxBtn');
+    const proBtn = document.getElementById('upgradeProBtnBottom');
+    const maxBtn = document.getElementById('upgradeMaxBtnBottom');
     if (proBtn && !proBtn.textContent.includes('已')) { proBtn.disabled = false; proBtn.textContent = '解锁 Pro ✦'; }
     if (maxBtn && !maxBtn.textContent.includes('已')) { maxBtn.disabled = false; maxBtn.textContent = '解锁 Max ✦'; }
   }
