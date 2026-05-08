@@ -830,15 +830,21 @@ function renderFreeCount(){
   dotsEl.innerHTML='';
 
   if(currentPlan==='max'){
-    textEl.textContent='变身券无限张，随便造 ✦';
+    dotsEl.innerHTML='';
+    textEl.textContent='∞ 变身券无限，想造多少造多少 ✦';
     textEl.style.color='#8b5cf6';
+    textEl.style.maxWidth='none';
     return;
   }
 
   if(currentPlan==='pro'){
+    const today=getBeijing4amTimestamp();
+    const savedDay=localStorage.getItem('waiFreeDay');
+    if(savedDay!==today) localStorage.setItem('waiProUsed','0');
     const used=parseInt(localStorage.getItem('waiProUsed')||'0');
     const left=Math.max(0,PRO_DAILY-used);
-    // 显示5个点代表满血状态，pro太多不好展示
+    dotsEl.innerHTML='';
+    // 5个点，每个代表6次
     for(let i=0;i<5;i++){
       const d=document.createElement('div');
       d.className='count-dot'+(i>=Math.ceil(left/6)?' used':'');
@@ -847,9 +853,11 @@ function renderFreeCount(){
     if(left<=0){
       textEl.textContent='今天 30 张变身券用完啦，凌晨 4 点续杯 (´;ω;`)';
       textEl.style.maxWidth='260px';
-    }else{
-      textEl.textContent='变身券剩余：'+left+' 张';
       textEl.style.color='';
+    }else{
+      textEl.textContent='变身券剩余：'+left+' / 30 张';
+      textEl.style.color='';
+      textEl.style.maxWidth='none';
     }
     return;
   }
@@ -868,7 +876,8 @@ function renderFreeCount(){
     textEl.textContent=pick+freeLeft+'次';
   }
 }
-renderFreeCount();
+// 初始先留空，等 initAuth 拿到套餐后再渲染
+document.getElementById('freeCountText').textContent = '';
 
 // ===== BACKGROUND BLOBS =====
 const canvas=document.getElementById('bg');
@@ -1239,7 +1248,6 @@ async function handleGen() {
       localStorage.setItem('waiProUsed', Math.max(0, used - 1));
     }
     renderFreeCount();
-    renderFreeCount();
     alert('生成失败：' + err.message + '\n请稍后重试');
   }
 
@@ -1487,7 +1495,7 @@ async function initAuth() {
     renderNavAuth();
     renderPricingByPlan();
     renderFreeCount();
-}
+  });
 
 async function refreshUserPlan() {
   if (!currentUser) { currentPlan = 'free'; return; }
