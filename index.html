@@ -1496,6 +1496,7 @@ async function initAuth() {
     renderPricingByPlan();
     renderFreeCount();
   });
+}
 
 async function refreshUserPlan() {
   if (!currentUser) { currentPlan = 'free'; return; }
