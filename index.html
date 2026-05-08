@@ -1507,20 +1507,33 @@ async function refreshUserPlan() {
   if (!currentUser) { currentPlan = 'free'; return; }
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${currentUser.id}&select=plan,status,current_period_end&limit=1`,
+      `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${currentUser.id}&select=plan,status,current_period_end&order=current_period_end.desc`,
       { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
     );
     const rows = await res.json();
-    if (rows.length && rows[0].status === 'active' && new Date(rows[0].current_period_end) > new Date()) {
-      currentPlan = rows[0].plan; // 'pro' or 'max'
-    } else {
-      currentPlan = 'free';
-    }
-  } catch(e) { currentPlan = 'free'; }
+    if (!Array.isArray(rows) || !rows.length) { currentPlan = 'free'; return; }
+    
+    // 过滤出有效的订阅（status=active 且未过期）
+    const now = new Date();
+    const activeRows = rows.filter(r => r.status === 'active' && new Date(r.current_period_end) > now);
+    
+    if (!activeRows.length) { currentPlan = 'free'; return; }
+    
+    // 优先取 max，其次 pro
+    const hasMax = activeRows.find(r => r.plan === 'max');
+    const hasPro = activeRows.find(r => r.plan === 'pro');
+    currentPlan = hasMax ? 'max' : (hasPro ? 'pro' : 'free');
+    
+    console.log('refreshUserPlan result:', currentPlan, activeRows);
+  } catch(e) { 
+    console.warn('refreshUserPlan error:', e);
+    currentPlan = 'free'; 
+  }
 }
 
 function renderNavAuth() {
   const nav = document.getElementById('navAuth');
+  console.log('renderNavAuth called, currentPlan:', currentPlan, 'currentUser:', !!currentUser);
   if (!currentUser) {
     nav.innerHTML = `<button class="nav-btn" onclick="openAuthModal()">登录 / 注册</button>`;
   } else {
@@ -1532,7 +1545,7 @@ function renderNavAuth() {
       : '';
     nav.innerHTML = `
       ${upgradeBtn}
-      <span class="nav-user">${short}${badge}</span>
+      <span class="nav-user">${badge} ${short}</span>
       <button class="nav-logout" onclick="handleLogout()">退出</button>`;
   }
 }
