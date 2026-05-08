@@ -1685,8 +1685,12 @@ function openManageSubscription() {
 let authMode = 'login';
 
 function openAuthModal() {
+  _authInProgress = false;
   document.getElementById('modalAuth').classList.add('open');
   document.getElementById('authMsg').textContent = '';
+  const btn = document.getElementById('authSubmitBtn');
+  btn.disabled = false;
+  btn.textContent = authMode === 'login' ? '登录' : '注册';
 }
 function closeAuthModal() {
   document.getElementById('modalAuth').classList.remove('open');
