@@ -143,12 +143,18 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .style-row-wrap{position:relative;margin-bottom:22px;}
 .style-row{display:flex;gap:10px;overflow-x:auto;overflow-y:visible;padding-bottom:2px;padding-top:4px;margin-bottom:0;}
 .style-row::-webkit-scrollbar{display:none;}
-.style-row-fade{position:absolute;top:0;right:0;height:100%;width:64px;background:linear-gradient(to right,transparent,var(--card-bg) 80%);pointer-events:none;display:flex;align-items:center;justify-content:flex-end;padding-right:4px;transition:opacity 0.3s;}
-.style-row-arrow{font-size:20px;color:#8b5cf6;font-weight:700;animation:arrowPulse 1.4s ease-in-out infinite;line-height:1;}
-@keyframes arrowPulse{0%,100%{transform:translateX(0);opacity:1;}50%{transform:translateX(4px);opacity:0.5;}}
-.style-row-wrap:hover .style-row-fade{opacity:0;}
-/* 滚动到底时隐藏箭头 */
-.style-row-fade.hidden{opacity:0;}
+.style-row-fade-right{position:absolute;top:0;right:0;height:100%;width:64px;background:linear-gradient(to right,transparent,var(--card-bg) 80%);display:flex;align-items:center;justify-content:flex-end;padding-right:4px;transition:opacity 0.3s;cursor:pointer;}
+.style-row-fade-left{position:absolute;top:0;left:0;height:100%;width:64px;background:linear-gradient(to left,transparent,var(--card-bg) 80%);display:flex;align-items:center;justify-content:flex-start;padding-left:4px;transition:opacity 0.3s;cursor:pointer;opacity:0;pointer-events:none;}
+.style-row-fade-left.visible{opacity:1;pointer-events:auto;}
+.style-row-fade-right.hidden{opacity:0;pointer-events:none;}
+.style-row-arrow{font-size:20px;color:#8b5cf6;font-weight:700;line-height:1;}
+.style-row-arrow-right{animation:arrowPulseR 1.4s ease-in-out infinite;}
+.style-row-arrow-left{animation:arrowPulseL 1.4s ease-in-out infinite;}
+@keyframes arrowPulseR{0%,100%{transform:translateX(0);opacity:1;}50%{transform:translateX(4px);opacity:0.5;}}
+@keyframes arrowPulseL{0%,100%{transform:translateX(0);opacity:1;}50%{transform:translateX(-4px);opacity:0.5;}}
+/* 鼠标在整个wrap上时遮罩淡出 */
+.style-row-wrap:hover .style-row-fade-right:not(.hidden){opacity:0.3;}
+.style-row-wrap:hover .style-row-fade-left.visible{opacity:0.3;}
 .style-pill{flex-shrink:0;padding:10px 18px;border-radius:40px;border:1px solid var(--border);background:var(--white-card);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
 .style-pill:hover{border-color:rgba(139,92,246,0.4);color:#8b5cf6;}
 .style-pill.on{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(236,72,153,0.06));border-color:rgba(139,92,246,0.5);color:#7c3aed;font-weight:600;}
@@ -566,6 +572,9 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
   <div class="section-label">选择风格</div>
   <div class="style-row-wrap" id="styleRowWrap">
+    <div class="style-row-fade-left" id="styleRowFadeLeft" onclick="document.getElementById('styleRow').scrollBy({left:-120,behavior:'smooth'})">
+      <span class="style-row-arrow style-row-arrow-left">‹</span>
+    </div>
     <div class="style-row" id="styleRow">
       <div class="style-pill on" onclick="pick(this)"><span>🎮</span>3D建模</div>
       <div class="style-pill" onclick="pick(this)"><span>😄</span>表情包</div>
@@ -574,8 +583,8 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       <div class="style-pill" onclick="pick(this)"><span>🏺</span>黏土风</div>
       <div class="style-pill" onclick="pick(this)"><span>🧸</span>玩具风</div>
     </div>
-    <div class="style-row-fade" id="styleRowFade">
-      <span class="style-row-arrow">›</span>
+    <div class="style-row-fade-right" id="styleRowFade" onclick="document.getElementById('styleRow').scrollBy({left:120,behavior:'smooth'})">
+      <span class="style-row-arrow style-row-arrow-right">›</span>
     </div>
   </div>
   <button class="gen-btn" id="genBtn" onclick="handleGen()">✦ 一键变身</button>
@@ -856,19 +865,16 @@ document.querySelectorAll('.h1-char').forEach(el => {
 // ===== STYLE ROW FADE ARROW =====
 (function(){
   const row = document.getElementById('styleRow');
-  const fade = document.getElementById('styleRowFade');
-  if(!row||!fade) return;
+  const fadeR = document.getElementById('styleRowFade');
+  const fadeL = document.getElementById('styleRowFadeLeft');
+  if(!row||!fadeR||!fadeL) return;
   function checkScroll(){
     const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 8;
-    fade.classList.toggle('hidden', atEnd);
+    const atStart = row.scrollLeft <= 8;
+    fadeR.classList.toggle('hidden', atEnd);
+    fadeL.classList.toggle('visible', !atStart);
   }
   row.addEventListener('scroll', checkScroll, {passive:true});
-  // 点击箭头区域时向右滚动
-  fade.style.pointerEvents = 'auto';
-  fade.style.cursor = 'pointer';
-  fade.addEventListener('click', () => {
-    row.scrollBy({left: 120, behavior:'smooth'});
-  });
   setTimeout(checkScroll, 200);
 })();
 
