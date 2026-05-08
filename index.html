@@ -459,7 +459,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <section class="hero">
   <div class="badge"><span class="badge-dot"></span>✨ 动漫生成引擎 v3.0 已就绪</div>
   <h1>把你的脸<br>变成<span class="grad">动漫角色</span></h1>
-  <p class="sub">丢一张自拍进来，8 秒后你就是动漫主角了✨<br>吉卜力 · 新海诚 · 赛博朋克 等 12 种风格随便选</p>
+  <p class="sub">丢一张自拍进来，8 秒后你就是动漫主角了✨<br>吉卜力 · 新海诚 · 赛博朋克 等 6 种风格随便选</p>
 </section>
 
 <!-- UPLOAD CARD -->
@@ -470,7 +470,6 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
     <div class="member-banner-left">
       <span class="member-banner-badge" id="memberBadgeText">PRO</span>
       <span class="member-banner-desc" id="memberBannerDesc">变身券不设上限，随便造 ✦</span>
-      <span class="member-banner-expire" id="memberExpire" style="font-size:12px;opacity:0.8;margin-left:8px;"></span>
     </div>
     <button class="member-banner-manage" onclick="openManageSubscription()">管理订阅 →</button>
   </div>
@@ -539,7 +538,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <div class="stats-row">
   <div class="stat-card"><span class="stat-n">320万+</span><span class="stat-d">已生成图片</span></div>
   <div class="stat-card"><span class="stat-n">~8秒</span><span class="stat-d">平均生成时间</span></div>
-  <div class="stat-card"><span class="stat-n">12种</span><span class="stat-d">动漫风格</span></div>
+  <div class="stat-card"><span class="stat-n">6种</span><span class="stat-d">动漫风格</span></div>
 </div>
 
 <!-- BEFORE/AFTER COMPARISON SLIDER -->
@@ -663,14 +662,13 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       <!-- MAX -->
       <div class="upgrade-card" id="upgradeMaxCard">
         <div class="upgrade-card-name">MAX</div>
-        <div class="upgrade-card-price" id="upgradeMaxPrice">$299<span id="upgradeMaxPeriod">/年</span></div>
-        <div class="upgrade-card-per-month" id="upgradeMaxPerMonth" style="font-size:12px;color:#8b5cf6;font-weight:600;margin-top:2px;">≈ $24.9/月</div>
+        <div class="upgrade-card-price" id="upgradeMaxPrice">$39<span id="upgradeMaxPeriod">/月</span></div>
         <div class="upgrade-card-desc">无限变身，发小红书接单都够用</div>
         <div class="upgrade-max-tabs">
-          <button class="umtab" onclick="switchUpgradeMax(this,'39','/月',3900,'month','')">月付<small>&nbsp;</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'99','/季',9900,'quarter','≈ $33/月')">季付<small>省$18</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'169','/半年',16900,'halfyear','≈ $28.2/月')">半年<small>省$65</small></button>
-          <button class="umtab on" onclick="switchUpgradeMax(this,'299','/年',29900,'year','≈ $24.9/月')">年付<small>省$169</small></button>
+          <button class="umtab on" onclick="switchUpgradeMax(this,'39','/月',3900,'month')">月付<small>&nbsp;</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'99','/季',9900,'quarter')">季付<small>省$18</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'169','/半年',16900,'halfyear')">半年<small>省$65</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'299','/年',29900,'year')">年付<small>省$169</small></button>
         </div>
         <ul class="upgrade-card-features">
           <li><i class="ti ti-infinity"></i>变身券无限张</li>
@@ -972,9 +970,10 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // ===== LOAD HISTORY =====
 async function loadHistory(){
   try {
-    const res = await fetch(`/api/history?userId=${WAI_USER_ID}`);
+    const histUserId = currentUser ? currentUser.id : WAI_USER_ID;
+    const res = await fetch(`/api/history?userId=${histUserId}`);
     const data = await res.json();
-    if(Array.isArray(data) && data.length > 0){
+    if(Array.isArray(data) && data.length > 0 && currentUser){
       document.getElementById('historySection').style.display = '';
       const grid = document.getElementById('historyGrid');
       grid.innerHTML = data.map(item => `
@@ -1020,7 +1019,7 @@ function handleFileChange(input) {
   const file = input.files[0];
   if (!file) return;
   if (file.size > 20 * 1024 * 1024) {
-    alert('图片太大了，请上传 20MB 以内的图片');
+    alert('图片有点太大啦，要 20MB 以内才行哦 (´•ω•`)');
     return;
   }
   const reader = new FileReader();
@@ -1097,7 +1096,7 @@ function incrementUsed() {
 async function handleGen() {
   if (busy) return;
   if (!uploadedImageBase64) {
-    alert('请先上传一张照片！');
+    alert('还没有上传照片哦！先把照片丢进来嘛 (｀・ω・´)');
     return;
   }
 
@@ -1107,9 +1106,9 @@ async function handleGen() {
     const used = getUsedToday();
     if (used >= limit) {
       if (currentPlan === 'pro') {
-        alert('今天 30 张变身券用完啦！凌晨 4 点刷新，或者升级 Max 无限造 ✦');
+        alert('今天 30 张变身券全烧完啦 (´;ω;`) 凌晨 4 点刷新，或者升级 Max 无限造 ✦');
       } else {
-        alert('今天的配额烧完啦！每天凌晨 4:00（北京时间）刷新，或者升级 Pro 无限造 ✦');
+        alert('今天的配额烧完啦！每天凌晨 4:00（北京时间）刷新 (≧▽≦) 或者升级 Pro 无限造～ ✦');
       }
       return;
     }
@@ -1257,7 +1256,7 @@ async function handleGen() {
 }
 
 // ===== PRICING TABS =====
-let maxSelectedAmount = 29900; // 默认年付 $299，单位：分
+let maxSelectedAmount = 3900; // 默认月付 $39，单位：分
 function switchMax(el,price,period,save){
   document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));
   el.classList.add('on');
@@ -1484,6 +1483,7 @@ async function initAuth() {
     try { renderPricingByPlan(); } catch(e) { console.warn('initAuth:', e); }
     try { renderFreeCount(); } catch(e) { console.warn('initAuth:', e); }
     try { checkPaymentResult(); } catch(e) { console.warn('initAuth:', e); }
+    try { loadHistory(); } catch(e) { console.warn('initAuth:', e); }
   }
   // 监听登录/登出变化
   _supabase.auth.onAuthStateChange(async (event, session) => {
@@ -1493,8 +1493,10 @@ async function initAuth() {
         try { closeAuthModal(); } catch(e) {}
         try { await refreshUserPlan(); } catch(e) { console.warn('onAuth:', e); }
         try { checkPaymentResult(); } catch(e) { console.warn('onAuth:', e); }
+        try { loadHistory(); } catch(e) { console.warn('onAuth:', e); }
       } else {
         currentPlan = 'free';
+        document.getElementById('historySection').style.display = 'none';
       }
       try { renderNavAuth(); } catch(e) { console.warn('onAuth:', e); }
       try { renderPricingByPlan(); } catch(e) { console.warn('onAuth:', e); }
@@ -1505,40 +1507,24 @@ async function initAuth() {
   });
 }
 
-let currentPeriodEnd = null;
-
 async function refreshUserPlan() {
-  if (!currentUser) { currentPlan = 'free'; currentPeriodEnd = null; return; }
+  if (!currentUser) { currentPlan = 'free'; return; }
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${currentUser.id}&select=plan,status,current_period_end&order=current_period_end.desc`,
+      `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${currentUser.id}&select=plan,status,current_period_end&limit=1`,
       { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
     );
     const rows = await res.json();
-    if (!Array.isArray(rows) || !rows.length) { currentPlan = 'free'; currentPeriodEnd = null; return; }
-    
-    const now = new Date();
-    const activeRows = rows.filter(r => r.status === 'active' && new Date(r.current_period_end) > now);
-    
-    if (!activeRows.length) { currentPlan = 'free'; currentPeriodEnd = null; return; }
-    
-    const hasMax = activeRows.find(r => r.plan === 'max');
-    const hasPro = activeRows.find(r => r.plan === 'pro');
-    const bestRow = hasMax || hasPro;
-    currentPlan = bestRow.plan;
-    currentPeriodEnd = bestRow.current_period_end;
-    
-    console.log('refreshUserPlan result:', currentPlan, 'expires:', currentPeriodEnd);
-  } catch(e) { 
-    console.warn('refreshUserPlan error:', e);
-    currentPlan = 'free'; 
-    currentPeriodEnd = null;
-  }
+    if (rows.length && rows[0].status === 'active' && new Date(rows[0].current_period_end) > new Date()) {
+      currentPlan = rows[0].plan; // 'pro' or 'max'
+    } else {
+      currentPlan = 'free';
+    }
+  } catch(e) { currentPlan = 'free'; }
 }
 
 function renderNavAuth() {
   const nav = document.getElementById('navAuth');
-  console.log('renderNavAuth called, currentPlan:', currentPlan, 'currentUser:', !!currentUser);
   if (!currentUser) {
     nav.innerHTML = `<button class="nav-btn" onclick="openAuthModal()">登录 / 注册</button>`;
   } else {
@@ -1550,14 +1536,14 @@ function renderNavAuth() {
       : '';
     nav.innerHTML = `
       ${upgradeBtn}
-      <span class="nav-user">${badge} ${short}</span>
+      <span class="nav-user">${short}${badge}</span>
       <button class="nav-logout" onclick="handleLogout()">退出</button>`;
   }
 }
 
 // ===== UPGRADE MODAL =====
-let upgradeMaxAmount = 29900;
-let upgradeMaxInterval = 'year';
+let upgradeMaxAmount = 3900;
+let upgradeMaxInterval = 'month';
 
 function openUpgradeModal() {
   renderUpgradeModal();
@@ -1569,12 +1555,10 @@ function closeUpgradeModal() {
   document.getElementById('modalUpgrade').classList.remove('open');
 }
 
-function switchUpgradeMax(el, price, period, amount, interval, perMonth) {
+function switchUpgradeMax(el, price, period, amount, interval) {
   document.querySelectorAll('.umtab').forEach(t => t.classList.remove('on'));
   el.classList.add('on');
   document.getElementById('upgradeMaxPrice').innerHTML = '$' + price + '<span id="upgradeMaxPeriod">' + period + '</span>';
-  const perMonthEl = document.getElementById('upgradeMaxPerMonth');
-  if (perMonthEl) perMonthEl.textContent = perMonth || '';
   upgradeMaxAmount = amount;
   upgradeMaxInterval = interval;
 }
@@ -1595,30 +1579,18 @@ function renderUpgradeModal() {
   status.style.display = 'none';
   btnRow.style.display = 'grid';
 
-  // 构建到期信息
-  let expireInfo = '';
-  if (currentPeriodEnd) {
-    const end = new Date(currentPeriodEnd);
-    const diffDays = Math.ceil((end - new Date()) / (1000 * 60 * 60 * 24));
-    const yyyy = end.getFullYear();
-    const mm = String(end.getMonth() + 1).padStart(2, '0');
-    const dd = String(end.getDate()).padStart(2, '0');
-    expireInfo = diffDays > 0 ? `（到期：${yyyy}-${mm}-${dd}，剩余 ${diffDays} 天）` : '（已到期）';
-  }
-
   if (currentPlan === 'pro') {
     proCard.classList.add('subscribed');
     proBtn.disabled = true; proBtn.textContent = '已是 Pro 啦 ✦';
     status.style.display = 'block';
-    status.textContent = `你已经是 Pro 用户了${expireInfo}，可以升级到 Max 解锁无限变身 ✦`;
+    status.textContent = '你已经是 Pro 用户了，可以升级到 Max 解锁无限变身 ✦';
   } else if (currentPlan === 'max') {
     proCard.classList.add('subscribed');
     maxCard.classList.add('subscribed');
     proBtn.disabled = true; proBtn.textContent = '已包含 ✦';
-    // Max 用户可以续费，按钮改为"续费"
-    maxBtn.disabled = false; maxBtn.textContent = '续费 Max ✦';
+    maxBtn.disabled = true; maxBtn.textContent = '已是 Max 啦 ✦';
     status.style.display = 'block';
-    status.textContent = `你已经是 Max 传奇玩家了${expireInfo}，续费可叠加时长！✦`;
+    status.textContent = '你已经是 Max 传奇玩家了，所有权益全解锁！✦';
   }
 }
 
@@ -1690,23 +1662,6 @@ function renderPricingByPlan() {
   if (descEl) descEl.textContent =
     plan === 'max' ? '变身券无限张，随便造 ✦' : '变身券每天 30 张，享受无水印 ✦';
 
-  // 显示到期倒计时
-  const expireEl = document.getElementById('memberExpire');
-  if (expireEl && currentPeriodEnd) {
-    const end = new Date(currentPeriodEnd);
-    const now = new Date();
-    const diffMs = end - now;
-    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-    if (diffDays > 0) {
-      const yyyy = end.getFullYear();
-      const mm = String(end.getMonth() + 1).padStart(2, '0');
-      const dd = String(end.getDate()).padStart(2, '0');
-      expireEl.textContent = `· 到期：${yyyy}-${mm}-${dd}（剩余 ${diffDays} 天）`;
-    } else {
-      expireEl.textContent = '· 已到期';
-    }
-  }
-
   // 显示管理订阅区
   manageSection?.classList.add('show');
   if (manageTitle) manageTitle.textContent = plan === 'max' ? '✦ 你已经是 Max 传奇玩家了！' : '✦ 你已经是 Pro 啦';
@@ -1714,7 +1669,7 @@ function renderPricingByPlan() {
     ? '最高权益全解锁，下面是各套餐对比供参考～'
     : '订阅正常有效，还想再进一步？可以升级到 Max～';
 
-  // 当前套餐卡片变色 + 按钮
+  // 当前套餐卡片变色 + 按钮置灰
   if (plan === 'pro') {
     proCard?.classList.add('subscribed');
     if (proPlanBtn) { proPlanBtn.disabled = true; proPlanBtn.textContent = '已是 Pro 啦 ✦'; proPlanBtn.onclick = null; }
@@ -1722,8 +1677,7 @@ function renderPricingByPlan() {
   } else if (plan === 'max') {
     maxCard?.classList.add('subscribed');
     proCard?.classList.add('subscribed');
-    // Max 用户可以续费（叠加时长），按钮改为"续费"
-    if (maxPlanBtn) { maxPlanBtn.disabled = false; maxPlanBtn.textContent = '续费 Max ✦'; }
+    if (maxPlanBtn) { maxPlanBtn.disabled = true; maxPlanBtn.textContent = '已是 Max 啦 ✦'; maxPlanBtn.onclick = null; }
     if (proPlanBtn) { proPlanBtn.disabled = true; proPlanBtn.textContent = '已是 Pro ✦'; proPlanBtn.onclick = null; }
     if (freePlanBtn) freePlanBtn.disabled = true;
   }
@@ -1768,8 +1722,8 @@ async function handleAuth() {
   const btn = document.getElementById('authSubmitBtn');
   const msg = document.getElementById('authMsg');
 
-  if (!email || !password) { msg.textContent = '邮箱和密码不能为空'; _authInProgress = false; return; }
-  if (password.length < 6) { msg.textContent = '密码至少 6 位哦'; _authInProgress = false; return; }
+  if (!email || !password) { msg.textContent = '邮箱和密码都要填哦，少一个都不行！(｀・ω・´)'; _authInProgress = false; return; }
+  if (password.length < 6) { msg.textContent = '密码至少要 6 位哦，短了守不住的 (´•ω•`)'; _authInProgress = false; return; }
 
   btn.disabled = true;
   btn.textContent = '处理中...';
@@ -1785,17 +1739,17 @@ async function handleAuth() {
 
     if (result.error) {
       const errMap = {
-        'Invalid login credentials': '邮箱或密码不对，再想想～',
-        'User already registered': '这个邮箱已经注册过了，直接登录吧',
-        'Email not confirmed': '先去邮箱点一下确认链接哦',
-        'Password should be at least 6 characters': '密码至少 6 位哦',
+        'Invalid login credentials': '邮箱或密码不对哦，再想想？(・ω・`)',
+        'User already registered': '这个邮箱已经是老朋友啦！快去登录吧 (≧▽≦)',
+        'Email not confirmed': '先去邮箱点一下确认链接哦，就差最后一步了！✉️',
+        'Password should be at least 6 characters': '密码至少要 6 位哦，短了守不住的 (´•ω•`)',
       };
       msg.textContent = errMap[result.error.message] || result.error.message;
       btn.disabled = false;
       btn.textContent = authMode === 'login' ? '登录' : '注册';
     } else if (authMode === 'signup' && !result.data.session) {
       msg.className = 'auth-msg ok';
-      msg.textContent = '📬 注册成功！去邮箱点一下确认链接就好了～';
+      msg.textContent = '📬 注册成功！去邮箱点一下确认链接，马上就能变身啦～ (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧';
       btn.disabled = false;
       btn.textContent = '注册';
     }
@@ -1871,7 +1825,7 @@ function checkPaymentResult() {
       await refreshUserPlan();
       renderNavAuth();
       renderPricingByPlan();
-      alert('🎉 订阅成功！权益已激活，随便造吧～');
+      alert('🎉 订阅成功！权益已激活，快去变身吧～ (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧');
     }, 1500);
     window.history.replaceState({}, '', '/');
   } else if (params.get('payment') === 'cancel') {
