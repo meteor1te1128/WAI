@@ -1477,24 +1477,30 @@ async function initAuth() {
   const { data: { session } } = await _supabase.auth.getSession();
   if (session?.user) {
     currentUser = session.user;
-    await refreshUserPlan();
-    renderNavAuth();
-    renderPricingByPlan();
-    renderFreeCount();
-    checkPaymentResult();
+    try { await refreshUserPlan(); } catch(e) { console.warn('initAuth refreshUserPlan:', e); }
+    try { renderNavAuth(); } catch(e) { console.warn('initAuth renderNavAuth:', e); }
+    try { renderPricingByPlan(); } catch(e) { console.warn('initAuth renderPricingByPlan:', e); }
+    try { renderFreeCount(); } catch(e) { console.warn('initAuth renderFreeCount:', e); }
+    try { checkPaymentResult(); } catch(e) { console.warn('initAuth checkPaymentResult:', e); }
   }
   // 监听登录/登出变化
   _supabase.auth.onAuthStateChange(async (event, session) => {
-    currentUser = session?.user || null;
-    if (currentUser) {
-      await refreshUserPlan();
-      checkPaymentResult();
-    } else {
-      currentPlan = 'free';
+    try {
+      currentUser = session?.user || null;
+      if (currentUser) {
+        // 登录成功 — 关闭登录弹窗（唯一关弹窗的地方）
+        try { closeAuthModal(); } catch(e) {}
+        try { await refreshUserPlan(); } catch(e) { console.warn('refreshUserPlan failed:', e); }
+        try { checkPaymentResult(); } catch(e) { console.warn('checkPaymentResult failed:', e); }
+      } else {
+        currentPlan = 'free';
+      }
+      try { renderNavAuth(); } catch(e) { console.warn(e); }
+      try { renderPricingByPlan(); } catch(e) { console.warn(e); }
+      try { renderFreeCount(); } catch(e) { console.warn(e); }
+    } catch(e) {
+      console.warn('onAuthStateChange error:', e);
     }
-    renderNavAuth();
-    renderPricingByPlan();
-    renderFreeCount();
   });
 }
 
@@ -1645,14 +1651,16 @@ function renderPricingByPlan() {
 
   // 有订阅 — 显示横幅
   banner?.classList.add('show');
-  document.getElementById('memberBadgeText').textContent = plan.toUpperCase();
-  document.getElementById('memberBannerDesc').textContent =
+  const badgeText = document.getElementById('memberBadgeText');
+  if (badgeText) badgeText.textContent = plan.toUpperCase();
+  const bannerDesc = document.getElementById('memberBannerDesc');
+  if (bannerDesc) bannerDesc.textContent =
     plan === 'max' ? '变身券无限张，随便造 ✦' : '变身券每天 30 张，享受无水印 ✦';
 
   // 显示管理订阅区
   manageSection?.classList.add('show');
-  manageTitle.textContent = plan === 'max' ? '✦ 你已经是 Max 传奇玩家了！' : '✦ 你已经是 Pro 啦';
-  manageDesc.textContent = plan === 'max'
+  if (manageTitle) manageTitle.textContent = plan === 'max' ? '✦ 你已经是 Max 传奇玩家了！' : '✦ 你已经是 Pro 啦';
+  if (manageDesc) manageDesc.textContent = plan === 'max'
     ? '最高权益全解锁，下面是各套餐对比供参考～'
     : '订阅正常有效，还想再进一步？可以升级到 Max～';
 
@@ -1695,14 +1703,18 @@ function switchAuthTab(mode) {
   document.getElementById('authMsg').textContent = '';
 }
 
+let _authInProgress = false;
 async function handleAuth() {
+  if (_authInProgress) return;
+  _authInProgress = true;
+
   const email = document.getElementById('authEmail').value.trim();
   const password = document.getElementById('authPassword').value;
   const btn = document.getElementById('authSubmitBtn');
   const msg = document.getElementById('authMsg');
 
-  if (!email || !password) { msg.textContent = '邮箱和密码不能为空'; return; }
-  if (password.length < 6) { msg.textContent = '密码至少 6 位哦'; return; }
+  if (!email || !password) { msg.textContent = '邮箱和密码不能为空'; _authInProgress = false; return; }
+  if (password.length < 6) { msg.textContent = '密码至少 6 位哦'; _authInProgress = false; return; }
 
   btn.disabled = true;
   btn.textContent = '处理中...';
@@ -1717,7 +1729,6 @@ async function handleAuth() {
     }
 
     if (result.error) {
-      // 友好错误提示
       const errMap = {
         'Invalid login credentials': '邮箱或密码不对，再想想～',
         'User already registered': '这个邮箱已经注册过了，直接登录吧',
@@ -1725,19 +1736,28 @@ async function handleAuth() {
         'Password should be at least 6 characters': '密码至少 6 位哦',
       };
       msg.textContent = errMap[result.error.message] || result.error.message;
-    } else {
-      if (authMode === 'signup' && !result.data.session) {
-        msg.className = 'auth-msg ok';
-        msg.textContent = '📬 注册成功！去邮箱点一下确认链接就好了～';
-      } else {
-        closeAuthModal();
-      }
+      btn.disabled = false;
+      btn.textContent = authMode === 'login' ? '登录' : '注册';
+    } else if (authMode === 'signup' && !result.data.session) {
+      // 注册成功但需要邮箱确认
+      msg.className = 'auth-msg ok';
+      msg.textContent = '📬 注册成功！去邮箱点一下确认链接就好了～';
+      btn.disabled = false;
+      btn.textContent = '注册';
     }
+    // 登录成功的情况：什么都不做！
+    // onAuthStateChange 会自动检测到 SIGNED_IN，然后关弹窗、渲染导航栏等
   } catch(e) {
-    msg.textContent = '网络错误，请稍后重试';
-  } finally {
+    // 真正的网络错误：先检查是不是其实已经登录成功了
+    const { data: { session } } = await _supabase.auth.getSession().catch(() => ({ data: { session: null } }));
+    if (!session) {
+      console.error('Auth error:', e);
+      msg.textContent = '网络错误，请稍后重试';
+    }
     btn.disabled = false;
     btn.textContent = authMode === 'login' ? '登录' : '注册';
+  } finally {
+    _authInProgress = false;
   }
 }
 
