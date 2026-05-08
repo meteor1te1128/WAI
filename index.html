@@ -340,7 +340,24 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 .modal-body h3{font-size:14px;font-weight:700;color:var(--text);margin:14px 0 6px;}
 .modal-body p{margin-bottom:10px;}
 
-/* ===== AUTH MODAL ===== */
+/* ===== MEMBER BANNER (upload card top) ===== */
+.member-banner{display:none;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(236,72,153,0.08));border:1px solid rgba(139,92,246,0.25);border-radius:14px;padding:10px 16px;margin-bottom:18px;}
+.member-banner.show{display:flex;}
+.member-banner-left{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#7c3aed;}
+.member-banner-badge{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:10px;letter-spacing:0.5px;}
+.member-banner-desc{font-size:12px;color:var(--text-muted);font-weight:400;}
+.member-banner-manage{font-size:11px;color:#8b5cf6;text-decoration:none;font-weight:600;white-space:nowrap;cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;padding:0;}
+.member-banner-manage:hover{text-decoration:underline;}
+/* subscribed card state */
+.price-card.subscribed{border:2px solid #8b5cf6;background:linear-gradient(160deg,rgba(139,92,246,0.08),var(--white-card));}
+.price-card.subscribed .price-btn{background:rgba(139,92,246,0.1);color:#8b5cf6;border:1.5px solid rgba(139,92,246,0.3);cursor:not-allowed;opacity:0.8;}
+/* manage subscription section */
+.manage-sub-section{display:none;text-align:center;padding:28px;background:var(--white-card);border:1px solid var(--border);border-radius:20px;}
+.manage-sub-section.show{display:block;}
+.manage-sub-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.manage-sub-desc{font-size:13px;color:var(--text-muted);margin-bottom:18px;}
+.manage-sub-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 24px;border-radius:12px;border:1.5px solid rgba(139,92,246,0.4);background:transparent;color:#8b5cf6;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.manage-sub-btn:hover{background:rgba(139,92,246,0.06);border-color:#8b5cf6;}
 .auth-tabs{display:flex;gap:0;margin-bottom:22px;border-bottom:1px solid var(--border);}
 .auth-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Outfit',sans-serif;}
 .auth-tab.on{color:#8b5cf6;border-bottom-color:#8b5cf6;}
@@ -428,6 +445,14 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <!-- UPLOAD CARD -->
 <div class="card">
   <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handleFileChange(this)">
+  <!-- 会员横幅 -->
+  <div class="member-banner" id="memberBanner">
+    <div class="member-banner-left">
+      <span class="member-banner-badge" id="memberBadgeText">PRO</span>
+      <span class="member-banner-desc" id="memberBannerDesc">变身券不设上限，随便造 ✦</span>
+    </div>
+    <button class="member-banner-manage" onclick="openManageSubscription()">管理订阅 →</button>
+  </div>
   <div class="upload-zone" id="uz" onclick="document.getElementById('fileInput').click()">
     <div class="upload-icon-wrap"><i class="ti ti-upload"></i></div>
     <h3>把照片拖进来，或者点这里</h3>
@@ -552,10 +577,18 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <div class="section" id="pricing">
   <div class="section-title">价格很 <span class="grad">良心</span>，真的</div>
   <div class="section-desc">免费够用，付费解锁更多，没有套路隐藏费用那种</div>
-  <div class="pricing-grid">
+
+  <!-- 已订阅时显示的管理入口 -->
+  <div class="manage-sub-section" id="manageSubSection">
+    <div class="manage-sub-title" id="manageSubTitle">✦ 你已经是 Pro 啦</div>
+    <div class="manage-sub-desc" id="manageSubDesc">订阅正常有效，下面可以看看各套餐权益对比，或者升级到 Max～</div>
+    <button class="manage-sub-btn" onclick="openManageSubscription()"><i class="ti ti-settings"></i> 管理我的订阅</button>
+  </div>
+
+  <div class="pricing-grid" id="pricingGrid">
 
     <!-- FREE -->
-    <div class="price-card">
+    <div class="price-card" id="freeCard">
       <div class="price-plan">Free</div>
       <div class="price-amount">$0</div>
       <div class="price-desc">先玩玩看，不用绑卡，每天刷新</div>
@@ -567,11 +600,11 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
         <li class="muted"><i class="ti ti-x"></i>仅标准清晰度</li>
         <li class="muted"><i class="ti ti-x"></i>没有历史记录</li>
       </ul>
-      <button class="price-btn outline">先免费试试</button>
+      <button class="price-btn outline" id="freePlanBtn">先免费试试</button>
     </div>
 
     <!-- PRO -->
-    <div class="price-card featured">
+    <div class="price-card featured" id="proCard">
       <div class="popular-badge">🔥 大多数人选这个</div>
       <div class="price-plan accent">Pro</div>
       <div style="display:flex;align-items:baseline;gap:6px;">
@@ -580,7 +613,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       <div class="price-desc">每天变身 30 次，够发一周 ins 了</div>
       <div class="price-divider"></div>
       <ul class="price-features">
-        <li><i class="ti ti-check"></i>每天 <strong>30 次</strong>，随便造</li>
+        <li><i class="ti ti-check"></i>变身券每天 <strong>30 张</strong>，随便造</li>
         <li><i class="ti ti-check"></i>12 种风格全解锁</li>
         <li><i class="ti ti-check"></i>无水印，发朋友圈不丢脸</li>
         <li><i class="ti ti-check"></i>最高 <strong>2K</strong> 高清下载</li>
@@ -588,7 +621,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
         <li><i class="ti ti-check"></i>ZIP 批量打包下载</li>
         <li class="muted"><i class="ti ti-x"></i>商业授权</li>
       </ul>
-      <button class="price-btn fill" onclick="handleSubscribe('pro')">解锁 Pro ✦</button>
+      <button class="price-btn fill" id="proPlanBtn" onclick="handleSubscribe('pro')">解锁 Pro ✦</button>
     </div>
 
     <!-- MAX -->
@@ -599,7 +632,6 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
         <div class="price-save" id="maxSave" style="display:none;"></div>
       </div>
       <div class="price-desc">无限变身，发小红书接单都够用</div>
-      <!-- billing tabs inside card -->
       <div class="max-tabs">
         <button class="mtab on" onclick="switchMax(this,'39','/月','')">月付<small>&nbsp;</small></button>
         <button class="mtab" onclick="switchMax(this,'99','/季','省 $18')">季付<small>省$18</small></button>
@@ -608,13 +640,13 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       </div>
       <div class="price-divider"></div>
       <ul class="price-features">
-        <li><i class="ti ti-infinity"></i><strong>无限次数</strong>，想生多少生多少</li>
+        <li><i class="ti ti-infinity"></i>变身券<strong>无限张</strong>，想生多少生多少</li>
         <li><i class="ti ti-photo"></i>最高 <strong>4K</strong> 超清，打印出来也好看</li>
         <li><i class="ti ti-history"></i>历史记录永久保存，不怕找不到</li>
         <li><i class="ti ti-shield-check"></i>商业授权，发 ins / 小红书随便用</li>
         <li><i class="ti ti-sparkles"></i>新风格第一批体验</li>
       </ul>
-      <button class="price-btn fill" onclick="handleSubscribe('max')">解锁 Max ✦</button>
+      <button class="price-btn fill" id="maxPlanBtn" onclick="handleSubscribe('max')">解锁 Max ✦</button>
     </div>
 
   </div>
@@ -791,9 +823,9 @@ const funnyLines=[
   '这么能生成，是资深宅吗？次数用完啦，明天凌晨 4 点见 (≧▽≦)',
 ];
 const normalLines=[
-  '今日剩余次数：',
-  '今日免费次数还有：',
-  '剩余生成配额：',
+  '变身券剩余：',
+  '今天还能变身 ',
+  '变身券还剩 ',
 ];
 
 function renderFreeCount(){
@@ -1340,6 +1372,7 @@ async function initAuth() {
     currentUser = session.user;
     await refreshUserPlan();
     renderNavAuth();
+    renderPricingByPlan();
     checkPaymentResult();
   }
   // 监听登录/登出变化
@@ -1352,6 +1385,7 @@ async function initAuth() {
       currentPlan = 'free';
     }
     renderNavAuth();
+    renderPricingByPlan();
   });
 }
 
@@ -1383,6 +1417,66 @@ function renderNavAuth() {
       <span class="nav-user">${short}${badge}</span>
       <button class="nav-logout" onclick="handleLogout()">退出</button>`;
   }
+}
+
+// ===== PRICING UI 根据套餐状态更新 =====
+function renderPricingByPlan() {
+  const plan = currentPlan; // 'free' | 'pro' | 'max'
+
+  const banner = document.getElementById('memberBanner');
+  const manageSection = document.getElementById('manageSubSection');
+  const manageTitle = document.getElementById('manageSubTitle');
+  const manageDesc = document.getElementById('manageSubDesc');
+  const freeCard = document.getElementById('freeCard');
+  const proCard = document.getElementById('proCard');
+  const maxCard = document.getElementById('maxCard');
+  const proPlanBtn = document.getElementById('proPlanBtn');
+  const maxPlanBtn = document.getElementById('maxPlanBtn');
+  const freePlanBtn = document.getElementById('freePlanBtn');
+
+  // 重置所有状态
+  [freeCard, proCard, maxCard].forEach(c => c?.classList.remove('subscribed'));
+  if (proPlanBtn) { proPlanBtn.disabled = false; proPlanBtn.textContent = '解锁 Pro ✦'; proPlanBtn.onclick = () => handleSubscribe('pro'); }
+  if (maxPlanBtn) { maxPlanBtn.disabled = false; maxPlanBtn.textContent = '解锁 Max ✦'; maxPlanBtn.onclick = () => handleSubscribe('max'); }
+  if (freePlanBtn) freePlanBtn.disabled = false;
+
+  if (plan === 'free') {
+    banner?.classList.remove('show');
+    manageSection?.classList.remove('show');
+    return;
+  }
+
+  // 有订阅 — 显示横幅
+  banner?.classList.add('show');
+  document.getElementById('memberBadgeText').textContent = plan.toUpperCase();
+  document.getElementById('memberBannerDesc').textContent =
+    plan === 'max' ? '变身券无限张，随便造 ✦' : '变身券每天 30 张，享受无水印 ✦';
+
+  // 显示管理订阅区
+  manageSection?.classList.add('show');
+  manageTitle.textContent = plan === 'max' ? '✦ 你已经是 Max 传奇玩家了！' : '✦ 你已经是 Pro 啦';
+  manageDesc.textContent = plan === 'max'
+    ? '最高权益全解锁，下面是各套餐对比供参考～'
+    : '订阅正常有效，还想再进一步？可以升级到 Max～';
+
+  // 当前套餐卡片变色 + 按钮置灰
+  if (plan === 'pro') {
+    proCard?.classList.add('subscribed');
+    if (proPlanBtn) { proPlanBtn.disabled = true; proPlanBtn.textContent = '已是 Pro 啦 ✦'; proPlanBtn.onclick = null; }
+    if (freePlanBtn) freePlanBtn.disabled = true;
+  } else if (plan === 'max') {
+    maxCard?.classList.add('subscribed');
+    proCard?.classList.add('subscribed');
+    if (maxPlanBtn) { maxPlanBtn.disabled = true; maxPlanBtn.textContent = '已是 Max 啦 ✦'; maxPlanBtn.onclick = null; }
+    if (proPlanBtn) { proPlanBtn.disabled = true; proPlanBtn.textContent = '已是 Pro ✦'; proPlanBtn.onclick = null; }
+    if (freePlanBtn) freePlanBtn.disabled = true;
+  }
+}
+
+function openManageSubscription() {
+  // 跳到 Stripe Customer Portal（目前先跳到定价区，等配置好 portal 再换链接）
+  smoothTo('pricing');
+  alert('订阅管理功能即将上线～如需取消订阅，请联系我们');
 }
 
 // ===== AUTH MODAL =====
@@ -1503,8 +1597,9 @@ function checkPaymentResult() {
     setTimeout(async () => {
       await refreshUserPlan();
       renderNavAuth();
-      alert('🎉 订阅成功！Pro 权益已激活，随便造吧～');
-    }, 1500); // 稍等 webhook 写入
+      renderPricingByPlan();
+      alert('🎉 订阅成功！权益已激活，随便造吧～');
+    }, 1500);
     window.history.replaceState({}, '', '/');
   } else if (params.get('payment') === 'cancel') {
     window.history.replaceState({}, '', '/');
