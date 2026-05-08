@@ -9,39 +9,39 @@ export default async function handler(req, res) {
   }
 
   const styleMap = {
-    '新海诚': {
+    '3D建模': {
       style: '3D',
-      prompt: 'makoto shinkai anime style, beautiful sky, cinematic soft lighting, pastel colors',
-      negative_prompt: 'ugly, blurry, bad anatomy, extra limbs',
-    },
-    '吉卜力': {
-      style: '3D',
-      prompt: 'studio ghibli anime style, hayao miyazaki, warm natural colors, magical atmosphere',
-      negative_prompt: 'ugly, blurry, bad anatomy, realistic photo',
-    },
-    '赛博朋克': {
-      style: '3D',
-      prompt: 'cyberpunk anime style, neon lights, futuristic, dark atmosphere, glowing effects',
+      prompt: 'a person, 3d rendered, pixar style, smooth lighting, detailed face',
       negative_prompt: 'ugly, blurry, bad anatomy',
     },
-    '少年漫画': {
-      style: '3D',
-      prompt: 'shonen manga anime style, vibrant colors, dynamic, bold outlines, expressive eyes',
-      negative_prompt: 'ugly, blurry, bad anatomy, realistic',
+    '表情包': {
+      style: 'Emoji',
+      prompt: 'a person, emoji style, expressive, cute, bold lines',
+      negative_prompt: 'ugly, blurry, bad anatomy',
     },
-    '黑暗幻想': {
-      style: '3D',
-      prompt: 'dark fantasy anime style, dramatic lighting, mysterious atmosphere, detailed',
-      negative_prompt: 'ugly, blurry, bad anatomy, bright colors',
+    '游戏角色': {
+      style: 'Video game',
+      prompt: 'a person, video game character, rpg style, detailed armor, fantasy',
+      negative_prompt: 'ugly, blurry, bad anatomy',
     },
-    '治愈系': {
-      style: '3D',
-      prompt: 'cute healing anime style, soft pastel colors, kawaii, warm gentle lighting',
-      negative_prompt: 'ugly, blurry, bad anatomy, dark, scary',
+    '像素风': {
+      style: 'Pixels',
+      prompt: 'a person, pixel art style, retro game, 16bit',
+      negative_prompt: 'ugly, blurry, bad anatomy',
+    },
+    '黏土风': {
+      style: 'Clay',
+      prompt: 'a person, claymation style, stop motion, clay texture, soft colors',
+      negative_prompt: 'ugly, blurry, bad anatomy',
+    },
+    '玩具风': {
+      style: 'Toy',
+      prompt: 'a person, toy figure, plastic texture, collectible, detailed',
+      negative_prompt: 'ugly, blurry, bad anatomy',
     },
   };
 
-  const selected = styleMap[style] || styleMap['新海诚'];
+  const selected = styleMap[style] || styleMap['3D建模'];
 
   try {
     const startRes = await fetch('https://api.replicate.com/v1/predictions', {
@@ -66,12 +66,9 @@ export default async function handler(req, res) {
     });
 
     const prediction = await startRes.json();
-    console.log('Prediction started:', prediction.id, 'error:', prediction.error);
-
     if (prediction.error) {
       return res.status(500).json({ error: prediction.error });
     }
-
     return res.status(200).json({ predictionId: prediction.id });
 
   } catch (err) {
