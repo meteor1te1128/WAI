@@ -1543,6 +1543,8 @@ let upgradeMaxInterval = 'month';
 
 function openUpgradeModal() {
   renderUpgradeModal();
+  renderNavAuth();
+  renderPricingByPlan();
   document.getElementById('modalUpgrade').classList.add('open');
 }
 function closeUpgradeModal() {
@@ -1838,7 +1840,14 @@ window.addEventListener('pageshow', (e) => {
 });
 
 // 初始化
-initAuth();
+initAuth().then(() => {
+  // 延迟再刷一次，确保 plan 数据已到位
+  setTimeout(() => {
+    try { renderNavAuth(); } catch(e) {}
+    try { renderPricingByPlan(); } catch(e) {}
+    try { renderFreeCount(); } catch(e) {}
+  }, 1500);
+});
 
 // ===== MODALS =====
 function openModal(type){
