@@ -1511,6 +1511,17 @@ function checkPaymentResult() {
   }
 }
 
+// 用户从 Stripe 按返回键回来时重置按钮（浏览器 bfcache）
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted) {
+    document.querySelectorAll('.price-btn.fill').forEach(btn => {
+      btn.disabled = false;
+      if (btn.getAttribute('onclick')?.includes("'pro'")) btn.textContent = '解锁 Pro ✦';
+      if (btn.getAttribute('onclick')?.includes("'max'")) btn.textContent = '解锁 Max ✦';
+    });
+  }
+});
+
 // 初始化
 initAuth();
 
