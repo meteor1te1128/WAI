@@ -50,8 +50,8 @@ async function verifySignature(rawBody, sigHeader, secret) {
   return isValid;
 }
 
-async function upsertSubscription(data) {
-  console.log('Upserting to Supabase:', JSON.stringify(data));
+async function upsertSubscription(data, extendMonths = 0) {
+  console.log('Upserting to Supabase:', JSON.stringify(data), 'extendMonths:', extendMonths);
   const baseUrl = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_KEY;
   const headers = {
@@ -63,14 +63,27 @@ async function upsertSubscription(data) {
   try {
     // 先查是否已有该用户的订阅记录
     const checkRes = await fetch(
-      `${baseUrl}/rest/v1/subscriptions?user_id=eq.${data.user_id}&select=id&limit=1`,
+      `${baseUrl}/rest/v1/subscriptions?user_id=eq.${data.user_id}&select=id,current_period_end,plan&limit=1`,
       { headers }
     );
     const existing = await checkRes.json();
     console.log('Existing records:', JSON.stringify(existing));
 
     if (Array.isArray(existing) && existing.length > 0) {
-      // 已有记录 → PATCH 更新
+      // 已有记录 → 计算新的到期时间
+      let newEnd = data.current_period_end;
+
+      if (extendMonths > 0) {
+        // 叠加模式：在当前到期时间基础上加月份
+        const currentEnd = existing[0].current_period_end;
+        const base = (currentEnd && new Date(currentEnd) > new Date())
+          ? new Date(currentEnd)  // 还没到期，在到期时间基础上延长
+          : new Date();           // 已过期，从现在开始算
+        base.setMonth(base.getMonth() + extendMonths);
+        newEnd = base.toISOString();
+        console.log('Extended period end to:', newEnd);
+      }
+
       console.log('Updating existing record for user:', data.user_id);
       const updateRes = await fetch(
         `${baseUrl}/rest/v1/subscriptions?user_id=eq.${data.user_id}`,
@@ -82,7 +95,7 @@ async function upsertSubscription(data) {
             status: data.status,
             stripe_customer_id: data.stripe_customer_id,
             stripe_subscription_id: data.stripe_subscription_id,
-            current_period_end: data.current_period_end,
+            current_period_end: newEnd,
           }),
         }
       );
@@ -173,6 +186,7 @@ export default async function handler(req, res) {
 
         const userId = session.metadata?.supabase_user_id;
         const plan = session.metadata?.plan || 'pro';
+        const interval = session.metadata?.interval || 'month';
 
         if (!userId) {
           console.error('No supabase_user_id in metadata!');
@@ -186,10 +200,14 @@ export default async function handler(req, res) {
         const subscription = await getStripeSubscription(session.subscription);
         if (!subscription) break;
 
-        // current_period_end 可能为 null，用 30 天后作为默认值
+        // 根据 interval 计算叠加月数
+        const intervalToMonths = { month: 1, quarter: 3, halfyear: 6, year: 12 };
+        const extendMonths = intervalToMonths[interval] || 1;
+
+        // current_period_end 可能为 null，用叠加月数作为默认值
         const periodEnd = subscription.current_period_end
           ? new Date(subscription.current_period_end * 1000).toISOString()
-          : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+          : new Date(Date.now() + extendMonths * 30 * 24 * 60 * 60 * 1000).toISOString();
 
         await upsertSubscription({
           user_id: userId,
@@ -198,8 +216,8 @@ export default async function handler(req, res) {
           stripe_customer_id: session.customer,
           stripe_subscription_id: session.subscription,
           current_period_end: periodEnd,
-        });
-        console.log(`✅ ${plan} 订阅激活：user ${userId}`);
+        }, extendMonths);
+        console.log(`✅ ${plan} 订阅激活 (${interval}, +${extendMonths}月)：user ${userId}`);
         break;
       }
 
