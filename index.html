@@ -1163,22 +1163,24 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // ===== LOAD HISTORY =====
 async function loadHistory(){
+  if (!currentUser) return; // 未登录直接跳过
   try {
-    const histUserId = currentUser ? currentUser.id : WAI_USER_ID;
-    const res = await fetch(`/api/history?userId=${histUserId}`);
+    const res = await fetch(`/api/history?userId=${currentUser.id}`);
     const data = await res.json();
-    if(Array.isArray(data) && data.length > 0 && currentUser){
+    if(Array.isArray(data) && data.length > 0){
       document.getElementById('historySection').style.display = '';
       const grid = document.getElementById('historyGrid');
       grid.innerHTML = data.map(item => `
         <div class="history-card" onclick="downloadHistoryItem('${item.anime_url}')">
-          <img src="${item.anime_url}" alt="${item.style||'变身'}" loading="lazy">
+          <img src="${item.anime_url}" alt="${item.style||'变身'}" loading="lazy" onerror="this.style.display='none'">
           <div class="history-card-label">
             <span class="history-card-style">${item.style||'变身'}</span>
             <span class="history-card-time">${timeAgo(item.created_at)}</span>
           </div>
         </div>
       `).join('');
+    } else {
+      document.getElementById('historySection').style.display = 'none';
     }
   } catch(e) {
     console.log('History load failed:', e);
@@ -1211,8 +1213,6 @@ function timeAgo(dateStr){
   if(m>0) return m+'分钟前';
   return '刚刚';
 }
-
-loadHistory();
 
 // ===== STYLE PICKER =====
 function pick(el){
@@ -1731,7 +1731,7 @@ function renderNavAuth() {
       } else if (currentPlan === 'pro') {
         const used = parseInt(localStorage.getItem('waiProUsed') || '0');
         const left = Math.max(0, 10 - used);
-        quotaStr = `剩 ${left} / 30 次`;
+        quotaStr = `剩 ${left} / 10 次`;
       }
 
       badgeHtml = `
@@ -1799,9 +1799,9 @@ function renderUpgradeModal() {
     proCard.classList.add('subscribed');
     maxCard.classList.add('subscribed');
     proBtn.disabled = true; proBtn.textContent = '已包含 ✦';
-    maxBtn.disabled = true; maxBtn.textContent = '已是 Max 啦 ✦';
+    maxBtn.disabled = false; maxBtn.textContent = '切换周期 / 续费 ✦';
     status.style.display = 'block';
-    status.textContent = '你已经是 Max 传奇玩家了，所有权益全解锁！✦';
+    status.textContent = '✦ 你已是 Max 传奇玩家！可选更长周期续费省更多～';
   }
 }
 
