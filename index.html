@@ -458,7 +458,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 }
 .nav-badge-tooltip{
   position:absolute;
-  top:calc(100% + 10px);
+  top:calc(100% + 6px);
   right:0;
   background:var(--white-card);
   border:1px solid var(--card-border);
@@ -470,12 +470,14 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   pointer-events:none;
   transform:translateY(-6px) scale(0.97);
   transition:opacity 0.2s,transform 0.2s;
+  transition-delay:300ms;
   z-index:50;
 }
 .nav-badge-wrap:hover .nav-badge-tooltip{
   opacity:1;
   pointer-events:all;
   transform:translateY(0) scale(1);
+  transition-delay:0s;
 }
 .nbt-plan{
   font-size:13px;
@@ -823,10 +825,10 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       <div class="upgrade-card featured" id="upgradeProCard">
         <div class="upgrade-card-badge">🔥 最受欢迎</div>
         <div class="upgrade-card-name">PRO</div>
-        <div class="upgrade-card-price">$19<span>/月</span></div>
-        <div class="upgrade-card-desc">每天变身 30 次，够发一周 ins 了</div>
+        <div class="upgrade-card-price">$9.9<span>/月</span></div>
+        <div class="upgrade-card-desc">每天变身 10 次，轻量够用</div>
         <ul class="upgrade-card-features">
-          <li><i class="ti ti-check"></i>变身券每天 30 张</li>
+          <li><i class="ti ti-check"></i>变身券每天 10 张</li>
           <li><i class="ti ti-check"></i>6 种风格全解锁</li>
           <li><i class="ti ti-check"></i>无水印 · 2K 高清</li>
           <li><i class="ti ti-check"></i>30 天历史记录</li>
@@ -838,13 +840,13 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       <!-- MAX -->
       <div class="upgrade-card" id="upgradeMaxCard">
         <div class="upgrade-card-name">MAX</div>
-        <div class="upgrade-card-price" id="upgradeMaxPrice">$39<span id="upgradeMaxPeriod">/月</span></div>
+        <div class="upgrade-card-price" id="upgradeMaxPrice">$29<span id="upgradeMaxPeriod">/月</span></div>
         <div class="upgrade-card-desc">无限变身，发小红书接单都够用</div>
         <div class="upgrade-max-tabs">
-          <button class="umtab on" onclick="switchUpgradeMax(this,'39','/月',3900,'month')">月付<small>&nbsp;</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'99','/季',9900,'quarter')">季付<small>省$18</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'169','/半年',16900,'halfyear')">半年<small>省$65</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'299','/年',29900,'year')">年付<small>省$169</small></button>
+          <button class="umtab on" onclick="switchUpgradeMax(this,'29','/月',2900,'month')">月付<small>&nbsp;</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'69','/季',6900,'quarter')">季付<small>省$18</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'119','/半年',11900,'halfyear')">半年<small>省$55</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'199','/年',19900,'year')">年付<small>省$149</small></button>
         </div>
         <ul class="upgrade-card-features">
           <li><i class="ti ti-infinity"></i>变身券无限张</li>
@@ -1043,11 +1045,11 @@ function renderFreeCount(){
       dotsEl.appendChild(d);
     }
     if(left<=0){
-      textEl.textContent='今天 30 张变身券用完啦，凌晨 4 点续杯 (´;ω;`)';
+      textEl.textContent='今天 10 张变身券用完啦，凌晨 4 点续杯 (´;ω;`)';
       textEl.style.maxWidth='260px';
       textEl.style.color='';
     }else{
-      textEl.textContent='变身券剩余：'+left+' / 30 张';
+      textEl.textContent='变身券剩余：'+left+' / 10 张';
       textEl.style.color='';
       textEl.style.maxWidth='none';
     }
@@ -1265,7 +1267,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ===== GENERATE =====
-const PRO_DAILY = 30;
+const PRO_DAILY = 10;
 let busy = false;
 
 function getDailyLimit() {
@@ -1309,7 +1311,7 @@ async function handleGen() {
     const used = getUsedToday();
     if (used >= limit) {
       if (currentPlan === 'pro') {
-        alert('今天 30 张变身券全烧完啦 (´;ω;`) 凌晨 4 点刷新，或者升级 Max 无限造 ✦');
+        alert('今天 10 张变身券全烧完啦 (´;ω;`) 凌晨 4 点刷新，或者升级 Max 无限造 ✦');
       } else {
         alert('今天的配额烧完啦！每天凌晨 4:00（北京时间）刷新 (≧▽≦) 或者升级 Pro 无限造～ ✦');
       }
@@ -1437,7 +1439,7 @@ async function handleGen() {
 }
 
 // ===== PRICING TABS =====
-let maxSelectedAmount = 3900;
+let maxSelectedAmount = 2900;
 function switchMax(el,price,period,save){
   document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));
   el.classList.add('on');
@@ -1728,7 +1730,7 @@ function renderNavAuth() {
         quotaStr = '无限 ∞';
       } else if (currentPlan === 'pro') {
         const used = parseInt(localStorage.getItem('waiProUsed') || '0');
-        const left = Math.max(0, 30 - used);
+        const left = Math.max(0, 10 - used);
         quotaStr = `剩 ${left} / 30 次`;
       }
 
@@ -1754,7 +1756,7 @@ function renderNavAuth() {
 }
 
 // ===== UPGRADE MODAL =====
-let upgradeMaxAmount = 3900;
+let upgradeMaxAmount = 2900;
 let upgradeMaxInterval = 'month';
 
 function openUpgradeModal() {
@@ -1867,7 +1869,7 @@ function renderPricingByPlan() {
   if (badgeEl) badgeEl.textContent = plan.toUpperCase();
   const descEl = document.getElementById('memberBannerDesc');
   if (descEl) descEl.textContent =
-    plan === 'max' ? '变身券无限张，随便造 ✦' : '变身券每天 30 张，享受无水印 ✦';
+    plan === 'max' ? '变身券无限张，随便造 ✦' : '变身券每天 10 张，享受无水印 ✦';
 
   const expireEl = document.getElementById('memberExpire');
   if (expireEl && currentPeriodEnd) {
