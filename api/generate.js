@@ -8,145 +8,122 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: '请上传图片' });
   }
 
-  const pureBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
-
-  const FACE_TO_MANY = 'edc6439ac55af138defbca7c472b38bcdd62c61797e8e0c2fae88696cd8afb25';
-  const PHOTOMAKER  = '467d062309da518648ba89d226490e02b8ed09b5abc15026e54e31c5a8cd0769';
-
+  // ─── 风格映射 ───────────────────────────────────────────────
+  // 全部使用 flux-kontext-apps/face-to-many-kontext
+  // 该模型接受 input_image URL，需先上传到 Supabase Storage
+  // style 枚举来自模型官方 schema（已截图确认）
   const styleMap = {
-    '吉卜力风': {
-      model: 'photomaker',
-      prompt: 'img, Studio Ghibli anime style painting, soft watercolor, hand-drawn, Miyazaki aesthetic, warm pastel colors, expressive eyes, dreamy background, gentle lighting',
-      negative_prompt: 'realistic, photo, 3d render, ugly, blurry, bad anatomy, dark, horror, nsfw',
-      style_name: '(No style)',
-      num_steps: 50,
-      style_strength_ratio: 35,
-      guidance_scale: 5,
+    '🌿 吉卜力风': {
+      style: 'Watercolor',
+      prompt: 'Studio Ghibli anime watercolor painting, soft hand-painted brushstrokes, Miyazaki aesthetic, warm pastel palette, expressive eyes, dreamy lush background, gentle cinematic lighting',
+      negative_prompt: 'realistic, photo, 3d render, ugly, blurry, bad anatomy, nsfw, dark, horror',
     },
-    '迪士尼3D': {
-      model: 'face-to-many',
-      style: '3D',
-      prompt: 'a person, Pixar Disney 3D animation, smooth round face, big expressive eyes, vibrant colors, cinematic lighting',
-      negative_prompt: 'ugly, blurry, bad anatomy, flat, 2d, realistic',
-      num_steps: 20,
-      guidance_scale: 7.5,
-      ip_adapter_scale: 0.8,
-      reserve_face_weight: 0.8,
+    '🧸 黏土风': {
+      style: 'Clay',
+      prompt: 'cute claymation character portrait, smooth matte clay texture, round chubby face, soft diffused studio lighting, pastel colors, stop-motion animation style, highly detailed clay sculpt',
+      negative_prompt: 'realistic, photo, ugly, blurry, flat, 2d, dark, horror, nsfw',
     },
-    '像素风': {
-      model: 'face-to-many',
-      style: 'Pixels',
-      prompt: 'a person, retro pixel art portrait, 16bit RPG game character, vibrant pixel colors',
-      negative_prompt: 'blurry, realistic, smooth, 3d, ugly',
-      num_steps: 20,
-      guidance_scale: 7.5,
-      ip_adapter_scale: 0.8,
-      reserve_face_weight: 0.8,
+    '👾 像素风': {
+      style: 'Pixel Art',
+      prompt: '16-bit RPG pixel art portrait, grid-aligned pixel blocks, limited vibrant color palette, retro game character sprite, sharp crisp pixel edges, classic JRPG style',
+      negative_prompt: 'blurry, smooth, anti-aliased, realistic, 3d, ugly, noisy',
     },
-    '游戏角色': {
-      model: 'face-to-many',
-      style: 'Video game',
-      prompt: 'a person, fantasy RPG hero, detailed epic armor, game character art, dynamic lighting',
-      negative_prompt: 'ugly, blurry, bad anatomy, realistic photo',
-      num_steps: 20,
-      guidance_scale: 7.5,
-      ip_adapter_scale: 0.8,
-      reserve_face_weight: 0.8,
+    '✨ 动漫风': {
+      style: 'Anime',
+      prompt: 'Japanese anime portrait, big bright expressive eyes, clean sharp lineart, vibrant cel shading, professional manga illustration, dramatic lighting, detailed hair',
+      negative_prompt: 'realistic, photo, 3d, ugly, blurry, bad anatomy, nsfw, western cartoon',
     },
-    '动漫风': {
-      model: 'photomaker',
-      prompt: 'img, Japanese anime portrait, big bright eyes, clean sharp lineart, vibrant cel shading, manga illustration',
-      negative_prompt: 'realistic, photo, 3d, ugly, blurry, bad anatomy, nsfw',
-      style_name: '(No style)',
-      num_steps: 50,
-      style_strength_ratio: 35,
-      guidance_scale: 5,
+    '🎨 漫画风': {
+      style: 'Cartoon',
+      prompt: 'stylized cartoon character portrait, bold clean outlines, vivid saturated colors, expressive exaggerated features, modern animation style, professional character design',
+      negative_prompt: 'realistic, photo, ugly, blurry, bad anatomy, nsfw, horror',
     },
   };
 
-  const selected = styleMap[style] || styleMap['动漫风'];
+  // 兼容旧风格名称（平滑过渡，防止前端缓存旧数据）
+  const legacyMap = {
+    '吉卜力风':  '🌿 吉卜力风',
+    '迪士尼3D':  '🧸 黏土风',
+    '像素风':    '👾 像素风',
+    '游戏角色':  '✨ 动漫风',
+    '动漫风':    '🎨 漫画风',
+  };
 
+  const resolvedStyle = styleMap[style]
+    ? style
+    : legacyMap[style]
+      ? legacyMap[style]
+      : '🌿 吉卜力风';
+
+  const selected = styleMap[resolvedStyle];
+
+  // ─── 上传图片到 Supabase Storage，拿公开 URL ───────────────
+  // face-to-many-kontext 只接受 URL，不接受 base64
+  const pureBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+  const imgBuffer = Buffer.from(pureBase64, 'base64');
+
+  const fileName = `tmp_${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
+
+  const uploadRes = await fetch(
+    `${process.env.SUPABASE_URL}/storage/v1/object/uploads/${fileName}`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
+        'Content-Type': 'image/jpeg',
+        'x-upsert': 'true',
+      },
+      body: imgBuffer,
+    }
+  );
+
+  if (!uploadRes.ok) {
+    const err = await uploadRes.text();
+    console.error('Supabase upload failed:', err);
+    return res.status(500).json({ error: '图片上传失败，请重试' });
+  }
+
+  const imageUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/uploads/${fileName}`;
+
+  // ─── 调用 face-to-many-kontext ────────────────────────────
+  // 注意：使用 /v1/models/{owner}/{name}/predictions 路径，无需 version hash
   try {
-    if (selected.model === 'photomaker') {
-      // 先上传图片到 Supabase Storage 拿 URL
-      const fileName = `tmp_${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
-      const imgBuffer = Buffer.from(pureBase64, 'base64');
-
-      const uploadRes = await fetch(
-        `${process.env.SUPABASE_URL}/storage/v1/object/uploads/${fileName}`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
-            'Content-Type': 'image/jpeg',
-          },
-          body: imgBuffer,
-        }
-      );
-
-      if (!uploadRes.ok) {
-        const err = await uploadRes.text();
-        console.error('Upload failed:', err);
-        return res.status(500).json({ error: '图片上传失败，请重试' });
-      }
-
-      const imageUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/uploads/${fileName}`;
-
-      const startRes = await fetch('https://api.replicate.com/v1/predictions', {
+    const startRes = await fetch(
+      'https://api.replicate.com/v1/models/flux-kontext-apps/face-to-many-kontext/predictions',
+      {
         method: 'POST',
         headers: {
           'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          version: PHOTOMAKER,
           input: {
+            style: selected.style,
             prompt: selected.prompt,
             negative_prompt: selected.negative_prompt,
-            style_name: selected.style_name,
             input_image: imageUrl,
-            num_steps: selected.num_steps,
-            style_strength_ratio: selected.style_strength_ratio,
-            guidance_scale: selected.guidance_scale,
-            num_outputs: 1,
+            num_images: 1,
+            aspect_ratio: 'match_input_image',
+            output_format: 'png',
+            preserve_outfit: false,
+            preserve_background: false,
+            safety_tolerance: 2,
           },
         }),
-      });
-
-      const prediction = await startRes.json();
-      if (prediction.error) {
-        return res.status(500).json({ error: prediction.error });
       }
-      return res.status(200).json({ predictionId: prediction.id, tmpFile: fileName });
-    }
-
-    // face-to-many
-    const startRes = await fetch('https://api.replicate.com/v1/predictions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        version: FACE_TO_MANY,
-        input: {
-          image: `data:image/jpeg;base64,${pureBase64}`,
-          style: selected.style,
-          prompt: selected.prompt,
-          negative_prompt: selected.negative_prompt,
-          num_steps: selected.num_steps,
-          guidance_scale: selected.guidance_scale,
-          ip_adapter_scale: selected.ip_adapter_scale,
-          reserve_face_weight: selected.reserve_face_weight,
-        },
-      }),
-    });
+    );
 
     const prediction = await startRes.json();
+
     if (prediction.error) {
+      console.error('Replicate error:', prediction.error);
       return res.status(500).json({ error: prediction.error });
     }
-    return res.status(200).json({ predictionId: prediction.id });
+
+    return res.status(200).json({
+      predictionId: prediction.id,
+      tmpFile: fileName,       // status.js 轮询完成后用来删除临时文件
+    });
 
   } catch (err) {
     console.error('generate error:', err);
