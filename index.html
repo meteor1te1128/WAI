@@ -1352,7 +1352,7 @@ async function handleGen() {
     let imageUrl = null;
     for (let i = 0; i < 40; i++) {
       await new Promise(r => setTimeout(r, 3000));
-      const pollRes = await fetch(`/api/status?id=${startData.predictionId}&tmpFile=${encodeURIComponent(startData.tmpFile||'')}`);
+      const pollRes = await fetch(`/api/status?id=${startData.predictionId}&tmpFile=${encodeURIComponent(startData.tmpFile||'')}&plan=${currentPlan}`);
       const pollData = await pollRes.json();
 
       if (pollData.status === 'succeeded') {
@@ -1376,41 +1376,7 @@ async function handleGen() {
     res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="变身图" id="animeImg" class="result-revealed">`;
     currentAnimeUrl = imageUrl;
 
-    if (currentPlan === 'free') {
-      try {
-        const response = await fetch(imageUrl);
-        const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          canvas.width = img.naturalWidth;
-          canvas.height = img.naturalHeight;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          ctx.save();
-          ctx.globalAlpha = 0.22;
-          ctx.fillStyle = '#ffffff';
-          const fontSize = Math.max(18, canvas.width * 0.045);
-          ctx.font = `bold ${fontSize}px sans-serif`;
-          ctx.rotate(-Math.PI / 6);
-          const step = fontSize * 5;
-          for (let y = -canvas.height; y < canvas.height * 2; y += step) {
-            for (let x = -canvas.width; x < canvas.width * 2; x += step) {
-              ctx.fillText('WAI.app', x, y);
-            }
-          }
-          ctx.restore();
-          const watermarked = canvas.toDataURL('image/jpeg', 0.9);
-          document.getElementById('animeResult').innerHTML = `<img src="${watermarked}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="动漫图">`;
-          currentAnimeUrl = watermarked;
-          URL.revokeObjectURL(blobUrl);
-        };
-        img.src = blobUrl;
-      } catch(e) {
-        console.warn('Watermark failed:', e);
-      }
-    }
+    // 水印已在服务端处理（status.js），免费用户图片由服务器加水印后返回
 
     await fetch(`${SUPABASE_URL}/rest/v1/generations`, {
       method: 'POST',
