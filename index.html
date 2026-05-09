@@ -1447,14 +1447,24 @@ async function handleGen() {
     btn.style.background = '';
     btn.style.boxShadow = '';
     btn.disabled = false;
-    freeLeft = Math.min(FREE_TOTAL, freeLeft + 1);
-    localStorage.setItem('waiFreeLeft', freeLeft);
-    if (currentPlan === 'pro') {
-      const used = parseInt(localStorage.getItem('waiProUsed') || '1');
-      localStorage.setItem('waiProUsed', Math.max(0, used - 1));
+
+    // 只有请求没发出去才回滚次数
+    const requestReachedServer = typeof startData !== 'undefined' && startData && startData.predictionId;
+    if (!requestReachedServer) {
+      if (currentPlan === 'free') {
+        freeLeft = Math.min(FREE_TOTAL, freeLeft + 1);
+        localStorage.setItem('waiFreeLeft', freeLeft);
+      } else if (currentPlan === 'pro') {
+        const used = parseInt(localStorage.getItem('waiProUsed') || '1');
+        localStorage.setItem('waiProUsed', Math.max(0, used - 1));
+      }
+      renderFreeCount();
+      alert('网络出了点问题，次数已退回，请重试 (｀・ω・´)');
+    } else if (err.message.includes('超时')) {
+      alert('生成超时了 (´;ω;`) AI 有点忙，次数已消耗，稍后重试～');
+    } else {
+      alert('这次变身没成功 (´•ω•`) 可能是照片角度问题，换张正脸照片试试');
     }
-    renderFreeCount();
-    alert('生成失败：' + err.message + '\n请稍后重试');
   }
 
   busy = false;
