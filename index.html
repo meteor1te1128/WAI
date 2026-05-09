@@ -99,7 +99,6 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
   pointer-events:none;
 }
 .h1-char:hover::after{opacity:1;}
-/* 邻字扩散效果 */
 .h1-char:hover{
   transform:scale(1.08) translateY(-2px);
   transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
@@ -152,7 +151,6 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .style-row-arrow-left{animation:arrowPulseL 1.4s ease-in-out infinite;}
 @keyframes arrowPulseR{0%,100%{transform:translateX(0);opacity:1;}50%{transform:translateX(4px);opacity:0.5;}}
 @keyframes arrowPulseL{0%,100%{transform:translateX(0);opacity:1;}50%{transform:translateX(-4px);opacity:0.5;}}
-/* 鼠标在整个wrap上时遮罩淡出 */
 .style-row-wrap:hover .style-row-fade-right:not(.hidden){opacity:0.3;}
 .style-row-wrap:hover .style-row-fade-left.visible{opacity:0.3;}
 .style-pill{flex-shrink:0;padding:10px 18px;border-radius:40px;border:1px solid var(--border);background:var(--white-card);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
@@ -282,14 +280,12 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .price-btn.outline:hover{background:rgba(139,92,246,0.07);border-color:#8b5cf6;}
 .price-btn.fill{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;box-shadow:0 4px 18px rgba(139,92,246,0.35);}
 .price-btn.fill:hover{opacity:0.88;transform:translateY(-1px);box-shadow:0 8px 24px rgba(139,92,246,0.4);}
-/* Max billing tabs — inside card */
 .max-tabs{display:flex;gap:5px;margin:16px 0 4px;background:rgba(139,92,246,0.06);border-radius:10px;padding:4px;}
 .mtab{flex:1;padding:6px 4px;text-align:center;font-size:11px;font-weight:600;color:var(--text-muted);border-radius:7px;cursor:pointer;transition:all 0.18s;border:none;background:transparent;font-family:'Outfit',sans-serif;line-height:1.3;}
 .mtab.on{background:var(--white-card);color:#7c3aed;box-shadow:0 2px 8px rgba(139,92,246,0.18);}
 .mtab small{display:block;font-size:9px;font-weight:500;color:#10b981;margin-top:1px;}
 .mtab.on small{color:#10b981;}
 .price-divider{height:1px;background:var(--divider);margin:18px 0 14px;}
-/* responsive */
 @media(max-width:640px){
   .pricing-grid{grid-template-columns:1fr;}
 }
@@ -300,7 +296,6 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .star-rating{display:flex;gap:3px;cursor:pointer;}
 .star-wrap{position:relative;width:26px;height:26px;flex-shrink:0;}
 .star-wrap svg{width:26px;height:26px;display:block;}
-/* Left half hover trigger */
 .star-left-hit,.star-right-hit{position:absolute;top:0;height:100%;width:50%;cursor:pointer;}
 .star-left-hit{left:0;}
 .star-right-hit{right:0;}
@@ -309,7 +304,6 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .star-fill-full{fill:url(#starGrad);transition:opacity 0.15s;}
 .star-fill-half{fill:url(#starGrad);clip-path:inset(0 50% 0 0);transition:opacity 0.15s;}
 .star-fill-full,.star-fill-half{opacity:0;}
-/* states */
 .star-wrap.half .star-fill-half{opacity:1;}
 .star-wrap.full .star-fill-full{opacity:1;}
 .star-wrap.preview-half .star-fill-half{opacity:0.55;}
@@ -326,9 +320,6 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .fb-textarea{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--input-border);font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);background:var(--input-bg);outline:none;resize:none;height:100px;transition:border-color 0.2s,background var(--transition),color var(--transition);line-height:1.5;}
 .fb-textarea:focus{border-color:rgba(139,92,246,0.5);}
 .fb-textarea::placeholder{color:var(--text-faint);}
-.pikachu-wrap{position:absolute;bottom:-2px;right:10px;width:62px;pointer-events:none;user-select:none;opacity:0.15;filter:blur(0.3px);}
-.pikachu-wrap svg path,.pikachu-wrap svg ellipse,.pikachu-wrap svg polygon{stroke:#8b5cf6;stroke-width:0.8;fill:none;}
-.pikachu-wrap svg .pika-fill{fill:rgba(139,92,246,0.1);}
 .fb-submit{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:10px;padding:11px 24px;color:#fff;font-size:13px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.15s;align-self:flex-end;box-shadow:0 4px 14px rgba(139,92,246,0.3);}
 .fb-submit:hover{opacity:0.88;transform:scale(1.02);}
 .fb-submit:active{transform:scale(0.98);}
@@ -381,17 +372,13 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .history-card-time{font-size:9px;color:var(--text-faint);}
 
 /* ===== UI UPGRADES ===== */
-/* style pill 发光hover */
 .style-pill{transition:all 0.2s;position:relative;}
 .style-pill:hover{border-color:rgba(139,92,246,0.6);color:#7c3aed;box-shadow:0 0 12px rgba(139,92,246,0.2);transform:translateY(-1px);}
 .style-pill.on{box-shadow:0 0 16px rgba(139,92,246,0.3);}
-/* 生成按钮等待时呼吸动画 */
 @keyframes breathe{0%,100%{box-shadow:0 8px 28px rgba(139,92,246,0.35)}50%{box-shadow:0 8px 40px rgba(139,92,246,0.6),0 0 0 6px rgba(139,92,246,0.1)}}
 .gen-btn.breathing{animation:breathe 1.8s ease-in-out infinite;}
-/* 结果图片淡入放大 */
 @keyframes resultReveal{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
 .result-revealed{animation:resultReveal 0.4s ease both;}
-/* nav user badge hover弹出小卡片 */
 .nav-user-wrap{position:relative;}
 .nav-user-wrap:hover .nav-user-tooltip{opacity:1;pointer-events:all;transform:translateY(0);}
 .nav-user-tooltip{position:absolute;top:calc(100% + 8px);right:0;background:var(--white-card);border:1px solid var(--card-border);border-radius:12px;padding:12px 16px;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,0.1);opacity:0;pointer-events:none;transform:translateY(-4px);transition:all 0.2s;z-index:20;font-size:12px;color:var(--text-muted);}
@@ -427,6 +414,20 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 .nav-upgrade{padding:7px 16px;border-radius:16px;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:12px;font-family:'Outfit',sans-serif;font-weight:700;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 3px 12px rgba(139,92,246,0.35);letter-spacing:0.3px;}
 .nav-upgrade:hover{opacity:0.88;transform:scale(1.04);}
 
+/* ===== NAV PLAN BADGE ===== */
+.nav-plan-badge{
+  display:inline-flex;
+  align-items:center;
+  padding:3px 10px;
+  border-radius:10px;
+  font-size:10px;
+  font-weight:700;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  color:#fff;
+  letter-spacing:0.5px;
+  flex-shrink:0;
+}
+
 /* ===== UPGRADE MODAL ===== */
 .upgrade-plans{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
 .upgrade-card{border:1.5px solid var(--border);border-radius:18px;padding:20px;transition:all 0.2s;background:var(--white-card);position:relative;}
@@ -458,10 +459,8 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 .member-banner-desc{font-size:12px;color:var(--text-muted);font-weight:400;}
 .member-banner-manage{font-size:11px;color:#8b5cf6;text-decoration:none;font-weight:600;white-space:nowrap;cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;padding:0;}
 .member-banner-manage:hover{text-decoration:underline;}
-/* subscribed card state */
 .price-card.subscribed{border:2px solid #8b5cf6;background:linear-gradient(160deg,rgba(139,92,246,0.08),var(--white-card));}
 .price-card.subscribed .price-btn{background:rgba(139,92,246,0.1);color:#8b5cf6;border:1.5px solid rgba(139,92,246,0.3);cursor:not-allowed;opacity:0.8;}
-/* manage subscription section */
 .manage-sub-section{display:none;text-align:center;padding:28px;background:var(--white-card);border:1px solid var(--border);border-radius:20px;}
 .manage-sub-section.show{display:block;}
 .manage-sub-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
@@ -482,12 +481,10 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 .auth-google:hover{border-color:#8b5cf6;background:rgba(139,92,246,0.04);}
 .auth-msg{font-size:12px;color:#ef4444;margin-top:8px;min-height:18px;}
 .auth-msg.ok{color:#10b981;}
-/* Nav auth area */
 .nav-auth{display:flex;align-items:center;gap:8px;}
 .nav-user{font-size:12px;color:var(--text-muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .nav-logout{padding:6px 12px;border-radius:16px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:12px;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.2s;}
 .nav-logout:hover{border-color:#ef4444;color:#ef4444;}
-.nav-plan-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;margin-left:4px;}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:600px){
@@ -625,7 +622,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
 </div>
 
-<!-- HISTORY — 紧跟在生成结果下方 -->
+<!-- HISTORY -->
 <div class="history-section" id="historySection" style="display:none;">
   <div class="history-header">
     <div class="history-title">✦ 我的变身历史</div>
@@ -645,20 +642,16 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <div class="comparison-section">
   <div class="comparison-label">👆 拖一下看看变身效果</div>
   <div class="comparison-wrapper comparison-height" id="compWrapper">
-    <!-- Before layer -->
     <div class="comparison-before" style="z-index:1;">
       <span class="comp-face-before">👩</span>
     </div>
-    <!-- After layer (clipped) -->
     <div class="comparison-clip" id="compClip" style="width:50%;z-index:2;">
       <div class="comparison-after-inner comparison-height" style="width:620px;max-width:none;">
         <span class="comp-face-after">🌸</span>
       </div>
     </div>
-    <!-- Labels -->
     <span class="comp-overlay-text comp-before-label">原始照片</span>
     <span class="comp-overlay-text comp-after-label">动漫版本</span>
-    <!-- Handle -->
     <div class="comp-handle" id="compHandle" style="left:50%;">
       <div class="comp-handle-circle">
         <div class="comp-arrows">◀▶</div>
@@ -700,7 +693,6 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   <div class="feedback-board">
     <div class="feedback-input-row">
       <input class="fb-input" id="fbName" placeholder="叫我什么好（可不填）" maxlength="20">
-      <!-- Star Rating -->
       <div class="star-rating-row">
         <span class="star-rating-label">评分</span>
         <div class="star-rating" id="starRating"></div>
@@ -751,7 +743,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
         <div class="upgrade-card-desc">每天变身 30 次，够发一周 ins 了</div>
         <ul class="upgrade-card-features">
           <li><i class="ti ti-check"></i>变身券每天 30 张</li>
-          <li><i class="ti ti-check"></i>12 种风格全解锁</li>
+          <li><i class="ti ti-check"></i>6 种风格全解锁</li>
           <li><i class="ti ti-check"></i>无水印 · 2K 高清</li>
           <li><i class="ti ti-check"></i>30 天历史记录</li>
           <li><i class="ti ti-check"></i>ZIP 批量下载</li>
@@ -905,16 +897,13 @@ function toggleTheme(){
 const FREE_TOTAL=3;
 
 function getBeijing4amTimestamp(){
-  // Returns the most recent 4am Beijing time (UTC+8) as a date string YYYY-MM-DD-HH
   const now=new Date();
-  // Beijing time = UTC + 8 hours
   const beijingOffset=8*60*60*1000;
   const beijingNow=new Date(now.getTime()+beijingOffset);
   const h=beijingNow.getUTCHours();
-  // If current Beijing time is before 4am, the reset day is yesterday
   const resetDay=new Date(beijingNow);
   if(h<4) resetDay.setUTCDate(resetDay.getUTCDate()-1);
-  return resetDay.toISOString().slice(0,10); // YYYY-MM-DD
+  return resetDay.toISOString().slice(0,10);
 }
 
 function initFreeCount(){
@@ -922,7 +911,6 @@ function initFreeCount(){
   const saved=localStorage.getItem('waiFreeLeft');
   const savedDay=localStorage.getItem('waiFreeDay');
   if(savedDay!==today){
-    // New day after 4am Beijing — reset
     localStorage.setItem('waiFreeLeft',FREE_TOTAL);
     localStorage.setItem('waiFreeDay',today);
     return FREE_TOTAL;
@@ -965,7 +953,6 @@ function renderFreeCount(){
     const used=parseInt(localStorage.getItem('waiProUsed')||'0');
     const left=Math.max(0,PRO_DAILY-used);
     dotsEl.innerHTML='';
-    // 5个点，每个代表6次
     for(let i=0;i<5;i++){
       const d=document.createElement('div');
       d.className='count-dot'+(i>=Math.ceil(left/6)?' used':'');
@@ -997,7 +984,6 @@ function renderFreeCount(){
     textEl.textContent=pick+freeLeft+'次';
   }
 }
-// 初始先留空，等 initAuth 拿到套餐后再渲染
 document.getElementById('freeCountText').textContent = '';
 
 // ===== BACKGROUND BLOBS =====
@@ -1064,7 +1050,6 @@ async function downloadAnime() {
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 3000);
   } catch(e) {
-    // 降级：直接打开新标签
     window.open(currentAnimeUrl, '_blank');
   }
 }
@@ -1073,10 +1058,9 @@ async function downloadFromLightbox() {
   await downloadAnime();
 }
 
-// ESC 关闭灯箱
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
-// ===== USER ID (anonymous, persisted) =====
+// ===== USER ID =====
 function getOrCreateUserId(){
   let uid = localStorage.getItem('waiUserId');
   if(!uid){
@@ -1142,7 +1126,6 @@ function timeAgo(dateStr){
   return '刚刚';
 }
 
-// Load history on page load
 loadHistory();
 
 // ===== STYLE PICKER =====
@@ -1163,20 +1146,18 @@ function handleFileChange(input) {
   }
   const reader = new FileReader();
   reader.onload = function(e) {
-    uploadedImageBase64 = e.target.result; // data:image/jpeg;base64,...
+    uploadedImageBase64 = e.target.result;
     const uz = document.getElementById('uz');
     uz.querySelector('h3').textContent = '已选择：' + file.name;
     uz.querySelector('p').textContent = '点击可重新选择';
     uz.style.borderColor = 'rgba(139,92,246,0.7)';
     uz.style.background = 'rgba(139,92,246,0.04)';
-    // 显示原图预览
     const originalPreview = document.getElementById('originalPreview');
     originalPreview.innerHTML = `<img src="${uploadedImageBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:0;">`;
   };
   reader.readAsDataURL(file);
 }
 
-// 拖拽上传支持
 document.addEventListener('DOMContentLoaded', function() {
   const uz = document.getElementById('uz');
   uz.addEventListener('dragover', function(e) {
@@ -1239,7 +1220,6 @@ async function handleGen() {
     return;
   }
 
-  // 次数检查
   if (currentPlan !== 'max') {
     const limit = getDailyLimit();
     const used = getUsedToday();
@@ -1269,7 +1249,6 @@ async function handleGen() {
   btn.classList.add('breathing');
 
   try {
-    // 第一步：发起请求，拿 predictionId
     const startRes = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1286,7 +1265,6 @@ async function handleGen() {
       throw new Error(startData.error || '启动失败');
     }
 
-    // 第二步：前端轮询状态，每3秒问一次，最多问40次（2分钟）
     let imageUrl = null;
     for (let i = 0; i < 40; i++) {
       await new Promise(r => setTimeout(r, 3000));
@@ -1299,7 +1277,6 @@ async function handleGen() {
       } else if (pollData.status === 'failed') {
         throw new Error(pollData.error || '生成失败');
       }
-      // 还在处理中，继续等
     }
 
     if (!imageUrl) throw new Error('生成超时，请重试');
@@ -1315,7 +1292,6 @@ async function handleGen() {
     res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="变身图" id="animeImg" class="result-revealed">`;
     currentAnimeUrl = imageUrl;
 
-    // 免费用户加水印
     if (currentPlan === 'free') {
       try {
         const response = await fetch(imageUrl);
@@ -1352,7 +1328,6 @@ async function handleGen() {
       }
     }
 
-    // 存入 Supabase
     await fetch(`${SUPABASE_URL}/rest/v1/generations`, {
       method: 'POST',
       headers: {
@@ -1368,7 +1343,6 @@ async function handleGen() {
       }),
     });
 
-    // 更新下载按钮
     const dlBtn = document.querySelector('.dl-btn');
     if (dlBtn) {
       dlBtn.onclick = () => {
@@ -1379,7 +1353,6 @@ async function handleGen() {
         a.click();
       };
     }
-    // 刷新历史记录
     setTimeout(loadHistory, 1500);
 
   } catch (err) {
@@ -1404,7 +1377,7 @@ async function handleGen() {
 }
 
 // ===== PRICING TABS =====
-let maxSelectedAmount = 3900; // 默认月付 $39，单位：分
+let maxSelectedAmount = 3900;
 function switchMax(el,price,period,save){
   document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));
   el.classList.add('on');
@@ -1412,7 +1385,7 @@ function switchMax(el,price,period,save){
   const saveEl=document.getElementById('maxSave');
   if(save){saveEl.style.display='';saveEl.textContent=save;}
   else{saveEl.style.display='none';}
-  maxSelectedAmount = parseInt(price) * 100; // 转成分
+  maxSelectedAmount = parseInt(price) * 100;
 }
 
 // ===== STAR RATING =====
@@ -1434,7 +1407,6 @@ function buildStars(){
       <div class="star-left-hit" data-val="${i-0.5}" data-idx="${i}"></div>
       <div class="star-right-hit" data-val="${i}" data-idx="${i}"></div>
     `;
-    // Mouse move for live preview
     wrap.addEventListener('mousemove',function(e){
       const rect=wrap.getBoundingClientRect();
       const isLeft=(e.clientX-rect.left)<rect.width/2;
@@ -1444,7 +1416,6 @@ function buildStars(){
     wrap.addEventListener('mouseleave',function(){
       previewStars(null);
     });
-    // Click
     wrap.querySelector('.star-left-hit').addEventListener('click',function(e){
       e.stopPropagation();
       setRating(i-0.5);
@@ -1453,7 +1424,6 @@ function buildStars(){
       e.stopPropagation();
       setRating(i);
     });
-    // Touch support
     wrap.addEventListener('touchstart',function(e){
       const touch=e.touches[0];
       const rect=wrap.getBoundingClientRect();
@@ -1475,7 +1445,6 @@ function previewStars(val){
       else if(idx===Math.ceil(val)&&val%1!==0){w.classList.add('half');}
       else if(idx<=val){w.classList.add('full');}
     } else {
-      // restore committed
       updateStarDisplay(currentRating,null);
     }
   });
@@ -1500,7 +1469,6 @@ function setRating(val){
   updateStarDisplay(val,null);
   const disp=document.getElementById('starValueDisplay');
   disp.textContent=val+'★';
-  // little bounce
   const container=document.getElementById('starRating');
   container.style.transform='scale(1.06)';
   setTimeout(()=>{container.style.transform='scale(1)';container.style.transition='transform 0.2s';},120);
@@ -1521,7 +1489,6 @@ buildStars();
     pct=Math.max(0.04,Math.min(0.96,pct));
     clip.style.width=(pct*100)+'%';
     handle.style.left=(pct*100)+'%';
-    // Update inner width to match wrapper
     const inner=clip.querySelector('.comparison-after-inner');
     if(inner){inner.style.width=rect.width+'px';}
   }
@@ -1533,7 +1500,6 @@ buildStars();
   window.addEventListener('touchmove',e=>{if(dragging)setPos(e.touches[0].clientX);},{passive:true});
   window.addEventListener('touchend',()=>{dragging=false;});
 
-  // Init inner width
   setTimeout(()=>{
     const rect=wrapper.getBoundingClientRect();
     const inner=clip.querySelector('.comparison-after-inner');
@@ -1561,17 +1527,14 @@ function starsToSVG(val){
   let html=`<span style="display:inline-flex;gap:2px;vertical-align:middle;">`;
   for(let i=1;i<=5;i++){
     if(val>=i){
-      // full star
       html+=`<svg width="${SIZE}" height="${SIZE}" viewBox="0 0 26 26"><polygon points="${pts}" fill="#f59e0b"/></svg>`;
     } else if(val>=i-0.5){
-      // half star
       html+=`<svg width="${SIZE}" height="${SIZE}" viewBox="0 0 26 26">
         <polygon points="${pts}" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
         <clipPath id="hc${i}"><rect x="0" y="0" width="13" height="26"/></clipPath>
         <polygon points="${pts}" fill="#f59e0b" clip-path="url(#hc${i})"/>
       </svg>`;
     } else {
-      // empty
       html+=`<svg width="${SIZE}" height="${SIZE}" viewBox="0 0 26 26"><polygon points="${pts}" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.25)" stroke-width="1.5"/></svg>`;
     }
   }
@@ -1615,12 +1578,13 @@ function submitFeedback(){
   document.getElementById('fbList').scrollTop=0;
 }
 
-// ===== SUPABASE CLIENT (SDK) =====
+// ===== SUPABASE CLIENT =====
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ===== AUTH STATE =====
 let currentUser = null;
-let currentPlan = 'free'; // 'free' | 'pro' | 'max'
+let currentPlan = 'free';
+let currentPeriodEnd = null;
 
 async function initAuth() {
   const { data: { session } } = await _supabase.auth.getSession();
@@ -1633,7 +1597,6 @@ async function initAuth() {
     try { checkPaymentResult(); } catch(e) { console.warn('initAuth:', e); }
     try { loadHistory(); } catch(e) { console.warn('initAuth:', e); }
   }
-  // 监听登录/登出变化
   _supabase.auth.onAuthStateChange(async (event, session) => {
     try {
       currentUser = session?.user || null;
@@ -1644,6 +1607,7 @@ async function initAuth() {
         try { loadHistory(); } catch(e) { console.warn('onAuth:', e); }
       } else {
         currentPlan = 'free';
+        currentPeriodEnd = null;
         document.getElementById('historySection').style.display = 'none';
       }
       try { renderNavAuth(); } catch(e) { console.warn('onAuth:', e); }
@@ -1673,6 +1637,7 @@ async function refreshUserPlan() {
   } catch(e) { currentPlan = 'free'; currentPeriodEnd = null; }
 }
 
+// ===== NAV AUTH — badge 独立于 nav-user 外，不被 ellipsis 截断 =====
 function renderNavAuth() {
   const nav = document.getElementById('navAuth');
   if (!currentUser) {
@@ -1680,13 +1645,16 @@ function renderNavAuth() {
   } else {
     const email = currentUser.email || '';
     const short = email.length > 14 ? email.slice(0, 14) + '…' : email;
-    const badge = currentPlan !== 'free' ? `<span class="nav-plan-badge">${currentPlan.toUpperCase()}</span>` : '';
+    const badge = currentPlan !== 'free'
+      ? `<span class="nav-plan-badge">${currentPlan.toUpperCase()}</span>`
+      : '';
     const upgradeBtn = currentPlan !== 'max'
       ? `<button class="nav-upgrade" onclick="openUpgradeModal()">✦ 升级</button>`
       : '';
     nav.innerHTML = `
       ${upgradeBtn}
-      <span class="nav-user">${short}${badge}</span>
+      ${badge}
+      <span class="nav-user">${short}</span>
       <button class="nav-logout" onclick="handleLogout()">退出</button>`;
   }
 }
@@ -1697,8 +1665,6 @@ let upgradeMaxInterval = 'month';
 
 function openUpgradeModal() {
   renderUpgradeModal();
-  renderNavAuth();
-  renderPricingByPlan();
   document.getElementById('modalUpgrade').classList.add('open');
 }
 function closeUpgradeModal() {
@@ -1721,7 +1687,6 @@ function renderUpgradeModal() {
   const maxBtn = document.getElementById('upgradeMaxBtnBottom');
   const btnRow = document.getElementById('upgradeBtnRow');
 
-  // 重置
   proCard.classList.remove('subscribed');
   maxCard.classList.remove('subscribed');
   proBtn.disabled = false; proBtn.textContent = '解锁 Pro ✦';
@@ -1747,8 +1712,8 @@ function renderUpgradeModal() {
 async function handleSubscribeFromModal(plan) {
   if (!currentUser) { closeUpgradeModal(); openAuthModal(); return; }
   const btn = plan === 'pro'
-    ? document.getElementById('upgradeProBtn')
-    : document.getElementById('upgradeMaxBtn');
+    ? document.getElementById('upgradeProBtnBottom')
+    : document.getElementById('upgradeMaxBtnBottom');
   const orig = btn.textContent;
   btn.disabled = true; btn.textContent = '跳转中...';
 
@@ -1777,9 +1742,9 @@ async function handleSubscribeFromModal(plan) {
   }
 }
 
-// ===== PRICING UI 根据套餐状态更新 =====
+// ===== PRICING UI =====
 function renderPricingByPlan() {
-  const plan = currentPlan; // 'free' | 'pro' | 'max'
+  const plan = currentPlan;
 
   const banner = document.getElementById('memberBanner');
   const manageSection = document.getElementById('manageSubSection');
@@ -1792,7 +1757,6 @@ function renderPricingByPlan() {
   const maxPlanBtn = document.getElementById('maxPlanBtn');
   const freePlanBtn = document.getElementById('freePlanBtn');
 
-  // 重置所有状态
   [freeCard, proCard, maxCard].forEach(c => c?.classList.remove('subscribed'));
   if (proPlanBtn) { proPlanBtn.disabled = false; proPlanBtn.textContent = '解锁 Pro ✦'; proPlanBtn.onclick = () => handleSubscribe('pro'); }
   if (maxPlanBtn) { maxPlanBtn.disabled = false; maxPlanBtn.textContent = '解锁 Max ✦'; maxPlanBtn.onclick = () => handleSubscribe('max'); }
@@ -1804,7 +1768,6 @@ function renderPricingByPlan() {
     return;
   }
 
-  // 有订阅 — 显示横幅
   banner?.classList.add('show');
   const badgeEl = document.getElementById('memberBadgeText');
   if (badgeEl) badgeEl.textContent = plan.toUpperCase();
@@ -1812,7 +1775,6 @@ function renderPricingByPlan() {
   if (descEl) descEl.textContent =
     plan === 'max' ? '变身券无限张，随便造 ✦' : '变身券每天 30 张，享受无水印 ✦';
 
-  // 显示到期倒计时
   const expireEl = document.getElementById('memberExpire');
   if (expireEl && currentPeriodEnd) {
     const end = new Date(currentPeriodEnd);
@@ -1827,14 +1789,12 @@ function renderPricingByPlan() {
     expireEl.textContent = '';
   }
 
-  // 显示管理订阅区
   manageSection?.classList.add('show');
   if (manageTitle) manageTitle.textContent = plan === 'max' ? '✦ 你已经是 Max 传奇玩家了！' : '✦ 你已经是 Pro 啦';
   if (manageDesc) manageDesc.textContent = plan === 'max'
     ? '最高权益全解锁，下面是各套餐对比供参考～'
     : '订阅正常有效，还想再进一步？可以升级到 Max～';
 
-  // 当前套餐卡片变色 + 按钮置灰
   if (plan === 'pro') {
     proCard?.classList.add('subscribed');
     if (proPlanBtn) { proPlanBtn.disabled = true; proPlanBtn.textContent = '已是 Pro 啦 ✦'; proPlanBtn.onclick = null; }
@@ -1918,9 +1878,7 @@ async function handleAuth() {
       btn.disabled = false;
       btn.textContent = '注册';
     }
-    // 登录成功：不做任何事！onAuthStateChange 会自动关弹窗+渲染UI
   } catch(e) {
-    // 检查是否其实已经登录成功了
     const { data: { session } } = await _supabase.auth.getSession().catch(() => ({ data: { session: null } }));
     if (!session) {
       console.error('Auth error:', e);
@@ -1943,10 +1901,13 @@ async function handleGoogleLogin() {
 async function handleLogout() {
   await _supabase.auth.signOut();
   currentPlan = 'free';
+  currentPeriodEnd = null;
   renderNavAuth();
+  renderPricingByPlan();
+  renderFreeCount();
 }
 
-// ===== STRIPE 订阅 =====
+// ===== STRIPE =====
 async function handleSubscribe(plan) {
   if (!currentUser) {
     openAuthModal();
@@ -1990,6 +1951,7 @@ function checkPaymentResult() {
       await refreshUserPlan();
       renderNavAuth();
       renderPricingByPlan();
+      renderFreeCount();
       alert('🎉 订阅成功！权益已激活，快去变身吧～ (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧');
     }, 1500);
     window.history.replaceState({}, '', '/');
@@ -1998,7 +1960,6 @@ function checkPaymentResult() {
   }
 }
 
-// 用户从 Stripe 按返回键回来时重置按钮（浏览器 bfcache）
 window.addEventListener('pageshow', (e) => {
   if (e.persisted) {
     const proBtn = document.getElementById('upgradeProBtnBottom');
@@ -2008,9 +1969,8 @@ window.addEventListener('pageshow', (e) => {
   }
 });
 
-// 初始化
+// ===== INIT =====
 initAuth().then(() => {
-  // 延迟再刷一次，确保 plan 数据已到位
   setTimeout(() => {
     try { renderNavAuth(); } catch(e) {}
     try { renderPricingByPlan(); } catch(e) {}
