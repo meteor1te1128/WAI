@@ -2,12 +2,10 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-
   const { imageBase64, style } = req.body;
   if (!imageBase64) {
     return res.status(400).json({ error: '请上传图片' });
   }
-
   const styleMap = {
     '3D建模': {
       style: '3D',
@@ -40,8 +38,10 @@ export default async function handler(req, res) {
       negative_prompt: 'ugly, blurry, bad anatomy',
     },
   };
-
   const selected = styleMap[style] || styleMap['3D建模'];
+
+  // 去掉 data:image/xxx;base64, 前缀，只传纯 base64
+  const pureBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
 
   try {
     const startRes = await fetch('https://api.replicate.com/v1/predictions', {
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         version: 'a07f252abbbd832009640b27f063ea52d87d7a23a185ca165bec23b5adc8deaf',
         input: {
-          image: imageBase64,
+          image: `data:image/jpeg;base64,${pureBase64}`,
           style: selected.style,
           prompt: selected.prompt,
           negative_prompt: selected.negative_prompt,
@@ -64,13 +64,11 @@ export default async function handler(req, res) {
         },
       }),
     });
-
     const prediction = await startRes.json();
     if (prediction.error) {
       return res.status(500).json({ error: prediction.error });
     }
     return res.status(200).json({ predictionId: prediction.id });
-
   } catch (err) {
     console.error('generate error:', err);
     return res.status(500).json({ error: '服务器错误，请稍后重试' });
