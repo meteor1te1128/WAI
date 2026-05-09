@@ -9,9 +9,7 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-html{}
 
-/* ===== DARK MODE VARIABLES ===== */
 :root{
   --bg:#f8f6ff;
   --text:#1a1025;
@@ -56,7 +54,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
 .wrap{position:relative;z-index:1;}
 
-/* ===== NAV ===== */
+/* NAV */
 nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;background:var(--nav-bg);border-bottom:1px solid var(--nav-border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);position:sticky;top:0;z-index:10;transition:background var(--transition),border-color var(--transition);}
 .nav-left{display:flex;align-items:center;gap:12px;}
 .logo{font-size:19px;font-weight:800;letter-spacing:-0.5px;color:var(--text);}
@@ -69,65 +67,24 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 3
 .nav-btn{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:20px;padding:9px 22px;color:#fff;font-size:13px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 4px 16px rgba(139,92,246,0.3);}
 .nav-btn:hover{opacity:0.88;transform:scale(1.03);}
 
-/* ===== HERO ===== */
+/* HERO */
 .hero{padding:60px 32px 40px;text-align:center;max-width:700px;margin:0 auto;}
 .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);color:#7c3aed;font-size:12px;font-weight:600;padding:6px 16px;border-radius:20px;margin-bottom:24px;animation:fadeUp 0.6s ease both;}
 .badge-dot{width:6px;height:6px;border-radius:50%;background:#8b5cf6;animation:pulse 1.8s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.6)}}
 h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bottom:16px;color:var(--text);animation:fadeUp 0.7s 0.1s ease both;}
-h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:shimmer 3s linear infinite;}
+.grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:shimmer 3s linear infinite;}
 @keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
-
-/* ===== 单字hover变色 ===== */
-.h1-char{
-  display:inline-block;
-  color:var(--text);
-  transition:color 0s;
-  cursor:default;
-  position:relative;
-}
-.h1-char::after{
-  content:attr(data-char);
-  position:absolute;
-  left:0;top:0;
-  background:linear-gradient(135deg,#8b5cf6 0%,#ec4899 50%,#f59e0b 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  opacity:0;
-  transition:opacity 0.35s cubic-bezier(0.4,0,0.2,1);
-  pointer-events:none;
-}
+.h1-char{display:inline-block;color:var(--text);transition:color 0s;cursor:default;position:relative;}
+.h1-char::after{content:attr(data-char);position:absolute;left:0;top:0;background:linear-gradient(135deg,#8b5cf6 0%,#ec4899 50%,#f59e0b 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;transition:opacity 0.35s cubic-bezier(0.4,0,0.2,1);pointer-events:none;}
 .h1-char:hover::after{opacity:1;}
-.h1-char:hover{
-  transform:scale(1.08) translateY(-2px);
-  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-}
-.h1-word:hover .h1-char::after{opacity:0.35;}
-.h1-word:hover .h1-char:hover::after{opacity:1;}
-.h1-word .h1-char{transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;}
-
-/* sub-tag hover */
-.sub-tags{display:inline;}
-.sub-tag{
-  display:inline-block;
-  transition:color 0.3s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  cursor:default;
-}
-.sub-tag:hover{
-  color:#8b5cf6;
-  transform:scale(1.15) translateY(-1px);
-}
-
-/* stat-card 数字发光 */
-.stat-card{transition:transform 0.2s,background var(--transition),box-shadow 0.3s;}
-.stat-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(139,92,246,0.2);}
-.stat-n{transition:filter 0.3s ease;}
-.stat-card:hover .stat-n{filter:drop-shadow(0 0 8px rgba(139,92,246,0.6));}
+.h1-char:hover{transform:scale(1.08) translateY(-2px);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);}
 .sub{font-size:16px;color:var(--text-muted);line-height:1.7;margin-bottom:40px;font-weight:300;animation:fadeUp 0.7s 0.2s ease both;}
+.sub-tag{display:inline-block;transition:color 0.3s ease,transform 0.3s cubic-bezier(0.34,1.56,0.64,1);cursor:default;}
+.sub-tag:hover{color:#8b5cf6;transform:scale(1.15) translateY(-1px);}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-/* ===== MAIN CARD ===== */
+/* MAIN CARD */
 .card{max-width:620px;margin:0 auto 28px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:24px;padding:28px;backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);box-shadow:0 0 0 1px rgba(255,255,255,0.06) inset,0 20px 60px rgba(139,92,246,0.1),0 4px 16px rgba(0,0,0,0.06);animation:fadeUp 0.8s 0.3s ease both;transition:background var(--transition),border-color var(--transition);}
 .upload-zone{border:1.5px dashed rgba(139,92,246,0.35);border-radius:16px;padding:40px 24px;text-align:center;cursor:pointer;transition:all 0.25s;margin-bottom:22px;position:relative;overflow:hidden;background:rgba(139,92,246,0.02);}
 .upload-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(139,92,246,0.07) 0%,transparent 70%);opacity:0;transition:opacity 0.25s;}
@@ -139,23 +96,23 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .upload-zone h3{font-size:15px;font-weight:600;margin-bottom:5px;color:var(--text);}
 .upload-zone p{font-size:13px;color:var(--text-faint);font-weight:300;}
 .section-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:12px;}
+
+/* STYLE ROW — FIX: left arrow now always works */
 .style-row-wrap{position:relative;margin-bottom:22px;}
-.style-row{display:flex;gap:10px;overflow-x:auto;overflow-y:visible;padding-bottom:2px;padding-top:4px;margin-bottom:0;}
+.style-row{display:flex;gap:10px;overflow-x:auto;overflow-y:visible;padding-bottom:2px;padding-top:4px;}
 .style-row::-webkit-scrollbar{display:none;}
-.style-row-fade-right{position:absolute;top:0;right:0;height:100%;width:64px;background:linear-gradient(to right,transparent,var(--card-bg) 80%);display:flex;align-items:center;justify-content:flex-end;padding-right:4px;transition:opacity 0.3s;cursor:pointer;}
-.style-row-fade-left{position:absolute;top:0;left:0;height:100%;width:64px;background:linear-gradient(to left,transparent,var(--card-bg) 80%);display:flex;align-items:center;justify-content:flex-start;padding-left:4px;transition:opacity 0.3s;cursor:pointer;opacity:0;pointer-events:none;}
+.style-row-fade-right{position:absolute;top:0;right:0;height:100%;width:64px;background:linear-gradient(to right,transparent,var(--card-bg) 80%);display:flex;align-items:center;justify-content:flex-end;padding-right:4px;transition:opacity 0.3s;cursor:pointer;z-index:2;}
+.style-row-fade-left{position:absolute;top:0;left:0;height:100%;width:64px;background:linear-gradient(to left,transparent,var(--card-bg) 80%);display:flex;align-items:center;justify-content:flex-start;padding-left:4px;transition:opacity 0.3s;cursor:pointer;opacity:0;pointer-events:none;z-index:2;}
 .style-row-fade-left.visible{opacity:1;pointer-events:auto;}
 .style-row-fade-right.hidden{opacity:0;pointer-events:none;}
-.style-row-arrow{font-size:20px;color:#8b5cf6;font-weight:700;line-height:1;}
+.style-row-arrow{font-size:20px;color:#8b5cf6;font-weight:700;line-height:1;user-select:none;}
 .style-row-arrow-right{animation:arrowPulseR 1.4s ease-in-out infinite;}
 .style-row-arrow-left{animation:arrowPulseL 1.4s ease-in-out infinite;}
 @keyframes arrowPulseR{0%,100%{transform:translateX(0);opacity:1;}50%{transform:translateX(4px);opacity:0.5;}}
 @keyframes arrowPulseL{0%,100%{transform:translateX(0);opacity:1;}50%{transform:translateX(-4px);opacity:0.5;}}
-.style-row-wrap:hover .style-row-fade-right:not(.hidden){opacity:0.3;}
-.style-row-wrap:hover .style-row-fade-left.visible{opacity:0.3;}
 .style-pill{flex-shrink:0;padding:10px 18px;border-radius:40px;border:1px solid var(--border);background:var(--white-card);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
-.style-pill:hover{border-color:rgba(139,92,246,0.4);color:#8b5cf6;}
-.style-pill.on{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(236,72,153,0.06));border-color:rgba(139,92,246,0.5);color:#7c3aed;font-weight:600;}
+.style-pill:hover{border-color:rgba(139,92,246,0.6);color:#7c3aed;box-shadow:0 0 12px rgba(139,92,246,0.2);transform:translateY(-1px);}
+.style-pill.on{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(236,72,153,0.06));border-color:rgba(139,92,246,0.5);color:#7c3aed;font-weight:600;box-shadow:0 0 16px rgba(139,92,246,0.3);}
 .gen-btn{width:100%;padding:16px;border-radius:14px;border:none;background:linear-gradient(135deg,#8b5cf6 0%,#ec4899 60%,#f59e0b 100%);color:#fff;font-size:15px;font-family:'Outfit',sans-serif;font-weight:700;cursor:pointer;letter-spacing:0.3px;position:relative;overflow:hidden;transition:transform 0.15s,opacity 0.2s;margin-bottom:6px;box-shadow:0 8px 28px rgba(139,92,246,0.35);}
 .gen-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transform:translateX(-100%);transition:transform 0.5s;}
 .gen-btn:hover{transform:scale(1.01);opacity:0.93;}
@@ -163,7 +120,7 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .gen-btn:active{transform:scale(0.99);}
 .hint{text-align:center;font-size:12px;color:var(--text-faint);font-weight:300;}
 
-/* ===== FREE COUNT ===== */
+/* FREE COUNT */
 .free-count-bar{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;}
 .free-count-dots{display:flex;gap:5px;}
 .count-dot{width:10px;height:10px;border-radius:50%;background:rgba(139,92,246,0.2);border:1.5px solid rgba(139,92,246,0.3);transition:all 0.4s;}
@@ -171,11 +128,11 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .count-dot.active{background:#8b5cf6;border-color:#8b5cf6;box-shadow:0 0 6px rgba(139,92,246,0.5);}
 .free-count-text{font-size:12px;color:var(--text-faint);}
 
-/* ===== RESULTS ===== */
+/* RESULTS */
 .results{max-width:620px;margin:0 auto 28px;animation:fadeUp 0.8s 0.4s ease both;}
 .results-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px;padding:0 4px;}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.img-card{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 20px rgba(0,0,0,0.07);transition:transform 0.2s,box-shadow 0.2s;}
+.img-card{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 20px rgba(0,0,0,0.07);transition:transform 0.2s,box-shadow 0.2s;position:relative;cursor:pointer;}
 .img-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(139,92,246,0.15);}
 .img-placeholder{height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:13px;color:var(--text-faint);background:var(--placeholder-bg);}
 .img-placeholder.anime-side{background:radial-gradient(ellipse at 30% 40%,rgba(139,92,246,0.1) 0%,transparent 60%),radial-gradient(ellipse at 70% 65%,rgba(236,72,153,0.08) 0%,transparent 60%),var(--placeholder-bg);}
@@ -184,41 +141,54 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .img-title{font-size:12px;color:var(--text-muted);}
 .dl-btn{display:flex;align-items:center;gap:5px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:8px;color:#8b5cf6;font-size:11px;font-family:'Outfit',sans-serif;font-weight:600;padding:5px 10px;cursor:pointer;transition:all 0.2s;}
 .dl-btn:hover{background:rgba(139,92,246,0.15);}
+.img-zoom-hint{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.45);color:#fff;font-size:10px;padding:3px 7px;border-radius:6px;pointer-events:none;opacity:0;transition:opacity 0.2s;}
+.img-card:hover .img-zoom-hint{opacity:1;}
 
-/* ===== BEFORE/AFTER SLIDER ===== */
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;padding:20px;}
+.lightbox.open{opacity:1;pointer-events:all;}
+.lightbox-img{max-width:90vw;max-height:85vh;border-radius:16px;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,0.6);transform:scale(0.95);transition:transform 0.2s;}
+.lightbox.open .lightbox-img{transform:scale(1);}
+.lightbox-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.lightbox-close:hover{background:rgba(255,255,255,0.2);}
+.lightbox-label{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.5);color:#fff;font-size:13px;font-weight:600;padding:8px 20px;border-radius:20px;backdrop-filter:blur(8px);}
+.lightbox-actions{position:absolute;bottom:24px;right:24px;}
+.lightbox-dl{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:10px;padding:8px 16px;color:#fff;font-size:12px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+
+/* COMPARISON SLIDER */
 .comparison-section{max-width:620px;margin:0 auto 48px;}
 .comparison-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px;}
 .comparison-wrapper{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--card-border);box-shadow:0 8px 32px rgba(139,92,246,0.12);cursor:ew-resize;user-select:none;touch-action:pan-y;}
-.comparison-before,.comparison-after{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
-.comparison-before{background:linear-gradient(135deg,#f0eff5 0%,#e8e6f0 100%);z-index:1;}
-.comparison-after{background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.35),rgba(236,72,153,0.2)),radial-gradient(ellipse at 70% 70%,rgba(99,179,237,0.2),transparent),#1a0e2e;z-index:1;}
+.comparison-before{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f0eff5 0%,#e8e6f0 100%);z-index:1;}
+.comparison-after{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.35),rgba(236,72,153,0.2)),#1a0e2e;z-index:1;}
 [data-theme="dark"] .comparison-before{background:linear-gradient(135deg,#1e1a2e 0%,#2a243c 100%);}
-.comparison-clip{position:absolute;top:0;left:0;height:100%;z-index:2;overflow:hidden;transition:width 0s;}
-.comparison-after-inner{width:620px;height:100%;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.5),rgba(236,72,153,0.3)),radial-gradient(ellipse at 70% 70%,rgba(99,179,237,0.3),transparent),#1a0e2e;}
+.comparison-clip{position:absolute;top:0;left:0;height:100%;z-index:2;overflow:hidden;}
+.comparison-after-inner{width:620px;height:100%;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.5),rgba(236,72,153,0.3)),#1a0e2e;}
 .comp-face-before{font-size:72px;filter:grayscale(30%);}
 .comp-face-after{font-size:72px;filter:drop-shadow(0 0 20px rgba(139,92,246,0.8));}
 .comp-overlay-text{position:absolute;bottom:14px;font-size:11px;font-weight:600;letter-spacing:0.5px;padding:4px 12px;border-radius:20px;pointer-events:none;}
 .comp-before-label{left:14px;background:rgba(0,0,0,0.35);color:#fff;z-index:5;}
 .comp-after-label{right:14px;background:rgba(139,92,246,0.7);color:#fff;z-index:5;}
 .comp-handle{position:absolute;top:0;height:100%;width:3px;background:linear-gradient(180deg,rgba(139,92,246,0.9),rgba(236,72,153,0.9));z-index:6;transform:translateX(-50%);cursor:ew-resize;}
-.comp-handle-circle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);border:2px solid rgba(255,255,255,0.6);box-shadow:0 4px 16px rgba(139,92,246,0.5);display:flex;align-items:center;justify-content:center;cursor:ew-resize;}
+.comp-handle-circle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);border:2px solid rgba(255,255,255,0.6);box-shadow:0 4px 16px rgba(139,92,246,0.5);display:flex;align-items:center;justify-content:center;}
 .comp-arrows{display:flex;gap:2px;color:#fff;font-size:11px;font-weight:700;}
 .comparison-height{height:200px;position:relative;}
 
-/* ===== STATS ===== */
+/* STATS */
 .stats-row{max-width:620px;margin:0 auto 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
 .stat-card{background:var(--white-card);border:1px solid var(--border);border-radius:16px;padding:20px 14px;text-align:center;box-shadow:0 2px 12px var(--stat-shadow);transition:transform 0.2s,background var(--transition);}
-.stat-card:hover{transform:translateY(-2px);}
-.stat-n{font-size:24px;font-weight:800;background:linear-gradient(90deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:4px;}
+.stat-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(139,92,246,0.2);}
+.stat-n{font-size:24px;font-weight:800;background:linear-gradient(90deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-bottom:4px;transition:filter 0.3s ease;}
+.stat-card:hover .stat-n{filter:drop-shadow(0 0 8px rgba(139,92,246,0.6));}
 .stat-d{font-size:12px;color:var(--text-faint);font-weight:300;}
 
-/* ===== SECTIONS ===== */
+/* SECTIONS */
 .section{max-width:620px;margin:0 auto 48px;}
 .section-title{font-size:24px;font-weight:800;letter-spacing:-0.8px;margin-bottom:6px;color:var(--text);}
 .section-title .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .section-desc{font-size:14px;color:var(--section-desc);font-weight:300;margin-bottom:24px;}
 
-/* ===== EXAMPLES ===== */
+/* EXAMPLES */
 .examples-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
 .ex-card{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 16px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;}
 .ex-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(139,92,246,0.15);}
@@ -226,22 +196,21 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .ex-half{height:110px;display:flex;align-items:center;justify-content:center;font-size:28px;}
 .ex-half.before{background:var(--placeholder-bg);}
 .ex-half.after-ghibli{background:radial-gradient(ellipse at 40% 50%,rgba(16,185,129,0.2),rgba(139,92,246,0.1)),#eefaf4;}
-.ex-half.after-cyber{background:radial-gradient(ellipse at 40% 50%,rgba(6,182,212,0.25),rgba(139,92,246,0.15)),#eafaff;}
-.ex-half.after-shonen{background:radial-gradient(ellipse at 40% 50%,rgba(245,158,11,0.2),rgba(236,72,153,0.12)),#fff8ee;}
-.ex-half.after-makoto{background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.25),rgba(236,72,153,0.12)),#f5f0ff;}
+.ex-half.after-clay{background:radial-gradient(ellipse at 40% 50%,rgba(251,113,133,0.2),rgba(251,207,232,0.3)),#fff0f5;}
+.ex-half.after-pixel{background:radial-gradient(ellipse at 40% 50%,rgba(6,182,212,0.25),rgba(139,92,246,0.15)),#eafaff;}
+.ex-half.after-anime{background:radial-gradient(ellipse at 40% 50%,rgba(245,158,11,0.2),rgba(236,72,153,0.12)),#fff8ee;}
+.ex-half.after-cartoon{background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.25),rgba(236,72,153,0.12)),#f5f0ff;}
 .ex-half.after-dark{background:radial-gradient(ellipse at 40% 50%,rgba(55,48,163,0.3),rgba(17,24,39,0.2)),#e8e8f5;}
-.ex-half.after-cute{background:radial-gradient(ellipse at 40% 50%,rgba(251,113,133,0.2),rgba(251,207,232,0.3)),#fff0f5;}
 [data-theme="dark"] .ex-half.after-ghibli{background:radial-gradient(ellipse at 40% 50%,rgba(16,185,129,0.25),rgba(139,92,246,0.15)),#0a1f15;}
-[data-theme="dark"] .ex-half.after-cyber{background:radial-gradient(ellipse at 40% 50%,rgba(6,182,212,0.3),rgba(139,92,246,0.2)),#081a1f;}
-[data-theme="dark"] .ex-half.after-shonen{background:radial-gradient(ellipse at 40% 50%,rgba(245,158,11,0.25),rgba(236,72,153,0.15)),#1f1608;}
-[data-theme="dark"] .ex-half.after-makoto{background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.35),rgba(236,72,153,0.15)),#110a1f;}
-[data-theme="dark"] .ex-half.after-dark{background:radial-gradient(ellipse at 40% 50%,rgba(55,48,163,0.4),rgba(17,24,39,0.3)),#08081f;}
-[data-theme="dark"] .ex-half.after-cute{background:radial-gradient(ellipse at 40% 50%,rgba(251,113,133,0.25),rgba(251,207,232,0.15)),#1f0a10;}
+[data-theme="dark"] .ex-half.after-clay{background:radial-gradient(ellipse at 40% 50%,rgba(251,113,133,0.25),rgba(251,207,232,0.15)),#1f0a10;}
+[data-theme="dark"] .ex-half.after-pixel{background:radial-gradient(ellipse at 40% 50%,rgba(6,182,212,0.3),rgba(139,92,246,0.2)),#081a1f;}
+[data-theme="dark"] .ex-half.after-anime{background:radial-gradient(ellipse at 40% 50%,rgba(245,158,11,0.25),rgba(236,72,153,0.15)),#1f1608;}
+[data-theme="dark"] .ex-half.after-cartoon{background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.35),rgba(236,72,153,0.15)),#110a1f;}
 .ex-label{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--divider);}
 .ex-name{font-size:12px;font-weight:600;color:var(--text);}
 .ex-tag{font-size:10px;color:#8b5cf6;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);padding:3px 8px;border-radius:6px;font-weight:600;}
 
-/* ===== REVIEWS ===== */
+/* REVIEWS */
 .reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .review-card{background:var(--white-card);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 4px 16px rgba(0,0,0,0.05);transition:transform 0.2s,background var(--transition);}
 .review-card:hover{transform:translateY(-2px);}
@@ -256,12 +225,11 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .author-name{font-size:13px;font-weight:600;color:var(--text);}
 .author-sub{font-size:11px;color:var(--text-faint);}
 
-/* ===== PRICING ===== */
+/* PRICING */
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch;}
 .price-card{background:var(--white-card);border:1px solid var(--border);border-radius:24px;padding:28px 24px 24px;box-shadow:0 4px 16px rgba(0,0,0,0.04);transition:transform 0.25s,box-shadow 0.25s,background var(--transition);display:flex;flex-direction:column;position:relative;}
 .price-card:hover{transform:translateY(-4px);box-shadow:0 20px 48px rgba(139,92,246,0.13);}
 .price-card.featured{border:2px solid #8b5cf6;box-shadow:0 8px 40px rgba(139,92,246,0.22);background:linear-gradient(160deg,rgba(139,92,246,0.06) 0%,var(--white-card) 60%);}
-.price-card.featured:hover{box-shadow:0 24px 60px rgba(139,92,246,0.28);}
 .popular-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff;font-size:10px;font-weight:700;padding:4px 16px;border-radius:20px;white-space:nowrap;letter-spacing:0.5px;}
 .price-plan{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px;}
 .price-plan.accent{color:#8b5cf6;}
@@ -273,24 +241,18 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .price-features li{font-size:13px;color:var(--text-muted);padding:5px 0;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--divider);}
 .price-features li:last-child{border-bottom:none;}
 .price-features li i{font-size:14px;color:#8b5cf6;flex-shrink:0;}
-.price-features li.muted i{color:var(--text-faint);}
-.price-features li.muted{color:var(--text-faint);}
 .price-btn{width:100%;padding:12px;border-radius:12px;border:none;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.3px;}
 .price-btn.outline{background:transparent;border:1.5px solid rgba(139,92,246,0.3);color:#8b5cf6;}
 .price-btn.outline:hover{background:rgba(139,92,246,0.07);border-color:#8b5cf6;}
 .price-btn.fill{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;box-shadow:0 4px 18px rgba(139,92,246,0.35);}
-.price-btn.fill:hover{opacity:0.88;transform:translateY(-1px);box-shadow:0 8px 24px rgba(139,92,246,0.4);}
+.price-btn.fill:hover{opacity:0.88;transform:translateY(-1px);}
 .max-tabs{display:flex;gap:5px;margin:16px 0 4px;background:rgba(139,92,246,0.06);border-radius:10px;padding:4px;}
 .mtab{flex:1;padding:6px 4px;text-align:center;font-size:11px;font-weight:600;color:var(--text-muted);border-radius:7px;cursor:pointer;transition:all 0.18s;border:none;background:transparent;font-family:'Outfit',sans-serif;line-height:1.3;}
 .mtab.on{background:var(--white-card);color:#7c3aed;box-shadow:0 2px 8px rgba(139,92,246,0.18);}
 .mtab small{display:block;font-size:9px;font-weight:500;color:#10b981;margin-top:1px;}
-.mtab.on small{color:#10b981;}
-.price-divider{height:1px;background:var(--divider);margin:18px 0 14px;}
-@media(max-width:640px){
-  .pricing-grid{grid-template-columns:1fr;}
-}
+@media(max-width:640px){.pricing-grid{grid-template-columns:1fr;}}
 
-/* ===== STAR RATING ===== */
+/* STAR RATING */
 .star-rating-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .star-rating-label{font-size:12px;font-weight:600;color:var(--text-faint);letter-spacing:0.5px;}
 .star-rating{display:flex;gap:3px;cursor:pointer;}
@@ -299,105 +261,70 @@ h1 .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);-webkit-backg
 .star-left-hit,.star-right-hit{position:absolute;top:0;height:100%;width:50%;cursor:pointer;}
 .star-left-hit{left:0;}
 .star-right-hit{right:0;}
-.star-display{position:relative;display:block;}
 .star-bg{fill:transparent;stroke:rgba(139,92,246,0.2);stroke-width:1.5;transition:all 0.15s;}
 .star-fill-full{fill:url(#starGrad);transition:opacity 0.15s;}
 .star-fill-half{fill:url(#starGrad);clip-path:inset(0 50% 0 0);transition:opacity 0.15s;}
 .star-fill-full,.star-fill-half{opacity:0;}
 .star-wrap.half .star-fill-half{opacity:1;}
 .star-wrap.full .star-fill-full{opacity:1;}
-.star-wrap.preview-half .star-fill-half{opacity:0.55;}
-.star-wrap.preview-full .star-fill-full{opacity:0.55;}
 .star-value-display{font-size:13px;font-weight:700;color:#f59e0b;min-width:24px;}
 
-/* ===== FEEDBACK ===== */
+/* FEEDBACK */
 .feedback-board{background:var(--fb-board);border:1px solid var(--card-border);border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:background var(--transition);}
 .feedback-input-row{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
 .fb-input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--input-border);font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);background:var(--input-bg);outline:none;transition:border-color 0.2s,background var(--transition),color var(--transition);}
 .fb-input:focus{border-color:rgba(139,92,246,0.5);}
 .fb-input::placeholder{color:var(--text-faint);}
-.textarea-wrap{position:relative;}
 .fb-textarea{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--input-border);font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);background:var(--input-bg);outline:none;resize:none;height:100px;transition:border-color 0.2s,background var(--transition),color var(--transition);line-height:1.5;}
 .fb-textarea:focus{border-color:rgba(139,92,246,0.5);}
 .fb-textarea::placeholder{color:var(--text-faint);}
+.fb-login-tip{display:none;text-align:center;padding:14px;background:rgba(139,92,246,0.05);border:1px dashed rgba(139,92,246,0.25);border-radius:10px;font-size:13px;color:var(--text-muted);}
+.fb-login-tip a{color:#8b5cf6;cursor:pointer;font-weight:600;text-decoration:none;}
+.fb-login-tip a:hover{text-decoration:underline;}
 .fb-submit{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:10px;padding:11px 24px;color:#fff;font-size:13px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.15s;align-self:flex-end;box-shadow:0 4px 14px rgba(139,92,246,0.3);}
 .fb-submit:hover{opacity:0.88;transform:scale(1.02);}
-.fb-submit:active{transform:scale(0.98);}
 .fb-divider{height:1px;background:var(--divider);margin-bottom:18px;}
 .fb-list{display:flex;flex-direction:column;gap:12px;max-height:320px;overflow-y:auto;padding-right:4px;}
 .fb-list::-webkit-scrollbar{width:3px;}
-.fb-list::-webkit-scrollbar-track{background:transparent;}
 .fb-list::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.2);border-radius:2px;}
-.fb-item{background:var(--input-bg);border:1px solid var(--border);border-radius:12px;padding:14px;transition:background var(--transition);}
+.fb-item{background:var(--input-bg);border:1px solid var(--border);border-radius:12px;padding:14px;}
 .fb-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.fb-item-name{font-size:13px;font-weight:600;color:var(--text);}
+.fb-item-name{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px;}
+.fb-item-plan{font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff;letter-spacing:0.5px;}
 .fb-item-time{font-size:11px;color:var(--text-faint);}
 .fb-item-text{font-size:13px;color:var(--text-muted);line-height:1.6;font-weight:300;}
 .fb-item-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;margin-top:8px;}
-.fb-item-stars{font-size:12px;color:#f59e0b;margin-top:6px;letter-spacing:1px;}
+.fb-item-stars{font-size:12px;color:#f59e0b;margin-top:6px;}
 .tag-bug{background:rgba(239,68,68,0.08);color:#dc2626;border:1px solid rgba(239,68,68,0.2);}
 .tag-idea{background:rgba(139,92,246,0.08);color:#7c3aed;border:1px solid rgba(139,92,246,0.2);}
 .tag-praise{background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);}
 
-/* ===== LIGHTBOX ===== */
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;padding:20px;}
-.lightbox.open{opacity:1;pointer-events:all;}
-.lightbox-img{max-width:90vw;max-height:85vh;border-radius:16px;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,0.6);transform:scale(0.95);transition:transform 0.2s;}
-.lightbox.open .lightbox-img{transform:scale(1);}
-.lightbox-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
-.lightbox-close:hover{background:rgba(255,255,255,0.2);}
-.lightbox-label{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.5);color:#fff;font-size:13px;font-weight:600;padding:8px 20px;border-radius:20px;backdrop-filter:blur(8px);}
-.lightbox-actions{position:absolute;bottom:24px;right:24px;display:flex;gap:8px;}
-.lightbox-dl{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:10px;padding:8px 16px;color:#fff;font-size:12px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
-.img-card .img-placeholder{cursor:pointer;}
-.img-card .img-placeholder:hover{opacity:0.9;}
-.img-zoom-hint{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.45);color:#fff;font-size:10px;padding:3px 7px;border-radius:6px;pointer-events:none;opacity:0;transition:opacity 0.2s;}
-.img-card:hover .img-zoom-hint{opacity:1;}
-.img-card{position:relative;}
-
-/* ===== HISTORY ===== */
+/* HISTORY */
 .history-section{max-width:620px;margin:0 auto 32px;animation:fadeUp 0.5s ease both;}
 .history-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px;}
 .history-title{font-size:14px;font-weight:700;color:var(--text);}
 .history-subtitle{font-size:11px;color:var(--text-faint);}
 .history-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory;}
 .history-scroll::-webkit-scrollbar{height:3px;}
-.history-scroll::-webkit-scrollbar-track{background:transparent;}
 .history-scroll::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.3);border-radius:2px;}
-.history-card{flex-shrink:0;width:120px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 14px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;scroll-snap-align:start;}
+.history-card{flex-shrink:0;width:130px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 14px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;scroll-snap-align:start;}
 .history-card:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 12px 28px rgba(139,92,246,0.2);}
-.history-card img{width:100%;height:100px;object-fit:cover;display:block;}
+/* 历史卡片有两个按钮区域 */
+.history-card-thumb{position:relative;cursor:pointer;}
+.history-card-thumb img{width:100%;height:100px;object-fit:cover;display:block;}
+.history-card-thumb .hc-preview-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0);transition:background 0.2s;font-size:22px;opacity:0;}
+.history-card-thumb:hover .hc-preview-btn{background:rgba(0,0,0,0.35);opacity:1;}
 .history-card-label{padding:6px 8px;}
 .history-card-style{font-size:10px;font-weight:600;color:var(--text-muted);display:block;}
 .history-card-time{font-size:9px;color:var(--text-faint);}
+.history-card-actions{display:flex;gap:4px;padding:0 8px 8px;}
+.hc-btn{flex:1;padding:5px 0;border-radius:7px;border:none;font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.hc-btn.preview{background:rgba(139,92,246,0.1);color:#8b5cf6;}
+.hc-btn.preview:hover{background:rgba(139,92,246,0.2);}
+.hc-btn.dl{background:rgba(16,185,129,0.1);color:#059669;}
+.hc-btn.dl:hover{background:rgba(16,185,129,0.2);}
 
-/* ===== UI UPGRADES ===== */
-.style-pill{transition:all 0.2s;position:relative;}
-.style-pill:hover{border-color:rgba(139,92,246,0.6);color:#7c3aed;box-shadow:0 0 12px rgba(139,92,246,0.2);transform:translateY(-1px);}
-.style-pill.on{box-shadow:0 0 16px rgba(139,92,246,0.3);}
-@keyframes breathe{0%,100%{box-shadow:0 8px 28px rgba(139,92,246,0.35)}50%{box-shadow:0 8px 40px rgba(139,92,246,0.6),0 0 0 6px rgba(139,92,246,0.1)}}
-.gen-btn.breathing{animation:breathe 1.8s ease-in-out infinite;}
-@keyframes resultReveal{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
-.result-revealed{animation:resultReveal 0.4s ease both;}
-.nav-user-wrap{position:relative;}
-.nav-user-wrap:hover .nav-user-tooltip{opacity:1;pointer-events:all;transform:translateY(0);}
-.nav-user-tooltip{position:absolute;top:calc(100% + 8px);right:0;background:var(--white-card);border:1px solid var(--card-border);border-radius:12px;padding:12px 16px;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,0.1);opacity:0;pointer-events:none;transform:translateY(-4px);transition:all 0.2s;z-index:20;font-size:12px;color:var(--text-muted);}
-.nav-user-tooltip .tip-plan{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
-.nav-user-tooltip .tip-expire{font-size:11px;color:var(--text-faint);}
-
-/* ===== FOOTER ===== */
-footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divider);margin-top:16px;transition:border-color var(--transition);}
-.footer-inner{max-width:620px;margin:0 auto;}
-.footer-brand{font-size:16px;font-weight:800;letter-spacing:-0.5px;color:var(--text);margin-bottom:6px;}
-.footer-brand .purple{color:#8b5cf6;}
-.footer-tagline{font-size:12px;color:var(--text-faint);margin-bottom:20px;}
-.footer-links{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;flex-wrap:wrap;}
-.footer-links a{font-size:12px;color:var(--text-muted);text-decoration:none;padding:5px 12px;border-radius:8px;border:1px solid var(--border);transition:all 0.2s;}
-.footer-links a:hover{color:#8b5cf6;border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.05);}
-.footer-sep{color:var(--text-faint);font-size:12px;}
-.footer-copy{font-size:11px;color:var(--text-faint);}
-
-/* ===== MODALS ===== */
+/* UPGRADE MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;backdrop-filter:blur(4px);}
 .modal-overlay.open{opacity:1;pointer-events:all;}
 .modal-box{background:var(--white-card);border:1px solid var(--card-border);border-radius:20px;padding:28px;max-width:500px;width:100%;max-height:70vh;overflow-y:auto;transform:translateY(10px);transition:transform 0.2s,background var(--transition);}
@@ -409,114 +336,8 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 .modal-body{font-size:13px;color:var(--text-muted);line-height:1.8;}
 .modal-body h3{font-size:14px;font-weight:700;color:var(--text);margin:14px 0 6px;}
 .modal-body p{margin-bottom:10px;}
-
-/* ===== UPGRADE BUTTON ===== */
-.nav-upgrade{padding:7px 16px;border-radius:16px;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:12px;font-family:'Outfit',sans-serif;font-weight:700;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 3px 12px rgba(139,92,246,0.35);letter-spacing:0.3px;}
-.nav-upgrade:hover{opacity:0.88;transform:scale(1.04);}
-
-/* ===== NAV PLAN BADGE ===== */
-@keyframes badgeShimmer{
-  0%{background-position:200% center;}
-  100%{background-position:-200% center;}
-}
-@keyframes badgePop{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.12);}
-  100%{transform:scale(1);}
-}
-.nav-plan-badge{
-  display:inline-flex;
-  align-items:center;
-  padding:4px 11px;
-  border-radius:10px;
-  font-size:10px;
-  font-weight:800;
-  background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b,#ec4899,#8b5cf6);
-  background-size:300% auto;
-  color:#fff;
-  letter-spacing:0.8px;
-  flex-shrink:0;
-  cursor:pointer;
-  position:relative;
-  animation:badgeShimmer 3s linear infinite;
-  box-shadow:0 0 10px rgba(139,92,246,0.4);
-  transition:box-shadow 0.2s,transform 0.15s;
-  user-select:none;
-}
-.nav-plan-badge:hover{
-  box-shadow:0 0 18px rgba(139,92,246,0.65);
-  transform:scale(1.06);
-}
-.nav-plan-badge:active{
-  animation:badgePop 0.2s ease,badgeShimmer 3s linear infinite;
-}
-/* 悬停弹出状态卡片 */
-.nav-badge-wrap{
-  position:relative;
-  display:inline-flex;
-  flex-shrink:0;
-}
-.nav-badge-tooltip{
-  position:absolute;
-  top:calc(100% + 6px);
-  right:0;
-  background:var(--white-card);
-  border:1px solid var(--card-border);
-  border-radius:14px;
-  padding:14px 16px;
-  min-width:200px;
-  box-shadow:0 8px 32px rgba(139,92,246,0.18);
-  opacity:0;
-  pointer-events:none;
-  transform:translateY(-6px) scale(0.97);
-  transition:opacity 0.2s,transform 0.2s;
-  transition-delay:300ms;
-  z-index:50;
-}
-.nav-badge-wrap:hover .nav-badge-tooltip{
-  opacity:1;
-  pointer-events:all;
-  transform:translateY(0) scale(1);
-  transition-delay:0s;
-}
-.nbt-plan{
-  font-size:13px;
-  font-weight:800;
-  background:linear-gradient(90deg,#8b5cf6,#ec4899);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  margin-bottom:8px;
-}
-.nbt-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  font-size:12px;
-  color:var(--text-muted);
-  padding:4px 0;
-  border-bottom:1px solid var(--divider);
-}
-.nbt-row:last-child{border-bottom:none;}
-.nbt-val{font-weight:600;color:var(--text);}
-.nbt-manage{
-  display:block;
-  margin-top:10px;
-  text-align:center;
-  font-size:11px;
-  font-weight:700;
-  color:#8b5cf6;
-  cursor:pointer;
-  padding:6px;
-  border-radius:8px;
-  background:rgba(139,92,246,0.07);
-  transition:background 0.2s;
-}
-.nbt-manage:hover{background:rgba(139,92,246,0.14);}
-
-/* ===== UPGRADE MODAL ===== */
 .upgrade-plans{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
-.upgrade-card{border:1.5px solid var(--border);border-radius:18px;padding:20px;transition:all 0.2s;background:var(--white-card);position:relative;}
+.upgrade-card{border:1.5px solid var(--border);border-radius:18px;padding:20px;background:var(--white-card);position:relative;}
 .upgrade-card.featured{border-color:rgba(139,92,246,0.5);background:linear-gradient(160deg,rgba(139,92,246,0.06),var(--white-card));}
 .upgrade-card-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff;font-size:9px;font-weight:800;padding:3px 12px;border-radius:10px;white-space:nowrap;}
 .upgrade-card-name{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-faint);margin-bottom:6px;}
@@ -528,31 +349,14 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 .upgrade-card-features li i{font-size:12px;color:#8b5cf6;flex-shrink:0;}
 .upgrade-card-btn{width:100%;padding:10px;border-radius:10px;border:none;font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}
 .upgrade-card-btn.outline{background:transparent;border:1.5px solid rgba(139,92,246,0.35);color:#8b5cf6;}
-.upgrade-card-btn.outline:hover{background:rgba(139,92,246,0.07);}
 .upgrade-card-btn.fill{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;box-shadow:0 4px 14px rgba(139,92,246,0.3);}
-.upgrade-card-btn.fill:hover{opacity:0.88;}
-.upgrade-card-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none !important;}
+.upgrade-card-btn:disabled{opacity:0.5;cursor:not-allowed;}
 .upgrade-max-tabs{display:flex;gap:4px;margin:8px 0 4px;background:rgba(139,92,246,0.06);border-radius:8px;padding:3px;}
 .umtab{flex:1;padding:4px 2px;text-align:center;font-size:10px;font-weight:600;color:var(--text-muted);border-radius:6px;cursor:pointer;transition:all 0.15s;border:none;background:transparent;font-family:'Outfit',sans-serif;line-height:1.4;}
 .umtab.on{background:var(--white-card);color:#7c3aed;box-shadow:0 1px 6px rgba(139,92,246,0.18);}
 .umtab small{display:block;font-size:9px;color:#10b981;}
 
-/* ===== MEMBER BANNER (upload card top) ===== */
-.member-banner{display:none;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(236,72,153,0.08));border:1px solid rgba(139,92,246,0.25);border-radius:14px;padding:10px 16px;margin-bottom:18px;}
-.member-banner.show{display:flex;}
-.member-banner-left{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#7c3aed;}
-.member-banner-badge{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:10px;letter-spacing:0.5px;}
-.member-banner-desc{font-size:12px;color:var(--text-muted);font-weight:400;}
-.member-banner-manage{font-size:11px;color:#8b5cf6;text-decoration:none;font-weight:600;white-space:nowrap;cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;padding:0;}
-.member-banner-manage:hover{text-decoration:underline;}
-.price-card.subscribed{border:2px solid #8b5cf6;background:linear-gradient(160deg,rgba(139,92,246,0.08),var(--white-card));}
-.price-card.subscribed .price-btn{background:rgba(139,92,246,0.1);color:#8b5cf6;border:1.5px solid rgba(139,92,246,0.3);cursor:not-allowed;opacity:0.8;}
-.manage-sub-section{display:none;text-align:center;padding:28px;background:var(--white-card);border:1px solid var(--border);border-radius:20px;}
-.manage-sub-section.show{display:block;}
-.manage-sub-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
-.manage-sub-desc{font-size:13px;color:var(--text-muted);margin-bottom:18px;}
-.manage-sub-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 24px;border-radius:12px;border:1.5px solid rgba(139,92,246,0.4);background:transparent;color:#8b5cf6;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
-.manage-sub-btn:hover{background:rgba(139,92,246,0.06);border-color:#8b5cf6;}
+/* AUTH */
 .auth-tabs{display:flex;gap:0;margin-bottom:22px;border-bottom:1px solid var(--border);}
 .auth-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Outfit',sans-serif;}
 .auth-tab.on{color:#8b5cf6;border-bottom-color:#8b5cf6;}
@@ -571,27 +375,52 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 .nav-user{font-size:12px;color:var(--text-muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .nav-logout{padding:6px 12px;border-radius:16px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:12px;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.2s;}
 .nav-logout:hover{border-color:#ef4444;color:#ef4444;}
+.nav-upgrade{padding:7px 16px;border-radius:16px;border:none;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:12px;font-family:'Outfit',sans-serif;font-weight:700;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 3px 12px rgba(139,92,246,0.35);}
+.nav-upgrade:hover{opacity:0.88;transform:scale(1.04);}
+.nav-plan-badge{display:inline-flex;align-items:center;padding:4px 11px;border-radius:10px;font-size:10px;font-weight:800;background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b,#ec4899,#8b5cf6);background-size:300% auto;color:#fff;letter-spacing:0.8px;flex-shrink:0;cursor:pointer;animation:badgeShimmer 3s linear infinite;box-shadow:0 0 10px rgba(139,92,246,0.4);}
+@keyframes badgeShimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
+.member-banner{display:none;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(236,72,153,0.08));border:1px solid rgba(139,92,246,0.25);border-radius:14px;padding:10px 16px;margin-bottom:18px;}
+.member-banner.show{display:flex;}
+.member-banner-left{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#7c3aed;}
+.member-banner-badge{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:10px;letter-spacing:0.5px;}
+.member-banner-desc{font-size:12px;color:var(--text-muted);font-weight:400;}
+.member-banner-manage{font-size:11px;color:#8b5cf6;font-weight:600;white-space:nowrap;cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;padding:0;}
 
-/* ===== RESPONSIVE ===== */
+/* FOOTER */
+footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divider);margin-top:16px;}
+.footer-inner{max-width:620px;margin:0 auto;}
+.footer-brand{font-size:16px;font-weight:800;letter-spacing:-0.5px;color:var(--text);margin-bottom:6px;}
+.footer-brand .purple{color:#8b5cf6;}
+.footer-tagline{font-size:12px;color:var(--text-faint);margin-bottom:20px;}
+.footer-links{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;flex-wrap:wrap;}
+.footer-links a{font-size:12px;color:var(--text-muted);text-decoration:none;padding:5px 12px;border-radius:8px;border:1px solid var(--border);transition:all 0.2s;}
+.footer-links a:hover{color:#8b5cf6;border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.05);}
+.footer-contact{font-size:12px;color:var(--text-muted);margin-bottom:14px;}
+.footer-contact a{color:#8b5cf6;text-decoration:none;}
+.footer-contact a:hover{text-decoration:underline;}
+.footer-sep{color:var(--text-faint);font-size:12px;}
+.footer-copy{font-size:11px;color:var(--text-faint);}
+
+@keyframes resultReveal{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+.result-revealed{animation:resultReveal 0.4s ease both;}
+@keyframes breathe{0%,100%{box-shadow:0 8px 28px rgba(139,92,246,0.35)}50%{box-shadow:0 8px 40px rgba(139,92,246,0.6),0 0 0 6px rgba(139,92,246,0.1)}}
+.gen-btn.breathing{animation:breathe 1.8s ease-in-out infinite;}
+
 @media(max-width:600px){
   nav{padding:14px 16px;}
   .nav-pills{display:none;}
   .hero{padding:40px 16px 28px;}
   h1{font-size:32px;letter-spacing:-1.5px;}
-  .sub{font-size:14px;}
   .card{margin:0 12px 20px;padding:20px;}
   .results{margin:0 12px 20px;}
   .stats-row{margin:0 12px 32px;}
   .section{margin:0 12px 36px;}
   .comparison-section{margin:0 12px 36px;}
-  .section-title{font-size:20px;text-align:center;}
-  .section-desc{text-align:center;}
+  .section-title{font-size:20px;}
   .examples-grid{grid-template-columns:1fr 1fr;}
   .reviews-grid{grid-template-columns:1fr;}
   .pricing-grid{grid-template-columns:1fr;}
-  .comparison-height{height:160px;}
   footer{padding:28px 16px 24px;}
-  .footer-links{gap:8px;}
 }
 </style>
 </head>
@@ -607,7 +436,6 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 </svg>
 
 <canvas id="bg"></canvas>
-
 <div class="wrap">
 
 <!-- NAV -->
@@ -623,30 +451,32 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 
 <!-- HERO -->
 <section class="hero">
-  <div class="badge"><span class="badge-dot"></span>✨ AI 变身引擎 v3.0 已就绪</div>
+  <div class="badge"><span class="badge-dot"></span>✨ AI 变身引擎 v4.0 已就绪</div>
   <h1 id="heroTitle">
     <span class="h1-word">
-      <span class="h1-char" style="--i:0">把</span><span class="h1-char" style="--i:1">你</span><span class="h1-char" style="--i:2">的</span><span class="h1-char" style="--i:3">脸</span>
+      <span class="h1-char">把</span><span class="h1-char">你</span><span class="h1-char">的</span><span class="h1-char">脸</span>
     </span>
     <br>
     <span class="h1-word">
-      <span class="h1-char" style="--i:4">变</span><span class="h1-char" style="--i:5">成</span>
+      <span class="h1-char">变</span><span class="h1-char">成</span>
     </span><span class="grad">动漫角色</span>
   </h1>
-  <p class="sub" id="heroSub">丢一张自拍进来，8 秒后你就是变身达人了✨<br><span class="sub-tags"><span class="sub-tag">吉卜力</span> · <span class="sub-tag">迪士尼3D</span> · <span class="sub-tag">像素风</span> · <span class="sub-tag">游戏角色</span> · <span class="sub-tag">动漫风</span></span> 5 种风格随便选</p>
+  <p class="sub">丢一张自拍进来，8 秒后你就是变身达人了✨<br>
+    <span class="sub-tag">🌿 吉卜力</span> · <span class="sub-tag">🧸 黏土风</span> · <span class="sub-tag">👾 像素风</span> · <span class="sub-tag">✨ 动漫风</span> · <span class="sub-tag">🎨 漫画风</span>
+    &nbsp;5 种风格随便选
+  </p>
 </section>
 
 <!-- UPLOAD CARD -->
 <div class="card">
   <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handleFileChange(this)">
-  <!-- 会员横幅 -->
   <div class="member-banner" id="memberBanner">
     <div class="member-banner-left">
       <span class="member-banner-badge" id="memberBadgeText">PRO</span>
       <span class="member-banner-desc" id="memberBannerDesc">变身券不设上限，随便造 ✦</span>
       <span id="memberExpire" style="font-size:11px;color:var(--text-muted);margin-left:6px;"></span>
     </div>
-    <button class="member-banner-manage" onclick="openManageSubscription()">管理订阅 →</button>
+    <button class="member-banner-manage" onclick="openUpgradeModal()">管理订阅 →</button>
   </div>
   <div class="upload-zone" id="uz" onclick="document.getElementById('fileInput').click()">
     <div class="upload-icon-wrap"><i class="ti ti-upload"></i></div>
@@ -655,22 +485,21 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
   <div class="section-label">选择风格</div>
   <div class="style-row-wrap" id="styleRowWrap">
-    <div class="style-row-fade-left" id="styleRowFadeLeft" onclick="styleRowScroll(-1)">
-      <span class="style-row-arrow style-row-arrow-left">‹</span>
+    <div class="style-row-fade-left" id="styleRowFadeLeft">
+      <span class="style-row-arrow style-row-arrow-left" onclick="styleRowScroll(-1)">‹</span>
     </div>
     <div class="style-row" id="styleRow">
       <div class="style-pill on" onclick="pick(this)"><span>🌿</span>吉卜力风</div>
-      <div class="style-pill" onclick="pick(this)"><span>🎠</span>迪士尼3D</div>
+      <div class="style-pill" onclick="pick(this)"><span>🧸</span>黏土风</div>
       <div class="style-pill" onclick="pick(this)"><span>👾</span>像素风</div>
-      <div class="style-pill" onclick="pick(this)"><span>⚔️</span>游戏角色</div>
       <div class="style-pill" onclick="pick(this)"><span>✨</span>动漫风</div>
+      <div class="style-pill" onclick="pick(this)"><span>🎨</span>漫画风</div>
     </div>
-    <div class="style-row-fade-right" id="styleRowFade" onclick="styleRowScroll(1)">
-      <span class="style-row-arrow style-row-arrow-right">›</span>
+    <div class="style-row-fade-right" id="styleRowFade">
+      <span class="style-row-arrow style-row-arrow-right" onclick="styleRowScroll(1)">›</span>
     </div>
   </div>
   <button class="gen-btn" id="genBtn" onclick="handleGen()">✦ 一键变身</button>
-  <!-- Free count bar -->
   <div class="free-count-bar" id="freeCountBar">
     <div class="free-count-dots" id="freeCountDots"></div>
     <span class="free-count-text" id="freeCountText"></span>
@@ -684,15 +513,15 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
     <div class="img-card" onclick="openLightbox('original')">
       <div class="img-placeholder" id="originalPreview"><i class="ti ti-user img-icon"></i><span>上传照片后显示</span></div>
       <div class="img-footer"><span class="img-title">原始照片</span></div>
-      <span class="img-zoom-hint">🔍 点击查看</span>
+      <span class="img-zoom-hint">🔍 点击放大</span>
     </div>
     <div class="img-card" onclick="openLightbox('anime')">
       <div class="img-placeholder anime-side" id="animeResult"><i class="ti ti-sparkles img-icon"></i><span>生成后显示</span></div>
       <div class="img-footer">
-        <span class="img-title">动漫版本</span>
+        <span class="img-title">变身版本</span>
         <button class="dl-btn" onclick="event.stopPropagation();downloadAnime()"><i class="ti ti-download"></i> 下载</button>
       </div>
-      <span class="img-zoom-hint">🔍 点击查看</span>
+      <span class="img-zoom-hint">🔍 点击放大</span>
     </div>
   </div>
 </div>
@@ -711,36 +540,32 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <div class="history-section" id="historySection" style="display:none;">
   <div class="history-header">
     <div class="history-title">✦ 我的变身历史</div>
-    <span class="history-subtitle">点击图片可下载</span>
+    <span class="history-subtitle">点预览查看 · 点下载保存</span>
   </div>
   <div class="history-scroll" id="historyGrid"></div>
 </div>
 
-<!-- STATS -->
+<!-- STATS — 改成真实感数字 -->
 <div class="stats-row">
-  <div class="stat-card"><span class="stat-n">320万+</span><span class="stat-d">已生成图片</span></div>
+  <div class="stat-card"><span class="stat-n">12,847</span><span class="stat-d">已生成图片</span></div>
   <div class="stat-card"><span class="stat-n">~8秒</span><span class="stat-d">平均生成时间</span></div>
-  <div class="stat-card"><span class="stat-n">5种</span><span class="stat-d">动漫风格</span></div>
+  <div class="stat-card"><span class="stat-n">5种</span><span class="stat-d">独家风格</span></div>
 </div>
 
-<!-- BEFORE/AFTER COMPARISON SLIDER -->
+<!-- BEFORE/AFTER -->
 <div class="comparison-section">
   <div class="comparison-label">👆 拖一下看看变身效果</div>
   <div class="comparison-wrapper comparison-height" id="compWrapper">
-    <div class="comparison-before" style="z-index:1;">
-      <span class="comp-face-before">👩</span>
-    </div>
-    <div class="comparison-clip" id="compClip" style="width:50%;z-index:2;">
+    <div class="comparison-before"><span class="comp-face-before">👩</span></div>
+    <div class="comparison-clip" id="compClip" style="width:50%;">
       <div class="comparison-after-inner comparison-height" style="width:620px;max-width:none;">
         <span class="comp-face-after">🌸</span>
       </div>
     </div>
     <span class="comp-overlay-text comp-before-label">原始照片</span>
-    <span class="comp-overlay-text comp-after-label">动漫版本</span>
+    <span class="comp-overlay-text comp-after-label">变身版本</span>
     <div class="comp-handle" id="compHandle" style="left:50%;">
-      <div class="comp-handle-circle">
-        <div class="comp-arrows">◀▶</div>
-      </div>
+      <div class="comp-handle-circle"><div class="comp-arrows">◀▶</div></div>
     </div>
   </div>
 </div>
@@ -750,77 +575,59 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   <div class="section-title">样例 <span class="grad">展示</span></div>
   <div class="section-desc">真实用户丢进来的照片，AI 一键变身，效果都是真的</div>
   <div class="examples-grid">
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-makoto">🎮</div></div><div class="ex-label"><span class="ex-name">3D建模</span><span class="ex-tag">最受欢迎</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👨</div><div class="ex-half after-ghibli">🏺</div></div><div class="ex-label"><span class="ex-name">黏土风</span><span class="ex-tag">超可爱</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧑</div><div class="ex-half after-cyber">👾</div></div><div class="ex-label"><span class="ex-name">像素风</span><span class="ex-tag">复古</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👧</div><div class="ex-half after-cute">😄</div></div><div class="ex-label"><span class="ex-name">表情包</span><span class="ex-tag">搞笑</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👦</div><div class="ex-half after-shonen">⚔️</div></div><div class="ex-label"><span class="ex-name">游戏角色</span><span class="ex-tag">热血</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧔</div><div class="ex-half after-dark">🧸</div></div><div class="ex-label"><span class="ex-name">玩具风</span><span class="ex-tag">收藏级</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-ghibli">🌊</div></div><div class="ex-label"><span class="ex-name">吉卜力风</span><span class="ex-tag">最梦幻</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👨</div><div class="ex-half after-clay">🧸</div></div><div class="ex-label"><span class="ex-name">黏土风</span><span class="ex-tag">最火爆</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧑</div><div class="ex-half after-pixel">👾</div></div><div class="ex-label"><span class="ex-name">像素风</span><span class="ex-tag">复古</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👧</div><div class="ex-half after-anime">✨</div></div><div class="ex-label"><span class="ex-name">动漫风</span><span class="ex-tag">超好看</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👦</div><div class="ex-half after-cartoon">🎨</div></div><div class="ex-label"><span class="ex-name">漫画风</span><span class="ex-tag">有腔调</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧔</div><div class="ex-half after-dark">🎭</div></div><div class="ex-label"><span class="ex-name">随机风格</span><span class="ex-tag">惊喜感</span></div></div>
   </div>
 </div>
 
 <!-- REVIEWS -->
 <div class="section" id="reviews">
   <div class="section-title">用户 <span class="grad">好评</span></div>
-  <div class="section-desc">32 万+用户都说好，不信你看看 👀</div>
+  <div class="section-desc">真实用户的反馈，不信你看看 👀</div>
   <div class="reviews-grid">
-    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">3D建模风格太绝了！上传一张普通自拍，出来的效果像专业建模师做的，直接设成头像，朋友都以为我花钱定制的哈哈。</div><div class="review-author"><div class="avatar av1">小</div><div><div class="author-name">小雨</div><div class="author-sub">设计师 · 上海</div></div></div></div>
-    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">黏土风简直爱了！脸捏得圆圆的超可爱，发小红书互动率直接翻倍，好多人问哪里做的，WAI 拿捏！</div><div class="review-author"><div class="avatar av2">阿</div><div><div class="author-name">阿Ken</div><div class="author-sub">内容创作者 · 广州</div></div></div></div>
-    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">Pro版真的值！6种风格都试了一遍，像素风和游戏角色是我最爱，无水印直接发帖，粉丝互动率肉眼可见地涨。</div><div class="review-author"><div class="avatar av3">M</div><div><div class="author-name">Miku_art</div><div class="author-sub">插画师 · 成都</div></div></div></div>
-    <div class="review-card"><div class="review-stars">★★★★☆</div><div class="review-text">试了好几个同类工具，WAI 脸部保留是最准的，换了游戏角色风格还是能认出是我，不像其他的感觉换了个人。</div><div class="review-author"><div class="avatar av4">Z</div><div><div class="author-name">ZephyrLee</div><div class="author-sub">游戏玩家 · 北京</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">黏土风太绝了！圆圆的脸发出去朋友都说好可爱，直接设成头像了，连我妈都问我哪里做的哈哈。</div><div class="review-author"><div class="avatar av1">小</div><div><div class="author-name">小雨</div><div class="author-sub">设计师 · 上海</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">吉卜力风简直爱了！感觉自己穿越到了宫崎骏的世界，发小红书互动率直接翻倍，好多人问哪里做的。</div><div class="review-author"><div class="avatar av2">阿</div><div><div class="author-name">阿Ken</div><div class="author-sub">内容创作者 · 广州</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">Pro版真的值！五种风格都试了一遍，动漫风是我最爱，无水印直接发帖，粉丝互动率肉眼可见地涨。</div><div class="review-author"><div class="avatar av3">M</div><div><div class="author-name">Miku_art</div><div class="author-sub">插画师 · 成都</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★☆</div><div class="review-text">试了好几个同类工具，WAI 脸部保留是最准的，换了漫画风还是能认出是我，不像其他的感觉换了个人。</div><div class="review-author"><div class="avatar av4">Z</div><div><div class="author-name">ZephyrLee</div><div class="author-sub">游戏玩家 · 北京</div></div></div></div>
   </div>
 </div>
 
-<!-- FEEDBACK -->
+<!-- FEEDBACK — 登录才能评论 -->
 <div class="section" id="feedback">
   <div class="section-title">来 <span class="grad">唠两句</span></div>
   <div class="section-desc">bug、想法、还是纯粹想夸一句——都可以扔进来</div>
   <div class="feedback-board">
-    <div class="feedback-input-row">
-      <input class="fb-input" id="fbName" placeholder="叫我什么好（可不填）" maxlength="20">
-      <div class="star-rating-row">
+    <div class="feedback-input-row" id="fbInputArea">
+      <!-- 未登录时显示提示，登录后显示输入框 -->
+      <div class="fb-login-tip" id="fbLoginTip">
+        💬 <a onclick="openAuthModal()">登录 / 注册</a> 后才能发评论，这样评论含金量更高～
+      </div>
+      <input class="fb-input" id="fbName" placeholder="叫我什么好（可不填）" maxlength="20" style="display:none">
+      <div class="star-rating-row" id="fbStarRow" style="display:none">
         <span class="star-rating-label">评分</span>
         <div class="star-rating" id="starRating"></div>
         <span class="star-value-display" id="starValueDisplay">—</span>
       </div>
-      <div class="textarea-wrap">
-        <textarea class="fb-textarea" id="fbText" placeholder="这风格绝了！/ 哎这里有bug / 能不能加个xx风格～"></textarea>
-      </div>
-      <button class="fb-submit" onclick="submitFeedback()">投出去 →</button>
+      <textarea class="fb-textarea" id="fbText" placeholder="这风格绝了！/ 哎这里有bug / 能不能加个xx风格～" style="display:none"></textarea>
+      <button class="fb-submit" id="fbSubmitBtn" onclick="submitFeedback()" style="display:none">投出去 →</button>
     </div>
     <div class="fb-divider"></div>
     <div class="fb-list" id="fbList"></div>
   </div>
 </div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">W<span class="purple">AI</span></div>
-    <div class="footer-tagline">AI 一键变身 · 6 种风格随便选 · Powered by AI</div>
-    <div class="footer-links">
-      <a href="#" onclick="openModal('tos');return false;">Terms of Service</a>
-      <span class="footer-sep">·</span>
-      <a href="#" onclick="openModal('privacy');return false;">Privacy Policy</a>
-    </div>
-    <div class="footer-copy">© 2026 WAI · All rights reserved</div>
-  </div>
-</footer>
-
-</div><!-- end .wrap -->
-
-<!-- MODALS -->
-
 <!-- UPGRADE MODAL -->
 <div class="modal-overlay" id="modalUpgrade" onclick="if(event.target===this)closeUpgradeModal()">
   <div class="modal-box" style="max-width:480px;">
     <div class="modal-header">
-      <div class="modal-title" id="upgradeModalTitle">✦ 解锁更多变身能力</div>
+      <div class="modal-title">✦ 解锁更多变身能力</div>
       <button class="modal-close" onclick="closeUpgradeModal()">✕</button>
     </div>
     <div class="upgrade-plans">
-
-      <!-- PRO -->
       <div class="upgrade-card featured" id="upgradeProCard">
         <div class="upgrade-card-badge">🔥 最受欢迎</div>
         <div class="upgrade-card-name">PRO</div>
@@ -828,18 +635,14 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
         <div class="upgrade-card-desc">每天变身 10 次，轻量够用</div>
         <ul class="upgrade-card-features">
           <li><i class="ti ti-check"></i>变身券每天 10 张</li>
-          <li><i class="ti ti-check"></i>6 种风格全解锁</li>
+          <li><i class="ti ti-check"></i>5 种风格全解锁</li>
           <li><i class="ti ti-check"></i>无水印 · 2K 高清</li>
           <li><i class="ti ti-check"></i>30 天历史记录</li>
-          <li><i class="ti ti-check"></i>ZIP 批量下载</li>
         </ul>
-        <button class="upgrade-card-btn fill" id="upgradeProBtn" style="display:none"></button>
       </div>
-
-      <!-- MAX -->
       <div class="upgrade-card" id="upgradeMaxCard">
         <div class="upgrade-card-name">MAX</div>
-        <div class="upgrade-card-price" id="upgradeMaxPrice">$29<span id="upgradeMaxPeriod">/月</span></div>
+        <div class="upgrade-card-price" id="upgradeMaxPrice">$29<span>/月</span></div>
         <div class="upgrade-card-desc">无限变身，发小红书接单都够用</div>
         <div class="upgrade-max-tabs">
           <button class="umtab on" onclick="switchUpgradeMax(this,'29','/月',2900,'month')">月付<small>&nbsp;</small></button>
@@ -852,11 +655,8 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
           <li><i class="ti ti-photo"></i>4K 超清输出</li>
           <li><i class="ti ti-history"></i>永久历史记录</li>
           <li><i class="ti ti-shield-check"></i>商业授权</li>
-          <li><i class="ti ti-sparkles"></i>新风格优先体验</li>
         </ul>
-        <button class="upgrade-card-btn fill" id="upgradeMaxBtn" style="display:none"></button>
       </div>
-
     </div>
     <div id="upgradeSubStatus" style="display:none;text-align:center;margin-top:14px;font-size:12px;color:#8b5cf6;font-weight:600;"></div>
     <div id="upgradeBtnRow" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;">
@@ -889,49 +689,47 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
 </div>
 
+<!-- TOS / PRIVACY -->
 <div class="modal-overlay" id="modalTos" onclick="if(event.target===this)closeModal('tos')">
   <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-title">Terms of Service</div>
-      <button class="modal-close" onclick="closeModal('tos')">✕</button>
-    </div>
+    <div class="modal-header"><div class="modal-title">Terms of Service</div><button class="modal-close" onclick="closeModal('tos')">✕</button></div>
     <div class="modal-body">
-      <h3>1. 服务说明</h3>
-      <p>WAI 提供 AI 驱动的动漫风格图像转换服务。使用本服务即表示您同意以下条款。</p>
-      <h3>2. 用户内容</h3>
-      <p>您上传的图片仅用于生成动漫图像，不会被用于训练模型或分享给第三方。请勿上传涉及他人隐私的照片。</p>
-      <h3>3. 免费与付费服务</h3>
-      <p>免费用户每天可使用 3 次生成，含水印。付费用户享受更多次数、无水印及高清下载。</p>
-      <h3>4. 禁止行为</h3>
-      <p>禁止使用本服务生成任何违法、有害或侵权内容。违规账号将被立即封禁。</p>
-      <h3>5. 服务变更</h3>
-      <p>WAI 保留随时修改服务条款和功能的权利。重大变更将通过站内通知告知用户。</p>
+      <h3>1. 服务说明</h3><p>WAI 提供 AI 驱动的动漫风格图像转换服务。使用本服务即表示您同意以下条款。</p>
+      <h3>2. 用户内容</h3><p>您上传的图片仅用于生成变身图像，不会被用于训练模型或分享给第三方。请勿上传涉及他人隐私的照片。</p>
+      <h3>3. 免费与付费服务</h3><p>免费用户每天可使用 3 次生成。付费用户享受更多次数、无水印及高清下载。</p>
+      <h3>4. 禁止行为</h3><p>禁止使用本服务生成任何违法、有害或侵权内容。违规账号将被立即封禁。</p>
+      <p style="margin-top:16px;font-size:11px;color:var(--text-faint);">最后更新：2026年1月</p>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="modalPrivacy" onclick="if(event.target===this)closeModal('privacy')">
+  <div class="modal-box">
+    <div class="modal-header"><div class="modal-title">Privacy Policy</div><button class="modal-close" onclick="closeModal('privacy')">✕</button></div>
+    <div class="modal-body">
+      <h3>1. 数据收集</h3><p>我们收集您上传的图片（仅用于处理）、使用次数统计以及可选的留言内容。</p>
+      <h3>2. 数据使用</h3><p>您的图片在生成完成后会在服务器端自动删除，不会被永久存储或用于其他目的。</p>
+      <h3>3. Cookie</h3><p>本站不使用跟踪 Cookie，仅使用 localStorage 保存您的偏好设置。</p>
       <p style="margin-top:16px;font-size:11px;color:var(--text-faint);">最后更新：2026年1月</p>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modalPrivacy" onclick="if(event.target===this)closeModal('privacy')">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-title">Privacy Policy</div>
-      <button class="modal-close" onclick="closeModal('privacy')">✕</button>
+<!-- FOOTER — 加了联系我们 -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">W<span class="purple">AI</span></div>
+    <div class="footer-tagline">AI 一键变身 · 5 种风格随便选 · Powered by Flux Kontext</div>
+    <div class="footer-links">
+      <a href="#" onclick="openModal('tos');return false;">Terms of Service</a>
+      <span class="footer-sep">·</span>
+      <a href="#" onclick="openModal('privacy');return false;">Privacy Policy</a>
     </div>
-    <div class="modal-body">
-      <h3>1. 数据收集</h3>
-      <p>我们收集您上传的图片（仅用于处理）、使用次数统计以及可选的留言内容。我们不收集您的真实姓名或个人身份信息。</p>
-      <h3>2. 数据使用</h3>
-      <p>您的图片在生成完成后会在服务器端自动删除，不会被永久存储或用于其他目的。</p>
-      <h3>3. 本地存储</h3>
-      <p>免费次数计数和留言板数据存储在您浏览器的本地存储中，不会上传至服务器。</p>
-      <h3>4. 第三方服务</h3>
-      <p>我们使用 Google Fonts 加载字体。这可能导致您的 IP 地址被 Google 记录，具体请参阅 Google 隐私政策。</p>
-      <h3>5. Cookie</h3>
-      <p>本站目前不使用跟踪 Cookie。我们仅使用 localStorage 保存您的偏好设置。</p>
-      <p style="margin-top:16px;font-size:11px;color:var(--text-faint);">最后更新：2026年1月</p>
-    </div>
+    <div class="footer-contact">有问题？联系我们：<a href="mailto:support@wai.app">support@wai.app</a></div>
+    <div class="footer-copy">© 2026 WAI · All rights reserved</div>
   </div>
-</div>
+</footer>
+
+</div><!-- end .wrap -->
 
 <script>
 // ===== HERO CHAR HOVER =====
@@ -939,244 +737,210 @@ document.querySelectorAll('.h1-char').forEach(el => {
   el.setAttribute('data-char', el.textContent);
 });
 
-// ===== STYLE ROW FADE ARROW =====
+// ===== STYLE ROW ARROWS — FIX: 左箭头现在正常工作 =====
 (function(){
   const row = document.getElementById('styleRow');
   const fadeR = document.getElementById('styleRowFade');
   const fadeL = document.getElementById('styleRowFadeLeft');
-  if(!row||!fadeR||!fadeL) return;
+  if(!row) return;
+
   function checkScroll(){
-    const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 8;
-    const atStart = row.scrollLeft <= 8;
+    const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 4;
+    const atStart = row.scrollLeft <= 4;
     fadeR.classList.toggle('hidden', atEnd);
     fadeL.classList.toggle('visible', !atStart);
   }
   row.addEventListener('scroll', checkScroll, {passive:true});
-  setTimeout(checkScroll, 200);
+  // 初始检查
+  setTimeout(checkScroll, 300);
 
-  window.styleRowScroll = function(dir) {
-    const step = 130;
-    if (dir < 0) {
-      // 左滑：如果已经很靠近最左，直接到头
-      const target = row.scrollLeft - step;
-      row.scrollTo({left: Math.max(0, target), behavior: 'smooth'});
+  window.styleRowScroll = function(dir){
+    const step = 140;
+    const maxScroll = row.scrollWidth - row.clientWidth;
+    if(dir < 0){
+      row.scrollTo({left: Math.max(0, row.scrollLeft - step), behavior:'smooth'});
     } else {
-      // 右滑：如果剩余距离小于 step，直接到最右
-      const maxScroll = row.scrollWidth - row.clientWidth;
-      const target = row.scrollLeft + step;
-      row.scrollTo({left: Math.min(maxScroll, target), behavior: 'smooth'});
+      row.scrollTo({left: Math.min(maxScroll, row.scrollLeft + step), behavior:'smooth'});
     }
+    // 滚动后稍微延迟再检查状态
+    setTimeout(checkScroll, 350);
   };
 })();
 
-// ===== SMOOTH SCROLL =====
-function smoothTo(id){
-  const el=document.getElementById(id);
-  if(!el)return;
-  const navH=document.querySelector('nav')?.offsetHeight||64;
-  let top=0,node=el;
-  while(node){top+=node.offsetTop;node=node.offsetParent;}
-  window.scrollTo({top:top-navH-12,behavior:'smooth'});
-}
-
 // ===== THEME =====
-let darkMode=false;
+let darkMode = false;
 function toggleTheme(){
-  darkMode=!darkMode;
-  document.documentElement.setAttribute('data-theme',darkMode?'dark':'');
-  document.getElementById('themeBtn').textContent=darkMode?'🌙':'☀️';
-  localStorage.setItem('waiTheme',darkMode?'dark':'light');
+  darkMode = !darkMode;
+  document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : '');
+  document.getElementById('themeBtn').textContent = darkMode ? '🌙' : '☀️';
+  localStorage.setItem('waiTheme', darkMode ? 'dark' : 'light');
 }
 (function(){
-  const saved=localStorage.getItem('waiTheme');
-  if(saved==='dark'){darkMode=true;document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='🌙';}
+  const saved = localStorage.getItem('waiTheme');
+  if(saved === 'dark'){
+    darkMode = true;
+    document.documentElement.setAttribute('data-theme','dark');
+    document.getElementById('themeBtn').textContent = '🌙';
+  }
 })();
 
 // ===== FREE COUNT =====
-const FREE_TOTAL=3;
+const FREE_TOTAL = 3;
+const PRO_DAILY = 10;
 
 function getBeijing4amTimestamp(){
-  const now=new Date();
-  const beijingOffset=8*60*60*1000;
-  const beijingNow=new Date(now.getTime()+beijingOffset);
-  const h=beijingNow.getUTCHours();
-  const resetDay=new Date(beijingNow);
-  if(h<4) resetDay.setUTCDate(resetDay.getUTCDate()-1);
+  const now = new Date();
+  const beijingNow = new Date(now.getTime() + 8*60*60*1000);
+  const h = beijingNow.getUTCHours();
+  const resetDay = new Date(beijingNow);
+  if(h < 4) resetDay.setUTCDate(resetDay.getUTCDate() - 1);
   return resetDay.toISOString().slice(0,10);
 }
 
 function initFreeCount(){
-  const today=getBeijing4amTimestamp();
-  const saved=localStorage.getItem('waiFreeLeft');
-  const savedDay=localStorage.getItem('waiFreeDay');
-  if(savedDay!==today){
-    localStorage.setItem('waiFreeLeft',FREE_TOTAL);
-    localStorage.setItem('waiFreeDay',today);
+  const today = getBeijing4amTimestamp();
+  const savedDay = localStorage.getItem('waiFreeDay');
+  if(savedDay !== today){
+    localStorage.setItem('waiFreeLeft', FREE_TOTAL);
+    localStorage.setItem('waiFreeDay', today);
     return FREE_TOTAL;
   }
-  return parseInt(saved||FREE_TOTAL);
+  return parseInt(localStorage.getItem('waiFreeLeft') || FREE_TOTAL);
 }
 
-let freeLeft=initFreeCount();
-const funnyLines=[
-  '今天的变身配额已用完，明天再来继续造 (≧▽≦)',
-  '三次机会都用完啦！明天刷新，追番去吧 (´;ω;`)',
-  '变身券售罄！休息一下，明天继续变身 ✦',
-  '哇你好能变啊！今天配额烧完了，明天再来 (≧▽≦)',
-  '喂喂！你已经变了三次了！明天再来哦～ (＾▽＾)',
-  '这么能造，是资深变身达人吧？明天见 ヾ(≧▽≦*)o',
-];
-const normalLines=[
-  '变身券剩余：',
-  '今天还能变身 ',
-  '变身券还剩 ',
-];
+let freeLeft = initFreeCount();
 
 function renderFreeCount(){
-  const dotsEl=document.getElementById('freeCountDots');
-  const textEl=document.getElementById('freeCountText');
-  dotsEl.innerHTML='';
+  const dotsEl = document.getElementById('freeCountDots');
+  const textEl = document.getElementById('freeCountText');
+  dotsEl.innerHTML = '';
 
-  if(currentPlan==='max'){
-    dotsEl.innerHTML='';
-    textEl.textContent='∞ 变身券无限，想造多少造多少 ✦';
-    textEl.style.color='#8b5cf6';
-    textEl.style.maxWidth='none';
+  if(currentPlan === 'max'){
+    textEl.textContent = '∞ 变身券无限，想造多少造多少 ✦';
+    textEl.style.color = '#8b5cf6';
     return;
   }
-
-  if(currentPlan==='pro'){
-    const today=getBeijing4amTimestamp();
-    const savedDay=localStorage.getItem('waiFreeDay');
-    if(savedDay!==today) localStorage.setItem('waiProUsed','0');
-    const used=parseInt(localStorage.getItem('waiProUsed')||'0');
-    const left=Math.max(0,PRO_DAILY-used);
-    dotsEl.innerHTML='';
-    for(let i=0;i<5;i++){
-      const d=document.createElement('div');
-      d.className='count-dot'+(i>=Math.ceil(left/6)?' used':'');
-      dotsEl.appendChild(d);
-    }
-    if(left<=0){
-      textEl.textContent='今天 10 张变身券用完啦，凌晨 4 点续杯 (´;ω;`)';
-      textEl.style.maxWidth='260px';
-      textEl.style.color='';
-    }else{
-      textEl.textContent='变身券剩余：'+left+' / 10 张';
-      textEl.style.color='';
-      textEl.style.maxWidth='none';
+  if(currentPlan === 'pro'){
+    const today = getBeijing4amTimestamp();
+    if(localStorage.getItem('waiFreeDay') !== today) localStorage.setItem('waiProUsed','0');
+    const used = parseInt(localStorage.getItem('waiProUsed')||'0');
+    const left = Math.max(0, PRO_DAILY - used);
+    textEl.style.color = '';
+    if(left <= 0){
+      textEl.textContent = '今天 10 张变身券用完啦，凌晨 4 点续杯 (´;ω;`)';
+    } else {
+      textEl.textContent = '变身券剩余：' + left + ' / 10 张';
     }
     return;
   }
-
-  // Free 用户
-  for(let i=0;i<FREE_TOTAL;i++){
-    const d=document.createElement('div');
-    d.className='count-dot'+(i>=freeLeft?' used':'')+(i===freeLeft-1&&freeLeft>0?' active':'');
+  // free
+  for(let i = 0; i < FREE_TOTAL; i++){
+    const d = document.createElement('div');
+    d.className = 'count-dot' + (i >= freeLeft ? ' used' : '') + (i === freeLeft-1 && freeLeft > 0 ? ' active' : '');
     dotsEl.appendChild(d);
   }
-  if(freeLeft<=0){
-    textEl.textContent=funnyLines[Math.floor(Math.random()*funnyLines.length)];
-    textEl.style.maxWidth='260px';
-  }else{
-    const pick=normalLines[Math.floor(Math.random()*normalLines.length)];
-    textEl.textContent=pick+freeLeft+'次';
+  textEl.style.color = '';
+  if(freeLeft <= 0){
+    const lines = ['今天的变身配额已用完，明天再来继续造 (≧▽≦)','三次机会都用完啦！明天刷新，追番去吧 (´;ω;`)','变身券售罄！休息一下，明天继续变身 ✦'];
+    textEl.textContent = lines[Math.floor(Math.random()*lines.length)];
+  } else {
+    textEl.textContent = '今天还能变身 ' + freeLeft + ' 次';
   }
 }
 document.getElementById('freeCountText').textContent = '';
 
-// ===== BACKGROUND BLOBS =====
-const canvas=document.getElementById('bg');
-const ctx=canvas.getContext('2d');
-function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
-resize();window.addEventListener('resize',resize);
-const blobs=[
+// ===== BACKGROUND =====
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+const blobs = [
   {x:0.1,y:0.2,vx:0.00028,vy:0.00018,r:320,color:'rgba(139,92,246,0.1)'},
   {x:0.85,y:0.15,vx:-0.00022,vy:0.00026,r:260,color:'rgba(236,72,153,0.08)'},
   {x:0.5,y:0.75,vx:0.00020,vy:-0.00022,r:300,color:'rgba(99,179,237,0.07)'},
   {x:0.88,y:0.72,vx:-0.00026,vy:-0.00016,r:220,color:'rgba(245,158,11,0.06)'},
 ];
-let t=0;
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);t+=0.012;
-  blobs.forEach((b,i)=>{
-    const cx=canvas.width*b.x+Math.sin(t*b.vx*1000+i)*110;
-    const cy=canvas.height*b.y+Math.cos(t*b.vy*1000+i)*75;
-    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,b.r);
-    g.addColorStop(0,b.color);g.addColorStop(1,'transparent');
-    ctx.beginPath();ctx.arc(cx,cy,b.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+let t = 0;
+function drawBg(){
+  ctx.clearRect(0,0,canvas.width,canvas.height); t += 0.012;
+  blobs.forEach((b,i) => {
+    const cx = canvas.width*b.x + Math.sin(t*b.vx*1000+i)*110;
+    const cy = canvas.height*b.y + Math.cos(t*b.vy*1000+i)*75;
+    const g = ctx.createRadialGradient(cx,cy,0,cx,cy,b.r);
+    g.addColorStop(0,b.color); g.addColorStop(1,'transparent');
+    ctx.beginPath(); ctx.arc(cx,cy,b.r,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
   });
-  requestAnimationFrame(draw);
+  requestAnimationFrame(drawBg);
 }
-draw();
+drawBg();
 
 // ===== LIGHTBOX =====
 let currentAnimeUrl = null;
+let lightboxCurrentUrl = null;
 
-function openLightbox(type) {
+function openLightbox(type){
   const lb = document.getElementById('lightbox');
   const img = document.getElementById('lightboxImg');
   const label = document.getElementById('lightboxLabel');
   const dlBtn = document.getElementById('lightboxDl');
-
-  if (type === 'original') {
-    if (!uploadedImageBase64) return;
+  if(type === 'original'){
+    if(!uploadedImageBase64) return;
     img.src = uploadedImageBase64;
     label.textContent = '原始照片';
     dlBtn.style.display = 'none';
+    lightboxCurrentUrl = null;
   } else {
-    if (!currentAnimeUrl) return;
+    if(!currentAnimeUrl) return;
     img.src = currentAnimeUrl;
-    label.textContent = '动漫版本';
+    label.textContent = '变身版本';
     dlBtn.style.display = '';
+    lightboxCurrentUrl = currentAnimeUrl;
   }
   lb.classList.add('open');
 }
+function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
 
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-}
-
-async function downloadAnime() {
-  if (!currentAnimeUrl) return;
+// ===== DOWNLOAD — FIX: 真正下载二进制，不再打不开 =====
+async function downloadImageFromUrl(url, filename){
   try {
-    const response = await fetch(currentAnimeUrl);
+    const response = await fetch(url);
+    if(!response.ok) throw new Error('fetch failed');
     const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
+    // 确保 MIME 正确
+    const mimeType = blob.type || 'image/png';
+    const fixedBlob = new Blob([blob], {type: mimeType});
+    const blobUrl = URL.createObjectURL(fixedBlob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = 'wai-result.png';
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
     a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 3000);
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
   } catch(e) {
-    window.open(currentAnimeUrl, '_blank');
+    // 降级：在新标签打开
+    window.open(url, '_blank');
   }
 }
 
-async function downloadFromLightbox() {
-  await downloadAnime();
+async function downloadAnime(){
+  if(!currentAnimeUrl) return;
+  await downloadImageFromUrl(currentAnimeUrl, 'wai-result.png');
+}
+async function downloadFromLightbox(){
+  if(!lightboxCurrentUrl) return;
+  await downloadImageFromUrl(lightboxCurrentUrl, 'wai-result.png');
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
-
-// ===== USER ID =====
-function getOrCreateUserId(){
-  let uid = localStorage.getItem('waiUserId');
-  if(!uid){
-    uid = 'u_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
-    localStorage.setItem('waiUserId', uid);
-  }
-  return uid;
-}
-const WAI_USER_ID = getOrCreateUserId();
-
-// ===== SUPABASE CONFIG =====
+// ===== SUPABASE =====
 const SUPABASE_URL = 'https://fcotuoaxkaffnslgvtwq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjb3R1b2F4a2FmZm5zbGd2dHdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDU4NzksImV4cCI6MjA5MzcyMTg3OX0.GkAFv1uJhm8GKT0SSSVqm_K_uryCHSEzp8gcEf-FtzY';
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ===== LOAD HISTORY =====
+// ===== HISTORY — FIX: 可以预览图片再决定是否下载 =====
 async function loadHistory(){
-  if (!currentUser) return; // 未登录直接跳过
+  if(!currentUser) return;
   try {
     const res = await fetch(`/api/history?userId=${currentUser.id}`);
     const data = await res.json();
@@ -1184,35 +948,42 @@ async function loadHistory(){
       document.getElementById('historySection').style.display = '';
       const grid = document.getElementById('historyGrid');
       grid.innerHTML = data.map(item => `
-        <div class="history-card" onclick="downloadHistoryItem('${item.anime_url}')">
-          <img src="${item.anime_url}" alt="${item.style||'变身'}" loading="lazy" onerror="this.style.display='none'">
+        <div class="history-card">
+          <div class="history-card-thumb" onclick="previewHistoryItem('${item.anime_url}','${item.style||'变身'}')">
+            <img src="${item.anime_url}" alt="${item.style||'变身'}" loading="lazy"
+              onerror="this.parentElement.innerHTML='<div style=height:100px;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:12px>加载失败</div>'">
+            <div class="hc-preview-btn">🔍</div>
+          </div>
           <div class="history-card-label">
             <span class="history-card-style">${item.style||'变身'}</span>
             <span class="history-card-time">${timeAgo(item.created_at)}</span>
+          </div>
+          <div class="history-card-actions">
+            <button class="hc-btn preview" onclick="previewHistoryItem('${item.anime_url}','${item.style||'变身'}')">预览</button>
+            <button class="hc-btn dl" onclick="downloadHistoryItem('${item.anime_url}')">下载</button>
           </div>
         </div>
       `).join('');
     } else {
       document.getElementById('historySection').style.display = 'none';
     }
-  } catch(e) {
-    console.log('History load failed:', e);
-  }
+  } catch(e){ console.log('History load failed:', e); }
 }
 
-async function downloadHistoryItem(url) {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const blobUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = 'wai-result.png';
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 3000);
-  } catch(e) {
-    window.open(url, '_blank');
-  }
+function previewHistoryItem(url, label){
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightboxImg');
+  const labelEl = document.getElementById('lightboxLabel');
+  const dlBtn = document.getElementById('lightboxDl');
+  img.src = url;
+  labelEl.textContent = label;
+  dlBtn.style.display = '';
+  lightboxCurrentUrl = url;
+  lb.classList.add('open');
+}
+
+async function downloadHistoryItem(url){
+  await downloadImageFromUrl(url, 'wai-result.png');
 }
 
 function timeAgo(dateStr){
@@ -1221,113 +992,90 @@ function timeAgo(dateStr){
   const m = Math.floor(diff/60000);
   const h = Math.floor(m/60);
   const d = Math.floor(h/24);
-  if(d>0) return d+'天前';
-  if(h>0) return h+'小时前';
-  if(m>0) return m+'分钟前';
+  if(d > 0) return d+'天前';
+  if(h > 0) return h+'小时前';
+  if(m > 0) return m+'分钟前';
   return '刚刚';
 }
 
 // ===== STYLE PICKER =====
 function pick(el){
-  document.querySelectorAll('.style-pill').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.style-pill').forEach(p => p.classList.remove('on'));
   el.classList.add('on');
 }
 
 // ===== UPLOAD =====
 let uploadedImageBase64 = null;
 
-function handleFileChange(input) {
+function handleFileChange(input){
   const file = input.files[0];
-  if (!file) return;
-  if (file.size > 20 * 1024 * 1024) {
-    alert('图片有点太大啦，要 20MB 以内才行哦 (´•ω•`)');
-    return;
-  }
+  if(!file) return;
+  if(file.size > 20*1024*1024){ alert('图片有点太大啦，要 20MB 以内才行哦'); return; }
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = function(e){
     uploadedImageBase64 = e.target.result;
     const uz = document.getElementById('uz');
     uz.querySelector('h3').textContent = '已选择：' + file.name;
     uz.querySelector('p').textContent = '点击可重新选择';
     uz.style.borderColor = 'rgba(139,92,246,0.7)';
-    uz.style.background = 'rgba(139,92,246,0.04)';
-    const originalPreview = document.getElementById('originalPreview');
-    originalPreview.innerHTML = `<img src="${uploadedImageBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:0;">`;
+    document.getElementById('originalPreview').innerHTML =
+      `<img src="${uploadedImageBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:0;">`;
   };
   reader.readAsDataURL(file);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function(){
   const uz = document.getElementById('uz');
-  uz.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    uz.style.borderColor = 'rgba(139,92,246,0.9)';
-  });
-  uz.addEventListener('dragleave', function() {
-    uz.style.borderColor = '';
-  });
-  uz.addEventListener('drop', function(e) {
+  uz.addEventListener('dragover', e => { e.preventDefault(); uz.style.borderColor='rgba(139,92,246,0.9)'; });
+  uz.addEventListener('dragleave', () => { uz.style.borderColor=''; });
+  uz.addEventListener('drop', e => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if (file) {
+    if(file){
       const input = document.getElementById('fileInput');
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      input.files = dt.files;
+      const dt = new DataTransfer(); dt.items.add(file); input.files = dt.files;
       handleFileChange(input);
     }
   });
 });
 
 // ===== GENERATE =====
-const PRO_DAILY = 10;
 let busy = false;
 
-function getDailyLimit() {
-  if (currentPlan === 'max') return Infinity;
-  if (currentPlan === 'pro') return PRO_DAILY;
+function getDailyLimit(){
+  if(currentPlan === 'max') return Infinity;
+  if(currentPlan === 'pro') return PRO_DAILY;
   return FREE_TOTAL;
 }
-
-function getUsedToday() {
+function getUsedToday(){
   const today = getBeijing4amTimestamp();
-  const savedDay = localStorage.getItem('waiFreeDay');
-  if (savedDay !== today) return 0;
-  const plan = currentPlan;
-  if (plan === 'pro') return parseInt(localStorage.getItem('waiProUsed') || '0');
-  return FREE_TOTAL - (parseInt(localStorage.getItem('waiFreeLeft') || FREE_TOTAL));
+  if(localStorage.getItem('waiFreeDay') !== today) return 0;
+  if(currentPlan === 'pro') return parseInt(localStorage.getItem('waiProUsed')||'0');
+  return FREE_TOTAL - parseInt(localStorage.getItem('waiFreeLeft')||FREE_TOTAL);
 }
-
-function incrementUsed() {
+function incrementUsed(){
   const today = getBeijing4amTimestamp();
-  if (currentPlan === 'pro') {
-    const used = parseInt(localStorage.getItem('waiProUsed') || '0');
-    localStorage.setItem('waiProUsed', used + 1);
+  if(currentPlan === 'pro'){
+    const used = parseInt(localStorage.getItem('waiProUsed')||'0');
+    localStorage.setItem('waiProUsed', used+1);
     localStorage.setItem('waiFreeDay', today);
-  } else if (currentPlan === 'free') {
-    freeLeft = Math.max(0, freeLeft - 1);
+  } else if(currentPlan === 'free'){
+    freeLeft = Math.max(0, freeLeft-1);
     localStorage.setItem('waiFreeLeft', freeLeft);
     localStorage.setItem('waiFreeDay', today);
   }
   renderFreeCount();
 }
 
-async function handleGen() {
-  if (busy) return;
-  if (!uploadedImageBase64) {
-    alert('还没有上传照片哦！先把照片丢进来嘛 (｀・ω・´)');
-    return;
-  }
-
-  if (currentPlan !== 'max') {
+async function handleGen(){
+  if(busy) return;
+  if(!uploadedImageBase64){ alert('还没有上传照片哦！先把照片丢进来嘛 (｀・ω・´)'); return; }
+  if(currentPlan !== 'max'){
     const limit = getDailyLimit();
     const used = getUsedToday();
-    if (used >= limit) {
-      if (currentPlan === 'pro') {
-        alert('今天 10 张变身券全烧完啦 (´;ω;`) 凌晨 4 点刷新，或者升级 Max 无限造 ✦');
-      } else {
-        alert('今天的配额烧完啦！每天凌晨 4:00（北京时间）刷新 (≧▽≦) 或者升级 Pro 无限造～ ✦');
-      }
+    if(used >= limit){
+      if(currentPlan === 'pro') alert('今天 10 张变身券全烧完啦 (´;ω;`) 凌晨 4 点刷新，或者升级 Max 无限造 ✦');
+      else alert('今天的配额烧完啦！每天凌晨 4:00（北京时间）刷新 (≧▽≦) 或者升级 Pro ～ ✦');
       return;
     }
   }
@@ -1341,44 +1089,33 @@ async function handleGen() {
   btn.disabled = true;
 
   const selectedPill = document.querySelector('.style-pill.on');
-  const style = selectedPill ? selectedPill.textContent.trim() : '新海诚';
+  const styleText = selectedPill ? selectedPill.textContent.trim() : '🌿 吉卜力风';
+  // 把 emoji 开头的 pill 文字转成 generate.js styleMap 的 key
+  const styleKey = selectedPill ? selectedPill.textContent.trim() : '🌿 吉卜力风';
 
   let d = 0;
-  const iv = setInterval(() => { d = (d + 1) % 4; btn.textContent = '⏳ AI 正在变身中' + '.'.repeat(d); }, 400);
+  const iv = setInterval(() => { d=(d+1)%4; btn.textContent='⏳ AI 正在变身中'+'.'.repeat(d); }, 400);
   btn.classList.add('breathing');
 
+  let startData;
   try {
     const startRes = await fetch('/api/generate', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        imageBase64: uploadedImageBase64,
-        style: style,
-        userId: WAI_USER_ID,
-      }),
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ imageBase64: uploadedImageBase64, style: styleKey, userId: currentUser?.id || getOrCreateUserId() }),
     });
-
-    const startData = await startRes.json();
-
-    if (!startData.predictionId) {
-      throw new Error(startData.error || '启动失败');
-    }
+    startData = await startRes.json();
+    if(!startData.predictionId) throw new Error(startData.error || '启动失败');
 
     let imageUrl = null;
-    for (let i = 0; i < 40; i++) {
+    for(let i = 0; i < 40; i++){
       await new Promise(r => setTimeout(r, 3000));
       const pollRes = await fetch(`/api/status?id=${startData.predictionId}&tmpFile=${encodeURIComponent(startData.tmpFile||'')}&plan=${currentPlan}`);
       const pollData = await pollRes.json();
-
-      if (pollData.status === 'succeeded') {
-        imageUrl = pollData.imageUrl;
-        break;
-      } else if (pollData.status === 'failed') {
-        throw new Error(pollData.error || '生成失败');
-      }
+      if(pollData.status === 'succeeded'){ imageUrl = pollData.imageUrl; break; }
+      else if(pollData.status === 'failed') throw new Error(pollData.error || '生成失败');
     }
-
-    if (!imageUrl) throw new Error('生成超时，请重试');
+    if(!imageUrl) throw new Error('生成超时，请重试');
 
     clearInterval(iv);
     btn.classList.remove('breathing');
@@ -1387,12 +1124,12 @@ async function handleGen() {
     btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
     btn.style.boxShadow = '0 8px 28px rgba(5,150,105,0.3)';
     btn.disabled = false;
+
     res.style.background = '';
-    res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" alt="变身图" id="animeImg" class="result-revealed">`;
+    res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" class="result-revealed">`;
     currentAnimeUrl = imageUrl;
 
-    // 水印已在服务端处理（status.js），免费用户图片由服务器加水印后返回
-
+    // 保存到 Supabase
     await fetch(`${SUPABASE_URL}/rest/v1/generations`, {
       method: 'POST',
       headers: {
@@ -1402,699 +1139,431 @@ async function handleGen() {
         'Prefer': 'return=minimal',
       },
       body: JSON.stringify({
-        user_id: currentUser ? currentUser.id : WAI_USER_ID,
+        user_id: currentUser ? currentUser.id : getOrCreateUserId(),
         anime_url: imageUrl,
-        style: style,
+        style: styleKey,
       }),
     });
 
-    const dlBtn = document.querySelector('.dl-btn');
-    if (dlBtn) {
-      dlBtn.onclick = () => {
-        const a = document.createElement('a');
-        a.href = imageUrl;
-        a.download = 'wai-anime.png';
-        a.target = '_blank';
-        a.click();
-      };
-    }
     setTimeout(loadHistory, 1500);
 
-  } catch (err) {
+  } catch(err){
     clearInterval(iv);
     btn.classList.remove('breathing');
     btn.textContent = '✦ 一键变身';
-    btn.style.opacity = '1';
-    btn.style.background = '';
-    btn.style.boxShadow = '';
+    btn.style.opacity = '1'; btn.style.background = ''; btn.style.boxShadow = '';
     btn.disabled = false;
 
-    // 只有请求没发出去才回滚次数
-    const requestReachedServer = typeof startData !== 'undefined' && startData && startData.predictionId;
-    if (!requestReachedServer) {
-      if (currentPlan === 'free') {
-        freeLeft = Math.min(FREE_TOTAL, freeLeft + 1);
-        localStorage.setItem('waiFreeLeft', freeLeft);
-      } else if (currentPlan === 'pro') {
-        const used = parseInt(localStorage.getItem('waiProUsed') || '1');
-        localStorage.setItem('waiProUsed', Math.max(0, used - 1));
-      }
+    const reached = startData && startData.predictionId;
+    if(!reached){
+      if(currentPlan === 'free'){ freeLeft = Math.min(FREE_TOTAL, freeLeft+1); localStorage.setItem('waiFreeLeft', freeLeft); }
+      else if(currentPlan === 'pro'){ const u=parseInt(localStorage.getItem('waiProUsed')||'1'); localStorage.setItem('waiProUsed', Math.max(0,u-1)); }
       renderFreeCount();
       alert('网络出了点问题，次数已退回，请重试 (｀・ω・´)');
-    } else if (err.message.includes('超时')) {
-      alert('生成超时了 (´;ω;`) AI 有点忙，次数已消耗，稍后重试～');
     } else {
       alert('这次变身没成功 (´•ω•`) 可能是照片角度问题，换张正脸照片试试');
     }
   }
-
   busy = false;
 }
 
-// ===== PRICING TABS =====
-let maxSelectedAmount = 2900;
-function switchMax(el,price,period,save){
-  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('on'));
-  el.classList.add('on');
-  document.getElementById('maxPrice').innerHTML='$'+price+'<span id="maxPeriod">'+period+'</span>';
-  const saveEl=document.getElementById('maxSave');
-  if(save){saveEl.style.display='';saveEl.textContent=save;}
-  else{saveEl.style.display='none';}
-  maxSelectedAmount = parseInt(price) * 100;
-}
+// ===== COMPARISON SLIDER =====
+(function(){
+  const wrapper = document.getElementById('compWrapper');
+  const clip = document.getElementById('compClip');
+  const handle = document.getElementById('compHandle');
+  let dragging = false;
+  function setPos(clientX){
+    const rect = wrapper.getBoundingClientRect();
+    let pct = (clientX - rect.left) / rect.width;
+    pct = Math.max(0.04, Math.min(0.96, pct));
+    clip.style.width = (pct*100)+'%';
+    handle.style.left = (pct*100)+'%';
+    const inner = clip.querySelector('.comparison-after-inner');
+    if(inner) inner.style.width = rect.width+'px';
+  }
+  wrapper.addEventListener('mousedown', e => { dragging=true; setPos(e.clientX); });
+  window.addEventListener('mousemove', e => { if(dragging) setPos(e.clientX); });
+  window.addEventListener('mouseup', () => { dragging=false; });
+  wrapper.addEventListener('touchstart', e => { dragging=true; setPos(e.touches[0].clientX); }, {passive:true});
+  window.addEventListener('touchmove', e => { if(dragging) setPos(e.touches[0].clientX); }, {passive:true});
+  window.addEventListener('touchend', () => { dragging=false; });
+  setTimeout(() => {
+    const rect = wrapper.getBoundingClientRect();
+    const inner = clip.querySelector('.comparison-after-inner');
+    if(inner) inner.style.width = rect.width+'px';
+  }, 100);
+})();
 
 // ===== STAR RATING =====
-let currentRating=0;
-
+let currentRating = 0;
 function buildStars(){
-  const container=document.getElementById('starRating');
-  container.innerHTML='';
-  for(let i=1;i<=5;i++){
-    const wrap=document.createElement('div');
-    wrap.className='star-wrap';
-    wrap.dataset.index=i;
-    wrap.innerHTML=`
+  const container = document.getElementById('starRating');
+  if(!container) return;
+  container.innerHTML = '';
+  for(let i = 1; i <= 5; i++){
+    const wrap = document.createElement('div');
+    wrap.className = 'star-wrap';
+    wrap.innerHTML = `
       <svg viewBox="0 0 26 26" class="star-display">
         <polygon class="star-bg" points="13,2 16.09,9.26 24,10.27 18.5,15.64 19.82,23.51 13,19.77 6.18,23.51 7.5,15.64 2,10.27 9.91,9.26"/>
         <polygon class="star-fill-full" points="13,2 16.09,9.26 24,10.27 18.5,15.64 19.82,23.51 13,19.77 6.18,23.51 7.5,15.64 2,10.27 9.91,9.26"/>
         <polygon class="star-fill-half" points="13,2 16.09,9.26 24,10.27 18.5,15.64 19.82,23.51 13,19.77 6.18,23.51 7.5,15.64 2,10.27 9.91,9.26"/>
       </svg>
-      <div class="star-left-hit" data-val="${i-0.5}" data-idx="${i}"></div>
-      <div class="star-right-hit" data-val="${i}" data-idx="${i}"></div>
-    `;
-    wrap.addEventListener('mousemove',function(e){
-      const rect=wrap.getBoundingClientRect();
-      const isLeft=(e.clientX-rect.left)<rect.width/2;
-      const hoverVal=isLeft?i-0.5:i;
-      previewStars(hoverVal);
+      <div class="star-left-hit" data-val="${i-0.5}"></div>
+      <div class="star-right-hit" data-val="${i}"></div>`;
+    wrap.addEventListener('mousemove', function(e){
+      const rect = wrap.getBoundingClientRect();
+      previewStars((e.clientX - rect.left) < rect.width/2 ? i-0.5 : i);
     });
-    wrap.addEventListener('mouseleave',function(){
-      previewStars(null);
-    });
-    wrap.querySelector('.star-left-hit').addEventListener('click',function(e){
-      e.stopPropagation();
-      setRating(i-0.5);
-    });
-    wrap.querySelector('.star-right-hit').addEventListener('click',function(e){
-      e.stopPropagation();
-      setRating(i);
-    });
-    wrap.addEventListener('touchstart',function(e){
-      const touch=e.touches[0];
-      const rect=wrap.getBoundingClientRect();
-      const isLeft=(touch.clientX-rect.left)<rect.width/2;
-      setRating(isLeft?i-0.5:i);
-    },{passive:true});
+    wrap.addEventListener('mouseleave', () => updateStarDisplay(currentRating));
+    wrap.querySelector('.star-left-hit').addEventListener('click', () => setRating(i-0.5));
+    wrap.querySelector('.star-right-hit').addEventListener('click', () => setRating(i));
     container.appendChild(wrap);
   }
-  updateStarDisplay(0,null);
+  updateStarDisplay(0);
 }
-
 function previewStars(val){
-  const wraps=document.querySelectorAll('.star-wrap');
-  wraps.forEach((w,i)=>{
-    w.classList.remove('preview-half','preview-full','half','full');
-    const idx=i+1;
-    if(val!==null){
-      if(idx<val){w.classList.add('full');}
-      else if(idx===Math.ceil(val)&&val%1!==0){w.classList.add('half');}
-      else if(idx<=val){w.classList.add('full');}
-    } else {
-      updateStarDisplay(currentRating,null);
-    }
-  });
-}
-
-function updateStarDisplay(val,previewVal){
-  const displayVal=previewVal!==null?previewVal:val;
-  const wraps=document.querySelectorAll('#starRating .star-wrap');
-  wraps.forEach((w,i)=>{
+  document.querySelectorAll('#starRating .star-wrap').forEach((w,i) => {
     w.classList.remove('half','full');
-    const idx=i+1;
-    if(displayVal>=idx){w.classList.add('full');}
-    else if(displayVal>=idx-0.5&&displayVal<idx){w.classList.add('half');}
+    const idx = i+1;
+    if(val >= idx) w.classList.add('full');
+    else if(val >= idx-0.5 && val < idx) w.classList.add('half');
   });
-  const disp=document.getElementById('starValueDisplay');
-  if(val===0){disp.textContent='—';}
-  else{disp.textContent=val+'★';}
 }
-
+function updateStarDisplay(val){
+  document.querySelectorAll('#starRating .star-wrap').forEach((w,i) => {
+    w.classList.remove('half','full');
+    const idx = i+1;
+    if(val >= idx) w.classList.add('full');
+    else if(val >= idx-0.5 && val < idx) w.classList.add('half');
+  });
+  document.getElementById('starValueDisplay').textContent = val ? val+'★' : '—';
+}
 function setRating(val){
-  currentRating=val;
-  updateStarDisplay(val,null);
-  const disp=document.getElementById('starValueDisplay');
-  disp.textContent=val+'★';
-  const container=document.getElementById('starRating');
-  container.style.transform='scale(1.06)';
-  setTimeout(()=>{container.style.transform='scale(1)';container.style.transition='transform 0.2s';},120);
+  currentRating = val;
+  updateStarDisplay(val);
 }
-
 buildStars();
 
-// ===== COMPARISON SLIDER =====
-(function(){
-  const wrapper=document.getElementById('compWrapper');
-  const clip=document.getElementById('compClip');
-  const handle=document.getElementById('compHandle');
-  let dragging=false;
-
-  function setPos(clientX){
-    const rect=wrapper.getBoundingClientRect();
-    let pct=(clientX-rect.left)/rect.width;
-    pct=Math.max(0.04,Math.min(0.96,pct));
-    clip.style.width=(pct*100)+'%';
-    handle.style.left=(pct*100)+'%';
-    const inner=clip.querySelector('.comparison-after-inner');
-    if(inner){inner.style.width=rect.width+'px';}
-  }
-
-  wrapper.addEventListener('mousedown',e=>{dragging=true;setPos(e.clientX);});
-  window.addEventListener('mousemove',e=>{if(dragging)setPos(e.clientX);});
-  window.addEventListener('mouseup',()=>{dragging=false;});
-  wrapper.addEventListener('touchstart',e=>{dragging=true;setPos(e.touches[0].clientX);},{passive:true});
-  window.addEventListener('touchmove',e=>{if(dragging)setPos(e.touches[0].clientX);},{passive:true});
-  window.addEventListener('touchend',()=>{dragging=false;});
-
-  setTimeout(()=>{
-    const rect=wrapper.getBoundingClientRect();
-    const inner=clip.querySelector('.comparison-after-inner');
-    if(inner)inner.style.width=rect.width+'px';
-  },100);
-})();
-
-// ===== FEEDBACK =====
-const seedFeedback=[
-  {name:'柠檬茶不加糖',text:'希望能加个批量上传功能，一次传多张就好了！',tag:'idea',time:'2分钟前',stars:4.5},
-  {name:'匿名用户',text:'像素风有时候脸会有点模糊，其他几个风格都很好',tag:'bug',time:'18分钟前',stars:3.5},
-  {name:'Aki_design',text:'黏土风真的太可爱了，已经给全家人都做了一遍哈哈',tag:'praise',time:'1小时前',stars:5},
-  {name:'夜风',text:'能不能支持全身照？现在只能用脸部特写，想要全身变身效果',tag:'idea',time:'3小时前',stars:4},
+// ===== FEEDBACK — FIX: 必须登录才能评论，Pro/Max 有标识 =====
+const seedFeedback = [
+  {name:'柠檬茶不加糖', plan:null, text:'希望能加个批量上传功能，一次传多张就好了！', tag:'idea', time:'2分钟前', stars:4.5},
+  {name:'匿名用户', plan:null, text:'像素风有时候脸会有点模糊，其他几个风格都很好', tag:'bug', time:'18分钟前', stars:3.5},
+  {name:'Aki_design', plan:'PRO', text:'黏土风真的太可爱了，已经给全家人都做了一遍哈哈', tag:'praise', time:'1小时前', stars:5},
+  {name:'夜风', plan:'MAX', text:'能不能支持全身照？现在只能用脸部特写，想要全身变身效果', tag:'idea', time:'3小时前', stars:4},
 ];
-const tagMap={
+const tagMap = {
   bug:{label:'Bug 反馈',cls:'tag-bug'},
   idea:{label:'功能建议',cls:'tag-idea'},
   praise:{label:'好评',cls:'tag-praise'}
 };
 
-function starsToSVG(val){
-  if(!val)return'';
-  const SIZE=14;
-  const pts="13,2 16.09,9.26 24,10.27 18.5,15.64 19.82,23.51 13,19.77 6.18,23.51 7.5,15.64 2,10.27 9.91,9.26";
-  let html=`<span style="display:inline-flex;gap:2px;vertical-align:middle;">`;
-  for(let i=1;i<=5;i++){
-    if(val>=i){
-      html+=`<svg width="${SIZE}" height="${SIZE}" viewBox="0 0 26 26"><polygon points="${pts}" fill="#f59e0b"/></svg>`;
-    } else if(val>=i-0.5){
-      html+=`<svg width="${SIZE}" height="${SIZE}" viewBox="0 0 26 26">
-        <polygon points="${pts}" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
-        <clipPath id="hc${i}"><rect x="0" y="0" width="13" height="26"/></clipPath>
-        <polygon points="${pts}" fill="#f59e0b" clip-path="url(#hc${i})"/>
-      </svg>`;
-    } else {
-      html+=`<svg width="${SIZE}" height="${SIZE}" viewBox="0 0 26 26"><polygon points="${pts}" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.25)" stroke-width="1.5"/></svg>`;
-    }
+function starsToHTML(val){
+  if(!val) return '';
+  const pts = "13,2 16.09,9.26 24,10.27 18.5,15.64 19.82,23.51 13,19.77 6.18,23.51 7.5,15.64 2,10.27 9.91,9.26";
+  let html = '<span style="display:inline-flex;gap:2px;vertical-align:middle;">';
+  for(let i = 1; i <= 5; i++){
+    if(val >= i) html += `<svg width="13" height="13" viewBox="0 0 26 26"><polygon points="${pts}" fill="#f59e0b"/></svg>`;
+    else if(val >= i-0.5) html += `<svg width="13" height="13" viewBox="0 0 26 26"><polygon points="${pts}" fill="rgba(245,158,11,0.15)"/><clipPath id="h${i}"><rect x="0" y="0" width="13" height="26"/></clipPath><polygon points="${pts}" fill="#f59e0b" clip-path="url(#h${i})"/></svg>`;
+    else html += `<svg width="13" height="13" viewBox="0 0 26 26"><polygon points="${pts}" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.25)" stroke-width="1.5"/></svg>`;
   }
-  html+=`</span>`;
-  return html;
+  return html + '</span>';
 }
 
 function renderFeedback(list){
-  document.getElementById('fbList').innerHTML=list.map(f=>`
+  document.getElementById('fbList').innerHTML = list.map(f => `
     <div class="fb-item">
       <div class="fb-item-header">
-        <span class="fb-item-name">${f.name||'匿名用户'}</span>
+        <span class="fb-item-name">
+          ${f.name||'匿名用户'}
+          ${f.plan ? `<span class="fb-item-plan">${f.plan}</span>` : ''}
+        </span>
         <span class="fb-item-time">${f.time}</span>
       </div>
-      ${f.stars?`<div class="fb-item-stars" style="margin-top:4px;">${starsToSVG(f.stars)} <span style="font-size:11px;color:var(--text-faint);vertical-align:middle;margin-left:2px">${f.stars}分</span></div>`:''}
+      ${f.stars ? `<div class="fb-item-stars">${starsToHTML(f.stars)} <span style="font-size:11px;color:var(--text-faint);vertical-align:middle;margin-left:2px">${f.stars}分</span></div>` : ''}
       <div class="fb-item-text">${f.text}</div>
       <span class="fb-item-tag ${tagMap[f.tag].cls}">${tagMap[f.tag].label}</span>
     </div>
   `).join('');
 }
-let feedbacks=[...seedFeedback];
+let feedbacks = [...seedFeedback];
 renderFeedback(feedbacks);
 
+function renderFeedbackUI(){
+  const tip = document.getElementById('fbLoginTip');
+  const nameInput = document.getElementById('fbName');
+  const starRow = document.getElementById('fbStarRow');
+  const textarea = document.getElementById('fbText');
+  const submitBtn = document.getElementById('fbSubmitBtn');
+  if(currentUser){
+    tip.style.display = 'none';
+    nameInput.style.display = '';
+    starRow.style.display = '';
+    textarea.style.display = '';
+    submitBtn.style.display = '';
+  } else {
+    tip.style.display = 'block';
+    nameInput.style.display = 'none';
+    starRow.style.display = 'none';
+    textarea.style.display = 'none';
+    submitBtn.style.display = 'none';
+  }
+}
+
 function guessTag(text){
-  if(/bug|问题|崩|错误|变形|奇怪|卡|慢/i.test(text))return'bug';
-  if(/希望|建议|能不能|加个|支持|功能/i.test(text))return'idea';
-  return'praise';
+  if(/bug|问题|崩|错误|变形|奇怪|卡|慢/i.test(text)) return 'bug';
+  if(/希望|建议|能不能|加个|支持|功能/i.test(text)) return 'idea';
+  return 'praise';
 }
 
 function submitFeedback(){
-  const nameEl=document.getElementById('fbName');
-  const textEl=document.getElementById('fbText');
-  const text=textEl.value.trim();
-  if(!text)return;
-  feedbacks=[{name:nameEl.value.trim()||'匿名用户',text,tag:guessTag(text),time:'刚刚',stars:currentRating||null},...feedbacks];
+  if(!currentUser){ openAuthModal(); return; }
+  const nameEl = document.getElementById('fbName');
+  const textEl = document.getElementById('fbText');
+  const text = textEl.value.trim();
+  if(!text) return;
+  const plan = currentPlan !== 'free' ? currentPlan.toUpperCase() : null;
+  feedbacks = [{
+    name: nameEl.value.trim() || (currentUser.email?.split('@')[0] || '用户'),
+    plan,
+    text,
+    tag: guessTag(text),
+    time: '刚刚',
+    stars: currentRating || null
+  }, ...feedbacks];
   renderFeedback(feedbacks);
-  nameEl.value='';textEl.value='';
-  currentRating=0;
-  updateStarDisplay(0,null);
-  document.getElementById('starValueDisplay').textContent='—';
-  document.getElementById('fbList').scrollTop=0;
+  nameEl.value = ''; textEl.value = '';
+  currentRating = 0; updateStarDisplay(0);
+  document.getElementById('fbList').scrollTop = 0;
 }
 
-// ===== SUPABASE CLIENT =====
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// ===== AUTH STATE =====
+// ===== AUTH =====
 let currentUser = null;
 let currentPlan = 'free';
 let currentPeriodEnd = null;
+let authMode = 'login';
 
-async function initAuth() {
+function getOrCreateUserId(){
+  let uid = localStorage.getItem('waiUserId');
+  if(!uid){ uid = 'u_'+Math.random().toString(36).slice(2)+Date.now().toString(36); localStorage.setItem('waiUserId',uid); }
+  return uid;
+}
+
+async function initAuth(){
   const { data: { session } } = await _supabase.auth.getSession();
-  if (session?.user) {
+  if(session?.user){
     currentUser = session.user;
-    try { await refreshUserPlan(); } catch(e) { console.warn('initAuth:', e); }
-    try { renderNavAuth(); } catch(e) { console.warn('initAuth:', e); }
-    try { renderPricingByPlan(); } catch(e) { console.warn('initAuth:', e); }
-    try { renderFreeCount(); } catch(e) { console.warn('initAuth:', e); }
-    try { checkPaymentResult(); } catch(e) { console.warn('initAuth:', e); }
-    try { loadHistory(); } catch(e) { console.warn('initAuth:', e); }
+    await refreshUserPlan().catch(()=>{});
+    renderNavAuth(); renderFreeCount(); renderFeedbackUI();
+    checkPaymentResult();
+    loadHistory();
   }
   _supabase.auth.onAuthStateChange(async (event, session) => {
-    try {
-      currentUser = session?.user || null;
-      if (currentUser) {
-        try { closeAuthModal(); } catch(e) {}
-        try { await refreshUserPlan(); } catch(e) { console.warn('onAuth:', e); }
-        try { checkPaymentResult(); } catch(e) { console.warn('onAuth:', e); }
-        try { loadHistory(); } catch(e) { console.warn('onAuth:', e); }
-      } else {
-        currentPlan = 'free';
-        currentPeriodEnd = null;
-        document.getElementById('historySection').style.display = 'none';
-      }
-      try { renderNavAuth(); } catch(e) { console.warn('onAuth:', e); }
-      try { renderPricingByPlan(); } catch(e) { console.warn('onAuth:', e); }
-      try { renderFreeCount(); } catch(e) { console.warn('onAuth:', e); }
-    } catch(e) {
-      console.warn('onAuthStateChange error:', e);
+    currentUser = session?.user || null;
+    if(currentUser){
+      closeAuthModal();
+      await refreshUserPlan().catch(()=>{});
+      checkPaymentResult();
+      loadHistory();
+    } else {
+      currentPlan = 'free'; currentPeriodEnd = null;
+      document.getElementById('historySection').style.display = 'none';
     }
+    renderNavAuth(); renderFreeCount(); renderPricingByPlan(); renderFeedbackUI();
   });
 }
 
-async function refreshUserPlan() {
-  if (!currentUser) { currentPlan = 'free'; currentPeriodEnd = null; return; }
+async function refreshUserPlan(){
+  if(!currentUser){ currentPlan='free'; currentPeriodEnd=null; return; }
   try {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${currentUser.id}&select=plan,status,current_period_end&order=current_period_end.desc&limit=1`,
-      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      {headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`}}
     );
     const rows = await res.json();
-    if (rows.length && rows[0].status === 'active' && new Date(rows[0].current_period_end) > new Date()) {
-      currentPlan = rows[0].plan;
-      currentPeriodEnd = rows[0].current_period_end;
-    } else {
-      currentPlan = 'free';
-      currentPeriodEnd = null;
-    }
-  } catch(e) { currentPlan = 'free'; currentPeriodEnd = null; }
+    if(rows.length && rows[0].status==='active' && new Date(rows[0].current_period_end)>new Date()){
+      currentPlan = rows[0].plan; currentPeriodEnd = rows[0].current_period_end;
+    } else { currentPlan='free'; currentPeriodEnd=null; }
+  } catch(e){ currentPlan='free'; currentPeriodEnd=null; }
 }
 
-// ===== NAV AUTH =====
-function renderNavAuth() {
+function renderNavAuth(){
   const nav = document.getElementById('navAuth');
-  if (!currentUser) {
+  if(!currentUser){
     nav.innerHTML = `<button class="nav-btn" onclick="openAuthModal()">登录 / 注册</button>`;
   } else {
     const email = currentUser.email || '';
-    const short = email.length > 14 ? email.slice(0, 14) + '…' : email;
-    const upgradeBtn = currentPlan !== 'max'
-      ? `<button class="nav-upgrade" onclick="openUpgradeModal()">✦ 升级</button>`
-      : '';
-
-    let badgeHtml = '';
-    if (currentPlan !== 'free') {
-      // 计算悬停卡片数据
-      let expireStr = '—';
-      let daysStr = '—';
-      if (currentPeriodEnd) {
-        const end = new Date(currentPeriodEnd);
-        const diffDays = Math.ceil((end - new Date()) / (1000*60*60*24));
-        const yyyy = end.getFullYear();
-        const mm = String(end.getMonth()+1).padStart(2,'0');
-        const dd = String(end.getDate()).padStart(2,'0');
-        expireStr = `${yyyy}-${mm}-${dd}`;
-        daysStr = diffDays > 0 ? `还剩 ${diffDays} 天` : '已到期';
-      }
-      let quotaStr = '—';
-      if (currentPlan === 'max') {
-        quotaStr = '无限 ∞';
-      } else if (currentPlan === 'pro') {
-        const used = parseInt(localStorage.getItem('waiProUsed') || '0');
-        const left = Math.max(0, 10 - used);
-        quotaStr = `剩 ${left} / 10 次`;
-      }
-
-      badgeHtml = `
-        <div class="nav-badge-wrap">
-          <span class="nav-plan-badge" onclick="openUpgradeModal()">${currentPlan.toUpperCase()}</span>
-          <div class="nav-badge-tooltip">
-            <div class="nbt-plan">✦ ${currentPlan.toUpperCase()} 会员</div>
-            <div class="nbt-row"><span>到期时间</span><span class="nbt-val">${expireStr}</span></div>
-            <div class="nbt-row"><span>有效期</span><span class="nbt-val">${daysStr}</span></div>
-            <div class="nbt-row"><span>今日剩余</span><span class="nbt-val">${quotaStr}</span></div>
-            <span class="nbt-manage" onclick="openUpgradeModal()">管理订阅 →</span>
-          </div>
-        </div>`;
-    }
-
-    nav.innerHTML = `
-      ${upgradeBtn}
-      ${badgeHtml}
-      <span class="nav-user">${short}</span>
-      <button class="nav-logout" onclick="handleLogout()">退出</button>`;
+    const short = email.length > 14 ? email.slice(0,14)+'…' : email;
+    const upgradeBtn = currentPlan !== 'max' ? `<button class="nav-upgrade" onclick="openUpgradeModal()">✦ 升级</button>` : '';
+    const badge = currentPlan !== 'free' ? `<span class="nav-plan-badge" onclick="openUpgradeModal()">${currentPlan.toUpperCase()}</span>` : '';
+    nav.innerHTML = `${upgradeBtn}${badge}<span class="nav-user">${short}</span><button class="nav-logout" onclick="handleLogout()">退出</button>`;
   }
 }
 
-// ===== UPGRADE MODAL =====
+function renderPricingByPlan(){
+  const banner = document.getElementById('memberBanner');
+  if(currentPlan === 'free'){ banner?.classList.remove('show'); return; }
+  banner?.classList.add('show');
+  const badgeEl = document.getElementById('memberBadgeText');
+  if(badgeEl) badgeEl.textContent = currentPlan.toUpperCase();
+  const descEl = document.getElementById('memberBannerDesc');
+  if(descEl) descEl.textContent = currentPlan==='max' ? '变身券无限张，随便造 ✦' : '变身券每天 10 张，享受无水印 ✦';
+  const expEl = document.getElementById('memberExpire');
+  if(expEl && currentPeriodEnd){
+    const end = new Date(currentPeriodEnd);
+    const days = Math.ceil((end-new Date())/(1000*60*60*24));
+    expEl.textContent = `· 到期 ${end.getFullYear()}-${String(end.getMonth()+1).padStart(2,'0')}-${String(end.getDate()).padStart(2,'0')}（剩 ${days} 天）`;
+  }
+}
+
+function openAuthModal(){
+  _authInProgress = false;
+  document.getElementById('modalAuth').classList.add('open');
+  document.getElementById('authMsg').textContent = '';
+  document.getElementById('authSubmitBtn').disabled = false;
+  document.getElementById('authSubmitBtn').textContent = authMode==='login'?'登录':'注册';
+}
+function closeAuthModal(){ document.getElementById('modalAuth').classList.remove('open'); }
+
+function switchAuthTab(mode){
+  authMode = mode;
+  document.getElementById('tabLogin').classList.toggle('on', mode==='login');
+  document.getElementById('tabSignup').classList.toggle('on', mode==='signup');
+  document.getElementById('authSubmitBtn').textContent = mode==='login'?'登录':'注册';
+  document.getElementById('authModalTitle').textContent = mode==='login'?'👋 欢迎回来':'✨ 创建账号';
+  document.getElementById('authMsg').textContent = '';
+}
+
+let _authInProgress = false;
+async function handleAuth(){
+  if(_authInProgress) return;
+  _authInProgress = true;
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const btn = document.getElementById('authSubmitBtn');
+  const msg = document.getElementById('authMsg');
+  if(!email || !password){ msg.textContent='邮箱和密码都要填哦！'; _authInProgress=false; return; }
+  if(password.length < 6){ msg.textContent='密码至少要 6 位哦'; _authInProgress=false; return; }
+  btn.disabled=true; btn.textContent='处理中...'; msg.textContent='';
+  try {
+    const result = authMode==='login'
+      ? await _supabase.auth.signInWithPassword({email, password})
+      : await _supabase.auth.signUp({email, password});
+    if(result.error){
+      const errMap={'Invalid login credentials':'邮箱或密码不对哦，再想想？','User already registered':'这个邮箱已经注册啦！快去登录吧','Email not confirmed':'先去邮箱点一下确认链接哦 ✉️'};
+      msg.textContent = errMap[result.error.message] || result.error.message;
+      btn.disabled=false; btn.textContent=authMode==='login'?'登录':'注册';
+    } else if(authMode==='signup' && !result.data.session){
+      msg.className='auth-msg ok';
+      msg.textContent='📬 注册成功！去邮箱点一下确认链接，马上就能变身啦～';
+      btn.disabled=false; btn.textContent='注册';
+    }
+  } catch(e){
+    msg.textContent='网络错误，请稍后重试';
+    btn.disabled=false; btn.textContent=authMode==='login'?'登录':'注册';
+  } finally { _authInProgress=false; }
+}
+
+async function handleGoogleLogin(){
+  await _supabase.auth.signInWithOAuth({provider:'google', options:{redirectTo:window.location.origin}});
+}
+async function handleLogout(){
+  await _supabase.auth.signOut();
+  currentPlan='free'; currentPeriodEnd=null;
+  renderNavAuth(); renderPricingByPlan(); renderFreeCount(); renderFeedbackUI();
+}
+
+// ===== UPGRADE =====
 let upgradeMaxAmount = 2900;
 let upgradeMaxInterval = 'month';
 
-function openUpgradeModal() {
+function openUpgradeModal(){
   renderUpgradeModal();
   document.getElementById('modalUpgrade').classList.add('open');
 }
-function closeUpgradeModal() {
-  document.getElementById('modalUpgrade').classList.remove('open');
-}
+function closeUpgradeModal(){ document.getElementById('modalUpgrade').classList.remove('open'); }
 
-function switchUpgradeMax(el, price, period, amount, interval) {
-  document.querySelectorAll('.umtab').forEach(t => t.classList.remove('on'));
+function switchUpgradeMax(el, price, period, amount, interval){
+  document.querySelectorAll('.umtab').forEach(t=>t.classList.remove('on'));
   el.classList.add('on');
-  document.getElementById('upgradeMaxPrice').innerHTML = '$' + price + '<span id="upgradeMaxPeriod">' + period + '</span>';
-  upgradeMaxAmount = amount;
-  upgradeMaxInterval = interval;
+  document.getElementById('upgradeMaxPrice').innerHTML = '$'+price+'<span>'+period+'</span>';
+  upgradeMaxAmount = amount; upgradeMaxInterval = interval;
 }
 
-function renderUpgradeModal() {
+function renderUpgradeModal(){
   const proCard = document.getElementById('upgradeProCard');
   const maxCard = document.getElementById('upgradeMaxCard');
   const status = document.getElementById('upgradeSubStatus');
   const proBtn = document.getElementById('upgradeProBtnBottom');
   const maxBtn = document.getElementById('upgradeMaxBtnBottom');
   const btnRow = document.getElementById('upgradeBtnRow');
-
-  proCard.classList.remove('subscribed');
-  maxCard.classList.remove('subscribed');
-  proBtn.disabled = false; proBtn.textContent = '解锁 Pro ✦';
-  maxBtn.disabled = false; maxBtn.textContent = '解锁 Max ✦';
-  status.style.display = 'none';
-  btnRow.style.display = 'grid';
-
-  if (currentPlan === 'pro') {
-    proCard.classList.add('subscribed');
-    proBtn.disabled = true; proBtn.textContent = '已是 Pro 啦 ✦';
-    status.style.display = 'block';
-    status.textContent = '你已经是 Pro 用户了，可以升级到 Max 解锁无限变身 ✦';
-  } else if (currentPlan === 'max') {
-    proCard.classList.add('subscribed');
-    maxCard.classList.add('subscribed');
-    proBtn.disabled = true; proBtn.textContent = '已包含 ✦';
-    maxBtn.disabled = false; maxBtn.textContent = '切换周期 / 续费 ✦';
-    status.style.display = 'block';
-    status.textContent = '✦ 你已是 Max 传奇玩家！可选更长周期续费省更多～';
+  [proCard,maxCard].forEach(c=>c?.classList.remove('subscribed'));
+  proBtn.disabled=false; proBtn.textContent='解锁 Pro ✦';
+  maxBtn.disabled=false; maxBtn.textContent='解锁 Max ✦';
+  status.style.display='none'; btnRow.style.display='grid';
+  if(currentPlan==='pro'){
+    proBtn.disabled=true; proBtn.textContent='已是 Pro 啦 ✦';
+    status.style.display='block'; status.textContent='你已经是 Pro 用户了，可以升级到 Max 解锁无限变身 ✦';
+  } else if(currentPlan==='max'){
+    proBtn.disabled=true; proBtn.textContent='已包含 ✦';
+    maxBtn.textContent='切换周期 / 续费 ✦';
+    status.style.display='block'; status.textContent='✦ 你已是 Max 传奇玩家！可选更长周期续费省更多～';
   }
 }
 
-async function handleSubscribeFromModal(plan) {
-  if (!currentUser) { closeUpgradeModal(); openAuthModal(); return; }
-  const btn = plan === 'pro'
-    ? document.getElementById('upgradeProBtnBottom')
-    : document.getElementById('upgradeMaxBtnBottom');
+async function handleSubscribeFromModal(plan){
+  if(!currentUser){ closeUpgradeModal(); openAuthModal(); return; }
+  const btn = plan==='pro' ? document.getElementById('upgradeProBtnBottom') : document.getElementById('upgradeMaxBtnBottom');
   const orig = btn.textContent;
-  btn.disabled = true; btn.textContent = '跳转中...';
-
+  btn.disabled=true; btn.textContent='跳转中...';
   try {
-    const res = await fetch('/api/create-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: currentUser.id,
-        userEmail: currentUser.email,
-        plan,
-        amount: plan === 'max' ? upgradeMaxAmount : undefined,
-        interval: plan === 'max' ? upgradeMaxInterval : undefined,
-      }),
+    const res = await fetch('/api/create-checkout',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({userId:currentUser.id, userEmail:currentUser.email, plan, amount:plan==='max'?upgradeMaxAmount:undefined, interval:plan==='max'?upgradeMaxInterval:undefined}),
     });
     const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert('出错了：' + (data.error || '请稍后重试'));
-      btn.disabled = false; btn.textContent = orig;
-    }
-  } catch(e) {
-    alert('网络错误，请稍后重试');
-    btn.disabled = false; btn.textContent = orig;
-  }
+    if(data.url) window.location.href = data.url;
+    else{ alert('出错了：'+(data.error||'请稍后重试')); btn.disabled=false; btn.textContent=orig; }
+  } catch(e){ alert('网络错误，请稍后重试'); btn.disabled=false; btn.textContent=orig; }
 }
 
-// ===== PRICING UI =====
-function renderPricingByPlan() {
-  const plan = currentPlan;
-
-  const banner = document.getElementById('memberBanner');
-  const manageSection = document.getElementById('manageSubSection');
-  const manageTitle = document.getElementById('manageSubTitle');
-  const manageDesc = document.getElementById('manageSubDesc');
-  const freeCard = document.getElementById('freeCard');
-  const proCard = document.getElementById('proCard');
-  const maxCard = document.getElementById('maxCard');
-  const proPlanBtn = document.getElementById('proPlanBtn');
-  const maxPlanBtn = document.getElementById('maxPlanBtn');
-  const freePlanBtn = document.getElementById('freePlanBtn');
-
-  [freeCard, proCard, maxCard].forEach(c => c?.classList.remove('subscribed'));
-  if (proPlanBtn) { proPlanBtn.disabled = false; proPlanBtn.textContent = '解锁 Pro ✦'; proPlanBtn.onclick = () => handleSubscribe('pro'); }
-  if (maxPlanBtn) { maxPlanBtn.disabled = false; maxPlanBtn.textContent = '解锁 Max ✦'; maxPlanBtn.onclick = () => handleSubscribe('max'); }
-  if (freePlanBtn) freePlanBtn.disabled = false;
-
-  if (plan === 'free') {
-    banner?.classList.remove('show');
-    manageSection?.classList.remove('show');
-    return;
-  }
-
-  banner?.classList.add('show');
-  const badgeEl = document.getElementById('memberBadgeText');
-  if (badgeEl) badgeEl.textContent = plan.toUpperCase();
-  const descEl = document.getElementById('memberBannerDesc');
-  if (descEl) descEl.textContent =
-    plan === 'max' ? '变身券无限张，随便造 ✦' : '变身券每天 10 张，享受无水印 ✦';
-
-  const expireEl = document.getElementById('memberExpire');
-  if (expireEl && currentPeriodEnd) {
-    const end = new Date(currentPeriodEnd);
-    const diffDays = Math.ceil((end - new Date()) / (1000*60*60*24));
-    const yyyy = end.getFullYear();
-    const mm = String(end.getMonth()+1).padStart(2,'0');
-    const dd = String(end.getDate()).padStart(2,'0');
-    expireEl.textContent = diffDays > 0
-      ? `· 到期 ${yyyy}-${mm}-${dd}（剩 ${diffDays} 天）`
-      : '· 已到期';
-  } else if (expireEl) {
-    expireEl.textContent = '';
-  }
-
-  manageSection?.classList.add('show');
-  if (manageTitle) manageTitle.textContent = plan === 'max' ? '✦ 你已经是 Max 传奇玩家了！' : '✦ 你已经是 Pro 啦';
-  if (manageDesc) manageDesc.textContent = plan === 'max'
-    ? '最高权益全解锁，下面是各套餐对比供参考～'
-    : '订阅正常有效，还想再进一步？可以升级到 Max～';
-
-  if (plan === 'pro') {
-    proCard?.classList.add('subscribed');
-    if (proPlanBtn) { proPlanBtn.disabled = true; proPlanBtn.textContent = '已是 Pro 啦 ✦'; proPlanBtn.onclick = null; }
-    if (freePlanBtn) freePlanBtn.disabled = true;
-  } else if (plan === 'max') {
-    maxCard?.classList.add('subscribed');
-    proCard?.classList.add('subscribed');
-    if (maxPlanBtn) { maxPlanBtn.disabled = true; maxPlanBtn.textContent = '已是 Max 啦 ✦'; maxPlanBtn.onclick = null; }
-    if (proPlanBtn) { proPlanBtn.disabled = true; proPlanBtn.textContent = '已是 Pro ✦'; proPlanBtn.onclick = null; }
-    if (freePlanBtn) freePlanBtn.disabled = true;
-  }
-}
-
-function openManageSubscription() {
-  openUpgradeModal();
-}
-
-// ===== AUTH MODAL =====
-let authMode = 'login';
-
-function openAuthModal() {
-  _authInProgress = false;
-  document.getElementById('modalAuth').classList.add('open');
-  document.getElementById('authMsg').textContent = '';
-  const btn = document.getElementById('authSubmitBtn');
-  btn.disabled = false;
-  btn.textContent = authMode === 'login' ? '登录' : '注册';
-}
-function closeAuthModal() {
-  document.getElementById('modalAuth').classList.remove('open');
-  document.getElementById('authMsg').textContent = '';
-}
-
-function switchAuthTab(mode) {
-  authMode = mode;
-  document.getElementById('tabLogin').classList.toggle('on', mode === 'login');
-  document.getElementById('tabSignup').classList.toggle('on', mode === 'signup');
-  document.getElementById('authSubmitBtn').textContent = mode === 'login' ? '登录' : '注册';
-  document.getElementById('authModalTitle').textContent = mode === 'login' ? '👋 欢迎回来' : '✨ 创建账号';
-  document.getElementById('authMsg').textContent = '';
-}
-
-let _authInProgress = false;
-async function handleAuth() {
-  if (_authInProgress) return;
-  _authInProgress = true;
-
-  const email = document.getElementById('authEmail').value.trim();
-  const password = document.getElementById('authPassword').value;
-  const btn = document.getElementById('authSubmitBtn');
-  const msg = document.getElementById('authMsg');
-
-  if (!email || !password) { msg.textContent = '邮箱和密码都要填哦，少一个都不行！(｀・ω・´)'; _authInProgress = false; return; }
-  if (password.length < 6) { msg.textContent = '密码至少要 6 位哦，短了守不住的 (´•ω•`)'; _authInProgress = false; return; }
-
-  btn.disabled = true;
-  btn.textContent = '处理中...';
-  msg.textContent = '';
-
-  try {
-    let result;
-    if (authMode === 'login') {
-      result = await _supabase.auth.signInWithPassword({ email, password });
-    } else {
-      result = await _supabase.auth.signUp({ email, password });
-    }
-
-    if (result.error) {
-      const errMap = {
-        'Invalid login credentials': '邮箱或密码不对哦，再想想？(・ω・`)',
-        'User already registered': '这个邮箱已经是老朋友啦！快去登录吧 (≧▽≦)',
-        'Email not confirmed': '先去邮箱点一下确认链接哦，就差最后一步了！✉️',
-        'Password should be at least 6 characters': '密码至少要 6 位哦，短了守不住的 (´•ω•`)',
-      };
-      msg.textContent = errMap[result.error.message] || result.error.message;
-      btn.disabled = false;
-      btn.textContent = authMode === 'login' ? '登录' : '注册';
-    } else if (authMode === 'signup' && !result.data.session) {
-      msg.className = 'auth-msg ok';
-      msg.textContent = '📬 注册成功！去邮箱点一下确认链接，马上就能变身啦～ (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧';
-      btn.disabled = false;
-      btn.textContent = '注册';
-    }
-  } catch(e) {
-    const { data: { session } } = await _supabase.auth.getSession().catch(() => ({ data: { session: null } }));
-    if (!session) {
-      console.error('Auth error:', e);
-      msg.textContent = '登录失败：' + (e.message || '网络错误，请稍后重试');
-    }
-    btn.disabled = false;
-    btn.textContent = authMode === 'login' ? '登录' : '注册';
-  } finally {
-    _authInProgress = false;
-  }
-}
-
-async function handleGoogleLogin() {
-  await _supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.origin }
-  });
-}
-
-async function handleLogout() {
-  await _supabase.auth.signOut();
-  currentPlan = 'free';
-  currentPeriodEnd = null;
-  renderNavAuth();
-  renderPricingByPlan();
-  renderFreeCount();
-}
-
-// ===== STRIPE =====
-async function handleSubscribe(plan) {
-  if (!currentUser) {
-    openAuthModal();
-    return;
-  }
-  const btn = event.currentTarget;
-  const orig = btn.textContent;
-  btn.textContent = '跳转中...';
-  btn.disabled = true;
-
-  try {
-    const res = await fetch('/api/create-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: currentUser.id,
-        userEmail: currentUser.email,
-        plan,
-        amount: plan === 'max' ? maxSelectedAmount : undefined,
-      }),
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert('出错了：' + (data.error || '请稍后重试'));
-      btn.textContent = orig;
-      btn.disabled = false;
-    }
-  } catch(e) {
-    alert('网络错误，请稍后重试');
-    btn.textContent = orig;
-    btn.disabled = false;
-  }
-}
-
-function checkPaymentResult() {
+function checkPaymentResult(){
   const params = new URLSearchParams(window.location.search);
-  if (params.get('payment') === 'success') {
+  if(params.get('payment')==='success'){
     setTimeout(async () => {
       await refreshUserPlan();
-      renderNavAuth();
-      renderPricingByPlan();
-      renderFreeCount();
+      renderNavAuth(); renderPricingByPlan(); renderFreeCount();
       alert('🎉 订阅成功！权益已激活，快去变身吧～ (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧');
     }, 1500);
-    window.history.replaceState({}, '', '/');
-  } else if (params.get('payment') === 'cancel') {
-    window.history.replaceState({}, '', '/');
+    window.history.replaceState({},'',' /');
+  } else if(params.get('payment')==='cancel'){
+    window.history.replaceState({},'','/');
   }
 }
 
-window.addEventListener('pageshow', (e) => {
-  if (e.persisted) {
-    const proBtn = document.getElementById('upgradeProBtnBottom');
-    const maxBtn = document.getElementById('upgradeMaxBtnBottom');
-    if (proBtn && !proBtn.textContent.includes('已')) { proBtn.disabled = false; proBtn.textContent = '解锁 Pro ✦'; }
-    if (maxBtn && !maxBtn.textContent.includes('已')) { maxBtn.disabled = false; maxBtn.textContent = '解锁 Max ✦'; }
+window.addEventListener('pageshow', e => {
+  if(e.persisted){
+    const proBtn=document.getElementById('upgradeProBtnBottom');
+    const maxBtn=document.getElementById('upgradeMaxBtnBottom');
+    if(proBtn && !proBtn.textContent.includes('已')){ proBtn.disabled=false; proBtn.textContent='解锁 Pro ✦'; }
+    if(maxBtn && !maxBtn.textContent.includes('已')){ maxBtn.disabled=false; maxBtn.textContent='解锁 Max ✦'; }
   }
+});
+
+// ===== MODALS =====
+function openModal(type){ document.getElementById('modal'+type.charAt(0).toUpperCase()+type.slice(1)).classList.add('open'); }
+function closeModal(type){ document.getElementById('modal'+type.charAt(0).toUpperCase()+type.slice(1)).classList.remove('open'); }
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape'){ closeModal('Tos'); closeModal('Privacy'); closeAuthModal(); closeUpgradeModal(); closeLightbox(); }
 });
 
 // ===== INIT =====
 initAuth().then(() => {
   setTimeout(() => {
-    try { renderNavAuth(); } catch(e) {}
-    try { renderPricingByPlan(); } catch(e) {}
-    try { renderFreeCount(); } catch(e) {}
+    renderNavAuth(); renderPricingByPlan(); renderFreeCount(); renderFeedbackUI();
   }, 1500);
 });
-
-// ===== MODALS =====
-function openModal(type){
-  document.getElementById('modal'+type.charAt(0).toUpperCase()+type.slice(1)).classList.add('open');
-}
-function closeModal(type){
-  document.getElementById('modal'+type.charAt(0).toUpperCase()+type.slice(1)).classList.remove('open');
-}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('Tos');closeModal('Privacy');closeAuthModal();closeUpgradeModal();}});
 </script>
 </body>
 </html>
