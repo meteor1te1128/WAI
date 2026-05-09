@@ -415,18 +415,102 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 .nav-upgrade:hover{opacity:0.88;transform:scale(1.04);}
 
 /* ===== NAV PLAN BADGE ===== */
+@keyframes badgeShimmer{
+  0%{background-position:200% center;}
+  100%{background-position:-200% center;}
+}
+@keyframes badgePop{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.12);}
+  100%{transform:scale(1);}
+}
 .nav-plan-badge{
   display:inline-flex;
   align-items:center;
-  padding:3px 10px;
+  padding:4px 11px;
   border-radius:10px;
   font-size:10px;
-  font-weight:700;
-  background:linear-gradient(135deg,#8b5cf6,#ec4899);
+  font-weight:800;
+  background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b,#ec4899,#8b5cf6);
+  background-size:300% auto;
   color:#fff;
-  letter-spacing:0.5px;
+  letter-spacing:0.8px;
+  flex-shrink:0;
+  cursor:pointer;
+  position:relative;
+  animation:badgeShimmer 3s linear infinite;
+  box-shadow:0 0 10px rgba(139,92,246,0.4);
+  transition:box-shadow 0.2s,transform 0.15s;
+  user-select:none;
+}
+.nav-plan-badge:hover{
+  box-shadow:0 0 18px rgba(139,92,246,0.65);
+  transform:scale(1.06);
+}
+.nav-plan-badge:active{
+  animation:badgePop 0.2s ease,badgeShimmer 3s linear infinite;
+}
+/* 悬停弹出状态卡片 */
+.nav-badge-wrap{
+  position:relative;
+  display:inline-flex;
   flex-shrink:0;
 }
+.nav-badge-tooltip{
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+  background:var(--white-card);
+  border:1px solid var(--card-border);
+  border-radius:14px;
+  padding:14px 16px;
+  min-width:200px;
+  box-shadow:0 8px 32px rgba(139,92,246,0.18);
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(-6px) scale(0.97);
+  transition:opacity 0.2s,transform 0.2s;
+  z-index:50;
+}
+.nav-badge-wrap:hover .nav-badge-tooltip{
+  opacity:1;
+  pointer-events:all;
+  transform:translateY(0) scale(1);
+}
+.nbt-plan{
+  font-size:13px;
+  font-weight:800;
+  background:linear-gradient(90deg,#8b5cf6,#ec4899);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:8px;
+}
+.nbt-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:12px;
+  color:var(--text-muted);
+  padding:4px 0;
+  border-bottom:1px solid var(--divider);
+}
+.nbt-row:last-child{border-bottom:none;}
+.nbt-val{font-weight:600;color:var(--text);}
+.nbt-manage{
+  display:block;
+  margin-top:10px;
+  text-align:center;
+  font-size:11px;
+  font-weight:700;
+  color:#8b5cf6;
+  cursor:pointer;
+  padding:6px;
+  border-radius:8px;
+  background:rgba(139,92,246,0.07);
+  transition:background 0.2s;
+}
+.nbt-manage:hover{background:rgba(139,92,246,0.14);}
 
 /* ===== UPGRADE MODAL ===== */
 .upgrade-plans{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
@@ -1637,7 +1721,7 @@ async function refreshUserPlan() {
   } catch(e) { currentPlan = 'free'; currentPeriodEnd = null; }
 }
 
-// ===== NAV AUTH — badge 独立于 nav-user 外，不被 ellipsis 截断 =====
+// ===== NAV AUTH =====
 function renderNavAuth() {
   const nav = document.getElementById('navAuth');
   if (!currentUser) {
@@ -1645,15 +1729,49 @@ function renderNavAuth() {
   } else {
     const email = currentUser.email || '';
     const short = email.length > 14 ? email.slice(0, 14) + '…' : email;
-    const badge = currentPlan !== 'free'
-      ? `<span class="nav-plan-badge">${currentPlan.toUpperCase()}</span>`
-      : '';
     const upgradeBtn = currentPlan !== 'max'
       ? `<button class="nav-upgrade" onclick="openUpgradeModal()">✦ 升级</button>`
       : '';
+
+    let badgeHtml = '';
+    if (currentPlan !== 'free') {
+      // 计算悬停卡片数据
+      let expireStr = '—';
+      let daysStr = '—';
+      if (currentPeriodEnd) {
+        const end = new Date(currentPeriodEnd);
+        const diffDays = Math.ceil((end - new Date()) / (1000*60*60*24));
+        const yyyy = end.getFullYear();
+        const mm = String(end.getMonth()+1).padStart(2,'0');
+        const dd = String(end.getDate()).padStart(2,'0');
+        expireStr = `${yyyy}-${mm}-${dd}`;
+        daysStr = diffDays > 0 ? `还剩 ${diffDays} 天` : '已到期';
+      }
+      let quotaStr = '—';
+      if (currentPlan === 'max') {
+        quotaStr = '无限 ∞';
+      } else if (currentPlan === 'pro') {
+        const used = parseInt(localStorage.getItem('waiProUsed') || '0');
+        const left = Math.max(0, 30 - used);
+        quotaStr = `剩 ${left} / 30 次`;
+      }
+
+      badgeHtml = `
+        <div class="nav-badge-wrap">
+          <span class="nav-plan-badge" onclick="openUpgradeModal()">${currentPlan.toUpperCase()}</span>
+          <div class="nav-badge-tooltip">
+            <div class="nbt-plan">✦ ${currentPlan.toUpperCase()} 会员</div>
+            <div class="nbt-row"><span>到期时间</span><span class="nbt-val">${expireStr}</span></div>
+            <div class="nbt-row"><span>有效期</span><span class="nbt-val">${daysStr}</span></div>
+            <div class="nbt-row"><span>今日剩余</span><span class="nbt-val">${quotaStr}</span></div>
+            <span class="nbt-manage" onclick="openUpgradeModal()">管理订阅 →</span>
+          </div>
+        </div>`;
+    }
+
     nav.innerHTML = `
       ${upgradeBtn}
-      ${badge}
+      ${badgeHtml}
       <span class="nav-user">${short}</span>
       <button class="nav-logout" onclick="handleLogout()">退出</button>`;
   }
