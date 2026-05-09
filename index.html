@@ -655,7 +655,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
   <div class="section-label">选择风格</div>
   <div class="style-row-wrap" id="styleRowWrap">
-    <div class="style-row-fade-left" id="styleRowFadeLeft" onclick="document.getElementById('styleRow').scrollBy({left:-120,behavior:'smooth'})">
+    <div class="style-row-fade-left" id="styleRowFadeLeft" onclick="styleRowScroll(-1)">
       <span class="style-row-arrow style-row-arrow-left">‹</span>
     </div>
     <div class="style-row" id="styleRow">
@@ -666,7 +666,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       <div class="style-pill" onclick="pick(this)"><span>🏺</span>黏土风</div>
       <div class="style-pill" onclick="pick(this)"><span>🧸</span>玩具风</div>
     </div>
-    <div class="style-row-fade-right" id="styleRowFade" onclick="document.getElementById('styleRow').scrollBy({left:120,behavior:'smooth'})">
+    <div class="style-row-fade-right" id="styleRowFade" onclick="styleRowScroll(1)">
       <span class="style-row-arrow style-row-arrow-right">›</span>
     </div>
   </div>
@@ -954,6 +954,20 @@ document.querySelectorAll('.h1-char').forEach(el => {
   }
   row.addEventListener('scroll', checkScroll, {passive:true});
   setTimeout(checkScroll, 200);
+
+  window.styleRowScroll = function(dir) {
+    const step = 130;
+    if (dir < 0) {
+      // 左滑：如果已经很靠近最左，直接到头
+      const target = row.scrollLeft - step;
+      row.scrollTo({left: Math.max(0, target), behavior: 'smooth'});
+    } else {
+      // 右滑：如果剩余距离小于 step，直接到最右
+      const maxScroll = row.scrollWidth - row.clientWidth;
+      const target = row.scrollLeft + step;
+      row.scrollTo({left: Math.min(maxScroll, target), behavior: 'smooth'});
+    }
+  };
 })();
 
 // ===== SMOOTH SCROLL =====
