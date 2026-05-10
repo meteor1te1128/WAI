@@ -227,8 +227,8 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .ex-slider-before{position:absolute;inset:0;z-index:1;}
 .ex-slider-before img{width:100%;height:100%;object-fit:cover;display:block;}
 .ex-slider-clip{position:absolute;top:0;left:0;height:100%;z-index:2;overflow:hidden;}
-.ex-slider-after-inner{height:100%;display:flex;}
-.ex-slider-after-inner img{height:100%;object-fit:cover;display:block;}
+.ex-slider-after-inner{height:100%;position:relative;}
+.ex-slider-after-inner img{position:absolute;top:0;left:0;height:100%;object-fit:cover;display:block;}
 .ex-slider-handle{position:absolute;top:0;height:100%;width:3px;background:linear-gradient(180deg,rgba(139,92,246,0.9),rgba(236,72,153,0.9));z-index:6;transform:translateX(-50%);cursor:ew-resize;}
 .ex-slider-circle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);border:2px solid rgba(255,255,255,0.7);box-shadow:0 4px 16px rgba(139,92,246,0.5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
 .ex-slider-label{position:absolute;bottom:12px;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;pointer-events:none;z-index:7;}
@@ -1096,10 +1096,20 @@ function openExModal(title, beforeSrc, afterSrc){
   document.getElementById('exSliderClip').style.width = '50%';
   document.getElementById('exSliderHandle').style.left = '50%';
   document.getElementById('exModal').classList.add('open');
-  setTimeout(() => {
-    const wrap = document.getElementById('exSliderWrap');
-    document.getElementById('exSliderAfterInner').style.width = wrap.offsetWidth + 'px';
-  }, 50);
+  // 等 modal 打开后再同步宽度
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const wrap = document.getElementById('exSliderWrap');
+      const w = wrap.offsetWidth;
+      document.getElementById('exSliderAfterInner').style.width = w + 'px';
+      document.getElementById('exSliderAfter').style.width = w + 'px';
+      document.getElementById('exSliderAfter').style.height = '100%';
+      document.getElementById('exSliderAfter').style.objectFit = 'cover';
+      document.getElementById('exSliderBefore').style.width = '100%';
+      document.getElementById('exSliderBefore').style.height = '100%';
+      document.getElementById('exSliderBefore').style.objectFit = 'cover';
+    });
+  });
 }
 
 function closeExModal(){
@@ -1113,13 +1123,20 @@ function closeExModal(){
   const afterInner = document.getElementById('exSliderAfterInner');
   let dragging = false;
 
+  function syncWidth(){
+    const w = wrap.offsetWidth;
+    afterInner.style.width = w + 'px';
+    const img = document.getElementById('exSliderAfter');
+    if(img) img.style.width = w + 'px';
+  }
+
   function setPos(clientX){
     const rect = wrap.getBoundingClientRect();
     let pct = (clientX - rect.left) / rect.width;
     pct = Math.max(0.03, Math.min(0.97, pct));
     clip.style.width = (pct * 100) + '%';
     handle.style.left = (pct * 100) + '%';
-    afterInner.style.width = rect.width + 'px';
+    syncWidth();
   }
 
   wrap.addEventListener('mousedown', e => { dragging = true; setPos(e.clientX); });
@@ -1128,6 +1145,7 @@ function closeExModal(){
   wrap.addEventListener('touchstart', e => { dragging = true; setPos(e.touches[0].clientX); }, {passive:true});
   window.addEventListener('touchmove', e => { if(dragging) setPos(e.touches[0].clientX); }, {passive:true});
   window.addEventListener('touchend', () => { dragging = false; });
+  window.addEventListener('resize', syncWidth);
 })();
 
 // ===== DOWNLOAD =====
