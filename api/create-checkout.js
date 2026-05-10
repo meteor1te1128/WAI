@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
   const SITE_URL = process.env.SITE_URL || 'https://wai-phi-swart.vercel.app';
   const plans = {
-    pro:  { name: 'WAI Pro',  description: '每天 30 次 · 6 种风格 · 无水印 · 2K 高清 · 30 天历史记录', amount: 1900, interval: 'month' },
+    pro:  { name: 'WAI Pro',  description: '每天 30 次 · 6 种风格 · 无水印 · 2K 高清 · 30 天历史记录', amount: 1, interval: 'month' },
     max:  { name: 'WAI Max',  description: '无限次数 · 4K 超清 · 永久历史 · 商业授权 · 新风格优先体验',  amount: 3900, interval: 'month' },
   };
   const selectedPlan = plans[plan] || plans.pro;
