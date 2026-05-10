@@ -201,6 +201,7 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .ex-half.after-anime{background:radial-gradient(ellipse at 40% 50%,rgba(245,158,11,0.2),rgba(236,72,153,0.12)),#fff8ee;}
 .ex-half.after-cartoon{background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.25),rgba(236,72,153,0.12)),#f5f0ff;}
 .ex-half.after-dark{background:radial-gradient(ellipse at 40% 50%,rgba(55,48,163,0.3),rgba(17,24,39,0.2)),#e8e8f5;}
+.ex-half.after-oil{background:radial-gradient(ellipse at 40% 50%,rgba(180,120,40,0.3),rgba(120,60,20,0.2)),#f5e6c8;}
 [data-theme="dark"] .ex-half.after-ghibli{background:radial-gradient(ellipse at 40% 50%,rgba(16,185,129,0.25),rgba(139,92,246,0.15)),#0a1f15;}
 [data-theme="dark"] .ex-half.after-clay{background:radial-gradient(ellipse at 40% 50%,rgba(251,113,133,0.25),rgba(251,207,232,0.15)),#1f0a10;}
 [data-theme="dark"] .ex-half.after-pixel{background:radial-gradient(ellipse at 40% 50%,rgba(6,182,212,0.3),rgba(139,92,246,0.2)),#081a1f;}
@@ -461,9 +462,9 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       <span class="h1-char">变</span><span class="h1-char">成</span>
     </span><span class="grad">动漫角色</span>
   </h1>
-  <p class="sub">丢一张自拍进来，8 秒后你就是变身达人了✨<br>
-    <span class="sub-tag">🌿 吉卜力</span> · <span class="sub-tag">🧸 黏土风</span> · <span class="sub-tag">👾 像素风</span> · <span class="sub-tag">✨ 动漫风</span> · <span class="sub-tag">🎨 漫画风</span>
-    &nbsp;5 种风格随便选
+  <p class="sub">丢一张自拍进来，约 15 秒后你就是变身达人了✨<br>
+    <span class="sub-tag">🌿 吉卜力</span> · <span class="sub-tag">🧸 黏土风</span> · <span class="sub-tag">👾 像素风</span> · <span class="sub-tag">✨ 动漫风</span> · <span class="sub-tag">🎨 漫画风</span> · <span class="sub-tag">🖼️ 油画风</span>
+    &nbsp;6 种风格随便选
   </p>
 </section>
 
@@ -494,6 +495,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       <div class="style-pill" onclick="pick(this)"><span>👾</span>像素风</div>
       <div class="style-pill" onclick="pick(this)"><span>✨</span>动漫风</div>
       <div class="style-pill" onclick="pick(this)"><span>🎨</span>漫画风</div>
+      <div class="style-pill" onclick="pick(this)"><span>🖼️</span>油画风</div>
     </div>
     <div class="style-row-fade-right" id="styleRowFade">
       <span class="style-row-arrow style-row-arrow-right" onclick="styleRowScroll(1)">›</span>
@@ -548,8 +550,8 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <!-- STATS — 改成真实感数字 -->
 <div class="stats-row">
   <div class="stat-card"><span class="stat-n">12,847</span><span class="stat-d">已生成图片</span></div>
-  <div class="stat-card"><span class="stat-n">~8秒</span><span class="stat-d">平均生成时间</span></div>
-  <div class="stat-card"><span class="stat-n">5种</span><span class="stat-d">独家风格</span></div>
+  <div class="stat-card"><span class="stat-n">~15秒</span><span class="stat-d">平均生成时间</span></div>
+  <div class="stat-card"><span class="stat-n">6种</span><span class="stat-d">独家风格</span></div>
 </div>
 
 <!-- BEFORE/AFTER -->
@@ -580,7 +582,8 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
     <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧑</div><div class="ex-half after-pixel">👾</div></div><div class="ex-label"><span class="ex-name">像素风</span><span class="ex-tag">复古</span></div></div>
     <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👧</div><div class="ex-half after-anime">✨</div></div><div class="ex-label"><span class="ex-name">动漫风</span><span class="ex-tag">超好看</span></div></div>
     <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👦</div><div class="ex-half after-cartoon">🎨</div></div><div class="ex-label"><span class="ex-name">漫画风</span><span class="ex-tag">有腔调</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧔</div><div class="ex-half after-dark">🎭</div></div><div class="ex-label"><span class="ex-name">随机风格</span><span class="ex-tag">惊喜感</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧔</div><div class="ex-half after-cartoon">🎨</div></div><div class="ex-label"><span class="ex-name">漫画风</span><span class="ex-tag">有腔调</span></div></div>
+    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-oil">🖼️</div></div><div class="ex-label"><span class="ex-name">油画风</span><span class="ex-tag">最惊艳</span></div></div>
   </div>
 </div>
 
@@ -718,13 +721,13 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">W<span class="purple">AI</span></div>
-    <div class="footer-tagline">AI 一键变身 · 5 种风格随便选 · Powered by Flux Kontext</div>
+    <div class="footer-tagline">AI 一键变身 · 6 种风格随便选 · Powered by Flux Kontext & PuLID</div>
     <div class="footer-links">
       <a href="#" onclick="openModal('tos');return false;">Terms of Service</a>
       <span class="footer-sep">·</span>
       <a href="#" onclick="openModal('privacy');return false;">Privacy Policy</a>
     </div>
-    <div class="footer-contact">有问题？联系我们：<a href="mailto:support@wai.app">support@wai.app</a></div>
+    <div class="footer-contact">有问题？联系我们：<a href="mailto:tingyuyanfeng@gmail.com">tingyuyanfeng@gmail.com</a></div>
     <div class="footer-copy">© 2026 WAI · All rights reserved</div>
   </div>
 </footer>
