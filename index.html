@@ -580,7 +580,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 </div>
 
 <div class="stats-row">
-  <div class="stat-card"><span class="stat-n">12,847</span><span class="stat-d">Images Generated</span></div>
+  <div class="stat-card"><span class="stat-n" id="statGenCount">12,847</span><span class="stat-d">Images Generated</span></div>
   <div class="stat-card"><span class="stat-n">~15s</span><span class="stat-d">Average Time</span></div>
   <div class="stat-card"><span class="stat-n">6</span><span class="stat-d">Unique Styles</span></div>
 </div>
@@ -947,8 +947,59 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let allHistoryData = [];
 
+// Style display name mapping (Chinese legacy data → English)
+const styleDisplayMap = {
+  '🌿 吉卜力风': '🌿 Ghibli',
+  '🧸 黏土风':   '🧸 Clay',
+  '👾 像素风':   '👾 Pixel Art',
+  '✨ 动漫风':   '✨ Anime',
+  '🎨 皮克斯风': '🎨 Pixar',
+  '🖼️ 油画风':  '🖼️ Oil Paint',
+};
+function resolveStyleName(s){ return styleDisplayMap[s] || s || 'Transform'; }
+
+// Animated image counter
+(function(){
+  const el = document.getElementById('statGenCount');
+  if(!el) return;
+  const target = 12847;
+  const start = target - 120;
+  let current = start;
+  // Roll up animation on load
+  const duration = 1200;
+  const startTime = performance.now();
+  function rollUp(now){
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    current = Math.round(start + (target - start) * eased);
+    el.textContent = current.toLocaleString();
+    if(progress < 1){ requestAnimationFrame(rollUp); }
+    else {
+      current = target;
+      el.textContent = current.toLocaleString();
+      // After roll-up, slowly increment every 8-15s
+      scheduleNextTick();
+    }
+  }
+  requestAnimationFrame(rollUp);
+  function scheduleNextTick(){
+    const delay = 8000 + Math.random() * 7000;
+    setTimeout(()=>{
+      current += Math.random() < 0.7 ? 1 : 2;
+      el.textContent = current.toLocaleString();
+      scheduleNextTick();
+    }, delay);
+  }
+  // Expose so handleGen can call it
+  window.bumpGenCount = function(){
+    current += 1;
+    el.textContent = current.toLocaleString();
+  };
+})();
+
 function historyCardHTML(item){
-  return `<div class="history-card"><div class="history-card-thumb" onclick="previewHistoryItem('${item.anime_url}','${item.style||'Transform'}')"><img src="${item.anime_url}" alt="${item.style||'Transform'}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=height:100px;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:12px>Failed to load</div>'"><div class="hc-preview-btn">🔍</div></div><div class="history-card-label"><span class="history-card-style">${item.style||'Transform'}</span><span class="history-card-time">${timeAgo(item.created_at)}</span></div><div class="history-card-actions"><button class="hc-btn preview" onclick="previewHistoryItem('${item.anime_url}','${item.style||'Transform'}')">Preview</button><button class="hc-btn dl" onclick="downloadHistoryItem('${item.anime_url}')">Save</button></div></div>`;
+  const displayStyle = resolveStyleName(item.style);
+  return `<div class="history-card"><div class="history-card-thumb" onclick="previewHistoryItem('${item.anime_url}','${displayStyle}')"><img src="${item.anime_url}" alt="${displayStyle}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=height:100px;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:12px>Failed to load</div>'"><div class="hc-preview-btn">🔍</div></div><div class="history-card-label"><span class="history-card-style">${displayStyle}</span><span class="history-card-time">${timeAgo(item.created_at)}</span></div><div class="history-card-actions"><button class="hc-btn preview" onclick="previewHistoryItem('${item.anime_url}','${displayStyle}')">Preview</button><button class="hc-btn dl" onclick="downloadHistoryItem('${item.anime_url}')">Save</button></div></div>`;
 }
 
 async function loadHistory(){
@@ -979,7 +1030,7 @@ function renderAhGrid(){
   const grid = document.getElementById('ahGrid');
   grid.innerHTML = page.length===0
     ? `<div class="ah-empty">No results for this style yet — go try it! ✨</div>`
-    : page.map(item=>`<div class="ah-card"><div class="ah-card-thumb" onclick="previewHistoryItem('${item.anime_url}','${item.style||'Transform'}')"><img src="${item.anime_url}" loading="lazy" onerror="this.style.display='none'"><div class="ah-card-thumb-hint">🔍</div></div><div class="ah-card-info"><span class="ah-card-style">${item.style||'Transform'}</span><span class="ah-card-time">${timeAgo(item.created_at)}</span></div><div class="ah-card-actions"><button class="ah-btn preview" onclick="previewHistoryItem('${item.anime_url}','${item.style||'Transform'}')">Preview</button><button class="ah-btn dl" onclick="downloadHistoryItem('${item.anime_url}')">Save</button></div></div>`).join('');
+    : page.map(item=>{ const ds=resolveStyleName(item.style); return `<div class="ah-card"><div class="ah-card-thumb" onclick="previewHistoryItem('${item.anime_url}','${ds}')"><img src="${item.anime_url}" loading="lazy" onerror="this.style.display='none'"><div class="ah-card-thumb-hint">🔍</div></div><div class="ah-card-info"><span class="ah-card-style">${ds}</span><span class="ah-card-time">${timeAgo(item.created_at)}</span></div><div class="ah-card-actions"><button class="ah-btn preview" onclick="previewHistoryItem('${item.anime_url}','${ds}')">Preview</button><button class="ah-btn dl" onclick="downloadHistoryItem('${item.anime_url}')">Save</button></div></div>`; }).join('');
   document.getElementById('ahPageInfo').textContent = `Page ${ahCurrentPage} / ${totalPages}`;
   document.getElementById('ahPrevBtn').disabled = ahCurrentPage <= 1;
   document.getElementById('ahNextBtn').disabled = ahCurrentPage >= totalPages;
@@ -1058,6 +1109,7 @@ async function handleGen(){
     btn.style.background='linear-gradient(135deg,#059669,#10b981)'; btn.style.boxShadow='0 8px 28px rgba(5,150,105,0.3)'; btn.disabled=false;
     res.style.background=''; res.innerHTML=`<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" class="result-revealed">`;
     currentAnimeUrl=imageUrl;
+    if(window.bumpGenCount) window.bumpGenCount();
     await fetch(`${SUPABASE_URL}/rest/v1/generations`,{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({user_id:currentUser?currentUser.id:getOrCreateUserId(),anime_url:imageUrl,style:styleKey})});
     setTimeout(loadHistory,1500);
   } catch(err){
