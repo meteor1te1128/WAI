@@ -13,63 +13,61 @@ export default async function handler(req, res) {
 
   const { imageBase64, style } = req.body;
   if (!imageBase64) {
-    return res.status(400).json({ error: '请上传图片' });
+    return res.status(400).json({ error: 'Missing image' });
   }
 
   const styleMap = {
-    '🌿 吉卜力风': {
+    '🌿 Ghibli': {
       style: 'Anime',
       prompt: 'Studio Ghibli anime style portrait, Miyazaki aesthetic, big expressive eyes, soft hand-drawn look, warm pastel colors, dreamy lush background, gentle cinematic lighting, anime film still',
       negative_prompt: 'realistic, photo, 3d render, ugly, blurry, bad anatomy, nsfw, dark, horror, western cartoon',
     },
-    '🧸 黏土风': {
+    '🧸 Clay': {
       style: 'Clay',
       prompt: 'cute claymation character portrait, smooth matte clay texture, round chubby face, soft diffused studio lighting, pastel colors, stop-motion animation style, highly detailed clay sculpt',
       negative_prompt: 'realistic, photo, ugly, blurry, flat, 2d, dark, horror, nsfw',
     },
-    '👾 像素风': {
+    '👾 Pixel Art': {
       style: 'Pixel Art',
       prompt: '16-bit RPG pixel art portrait, grid-aligned pixel blocks, limited vibrant color palette, retro game character sprite, sharp crisp pixel edges, classic JRPG style',
       negative_prompt: 'blurry, smooth, anti-aliased, realistic, 3d, ugly, noisy',
     },
-    '✨ 动漫风': {
+    '✨ Anime': {
       style: 'Anime',
       prompt: 'Japanese anime portrait, big bright expressive eyes, clean sharp lineart, vibrant cel shading, professional manga illustration, dramatic lighting, detailed hair',
       negative_prompt: 'realistic, photo, 3d, ugly, blurry, bad anatomy, nsfw, western cartoon',
     },
-    '🎨 皮克斯风': {
+    '🎨 Pixar': {
       style: 'Anime',
       prompt: 'Pixar 3D animation style portrait, high quality Disney Pixar movie character, smooth glossy skin, big expressive eyes, soft studio lighting, vivid cheerful colors, detailed hair, clean bright background, cinematic 3D render, cute and charming face',
       negative_prompt: 'realistic, photo, 2d, flat, ugly, blurry, bad anatomy, nsfw, dark, horror, sketch, painting',
     },
-    '🖼️ 油画风': {
+    '🖼️ Oil Paint': {
       style: 'Watercolor',
       prompt: 'classical oil painting portrait, museum masterpiece, rich impasto brushstrokes, Rembrandt dramatic chiaroscuro lighting, deep warm amber tones, Renaissance fine art canvas texture, highly detailed face, old master painting style',
       negative_prompt: 'anime, cartoon, 3d render, photo, realistic, ugly, blurry, nsfw, modern, digital art',
     },
   };
 
-  // 兼容旧风格名称
   const legacyMap = {
-    '吉卜力风': '🌿 吉卜力风',
-    '迪士尼3D': '🧸 黏土风',
-    '像素风':   '👾 像素风',
-    '游戏角色': '✨ 动漫风',
-    '动漫风':   '🎨 漫画风',
+    '🌿 吉卜力风': '🌿 Ghibli',
+    '🧸 黏土风':   '🧸 Clay',
+    '👾 像素风':   '👾 Pixel Art',
+    '✨ 动漫风':   '✨ Anime',
+    '🎨 皮克斯风': '🎨 Pixar',
+    '🖼️ 油画风':  '🖼️ Oil Paint',
   };
 
   const resolvedStyle = styleMap[style]
     ? style
     : legacyMap[style]
       ? legacyMap[style]
-      : '🌿 吉卜力风';
+      : '🌿 Ghibli';
 
   const selected = styleMap[resolvedStyle];
 
-  // 上传图片到 Supabase Storage，拿公开 URL
   const pureBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
   const imgBuffer = Buffer.from(pureBase64, 'base64');
-
   const fileName = `tmp_${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
 
   const uploadRes = await fetch(
@@ -88,12 +86,11 @@ export default async function handler(req, res) {
   if (!uploadRes.ok) {
     const err = await uploadRes.text();
     console.error('Supabase upload failed:', err);
-    return res.status(500).json({ error: '图片上传失败，请重试' });
+    return res.status(500).json({ error: 'Image upload failed, please try again' });
   }
 
   const imageUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/uploads/${fileName}`;
 
-  // 调用模型
   try {
     const startRes = await fetch(
       'https://api.replicate.com/v1/models/flux-kontext-apps/face-to-many-kontext/predictions',
@@ -134,6 +131,6 @@ export default async function handler(req, res) {
 
   } catch (err) {
     console.error('generate error:', err);
-    return res.status(500).json({ error: '服务器错误，请稍后重试' });
+    return res.status(500).json({ error: 'Server error, please try again' });
   }
 }
