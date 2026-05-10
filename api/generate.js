@@ -126,7 +126,6 @@ export default async function handler(req, res) {
     );
 
     const prediction = await startRes.json();
-    console.log('Replicate response:', JSON.stringify(prediction));
 
     if (prediction.error) {
       console.error('Replicate error:', prediction.error);
