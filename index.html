@@ -490,12 +490,12 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       <span class="style-row-arrow style-row-arrow-left" onclick="styleRowScroll(-1)">‹</span>
     </div>
     <div class="style-row" id="styleRow">
-      <div class="style-pill on" onclick="pick(this)"><span>🌿</span>吉卜力风</div>
-      <div class="style-pill" onclick="pick(this)"><span>🧸</span>黏土风</div>
-      <div class="style-pill" onclick="pick(this)"><span>👾</span>像素风</div>
-      <div class="style-pill" onclick="pick(this)"><span>✨</span>动漫风</div>
-      <div class="style-pill" onclick="pick(this)"><span>🎨</span>漫画风</div>
-      <div class="style-pill" onclick="pick(this)"><span>🖼️</span>油画风</div>
+      <div class="style-pill on" data-style="🌿 吉卜力风" onclick="pick(this)"><span>🌿</span>吉卜力风</div>
+      <div class="style-pill" data-style="🧸 黏土风" onclick="pick(this)"><span>🧸</span>黏土风</div>
+      <div class="style-pill" data-style="👾 像素风" onclick="pick(this)"><span>👾</span>像素风</div>
+      <div class="style-pill" data-style="✨ 动漫风" onclick="pick(this)"><span>✨</span>动漫风</div>
+      <div class="style-pill" data-style="🎨 漫画风" onclick="pick(this)"><span>🎨</span>漫画风</div>
+      <div class="style-pill" data-style="🖼️ 油画风" onclick="pick(this)"><span>🖼️</span>油画风</div>
     </div>
     <div class="style-row-fade-right" id="styleRowFade">
       <span class="style-row-arrow style-row-arrow-right" onclick="styleRowScroll(1)">›</span>
@@ -1091,17 +1091,8 @@ async function handleGen(){
   btn.disabled = true;
 
   const selectedPill = document.querySelector('.style-pill.on');
-  const pillText = selectedPill ? selectedPill.textContent.trim() : '';
-  // pill 的 textContent 是 "🌿吉卜力风"（无空格），要映射到 generate.js 的 key
-  const pillStyleMap = {
-    '🌿吉卜力风': '🌿 吉卜力风',
-    '🧸黏土风':   '🧸 黏土风',
-    '👾像素风':   '👾 像素风',
-    '✨动漫风':   '✨ 动漫风',
-    '🎨漫画风':   '🎨 漫画风',
-    '🖼️油画风':  '🖼️ 油画风',
-  };
-  const styleKey = pillStyleMap[pillText] || '🌿 吉卜力风';
+  // 用 data-style 属性传 key，完全避开 emoji 编码问题
+  const styleKey = selectedPill ? selectedPill.dataset.style : '🌿 吉卜力风';
 
   let d = 0;
   const iv = setInterval(() => { d=(d+1)%4; btn.textContent='⏳ AI 正在变身中'+'.'.repeat(d); }, 400);
