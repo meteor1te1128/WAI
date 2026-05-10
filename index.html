@@ -674,16 +674,18 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 
 <!-- BEFORE/AFTER -->
 <div class="comparison-section">
-  <div class="comparison-label">👆 拖一下看看变身效果</div>
-  <div class="comparison-wrapper comparison-height" id="compWrapper">
-    <div class="comparison-before"><span class="comp-face-before">👩</span></div>
-    <div class="comparison-clip" id="compClip" style="width:50%;">
-      <div class="comparison-after-inner comparison-height" style="width:620px;max-width:none;">
-        <span class="comp-face-after">🌸</span>
+  <div class="comparison-label">👆 拖一下看看变身效果 · 动漫风</div>
+  <div class="comparison-wrapper" id="compWrapper" style="height:420px;position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--card-border);box-shadow:0 8px 32px rgba(139,92,246,0.12);cursor:ew-resize;user-select:none;touch-action:pan-y;">
+    <div style="position:absolute;inset:0;z-index:1;">
+      <img src="/samples/hero-before.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
+    </div>
+    <div id="compClip" style="position:absolute;top:0;left:0;height:100%;width:50%;z-index:2;overflow:hidden;">
+      <div id="compAfterInner" style="height:100%;width:620px;">
+        <img src="/samples/hero-after.png" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
       </div>
     </div>
     <span class="comp-overlay-text comp-before-label">原始照片</span>
-    <span class="comp-overlay-text comp-after-label">变身版本</span>
+    <span class="comp-overlay-text comp-after-label">✨ 动漫风</span>
     <div class="comp-handle" id="compHandle" style="left:50%;">
       <div class="comp-handle-circle"><div class="comp-arrows">◀▶</div></div>
     </div>
@@ -696,25 +698,45 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   <div class="section-desc">真实用户丢进来的照片，AI 一键变身，效果都是真的 · 点击卡片拖动对比</div>
   <div class="examples-grid">
 
-    <div class="ex-card" onclick="openExModal('🌿 吉卜力风','','')">
-      <div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-ghibli">🌊</div></div>
+    <div class="ex-card" onclick="openExModal('🌿 吉卜力风','/samples/ghibli-before.jpg','/samples/ghibli-after.png')">
+      <div class="ex-before-after">
+        <div class="ex-half before" style="padding:0;overflow:hidden;">
+          <img src="/samples/ghibli-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+        <div class="ex-half after-ghibli" style="padding:0;overflow:hidden;">
+          <img src="/samples/ghibli-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+      </div>
       <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
       <div class="ex-label"><span class="ex-name">吉卜力风</span><span class="ex-tag">最梦幻</span></div>
     </div>
 
-    <div class="ex-card" onclick="openExModal('🧸 黏土风','','')">
-      <div class="ex-before-after"><div class="ex-half before">👨</div><div class="ex-half after-clay">🧸</div></div>
+    <div class="ex-card" onclick="openExModal('🧸 黏土风','/samples/clay-before.jpg','/samples/clay-after.png')">
+      <div class="ex-before-after">
+        <div class="ex-half before" style="padding:0;overflow:hidden;">
+          <img src="/samples/clay-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+        <div class="ex-half after-clay" style="padding:0;overflow:hidden;">
+          <img src="/samples/clay-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+      </div>
       <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
       <div class="ex-label"><span class="ex-name">黏土风</span><span class="ex-tag">最火爆</span></div>
     </div>
 
-    <div class="ex-card" onclick="openExModal('👾 像素风','','')">
-      <div class="ex-before-after"><div class="ex-half before">🧑</div><div class="ex-half after-pixel">👾</div></div>
+    <div class="ex-card" onclick="openExModal('👾 像素风','/samples/pixel-before.jpg','/samples/pixel-after.png')">
+      <div class="ex-before-after">
+        <div class="ex-half before" style="padding:0;overflow:hidden;">
+          <img src="/samples/pixel-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+        <div class="ex-half after-pixel" style="padding:0;overflow:hidden;">
+          <img src="/samples/pixel-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+      </div>
       <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
       <div class="ex-label"><span class="ex-name">像素风</span><span class="ex-tag">复古</span></div>
     </div>
 
-    <!-- 动漫风：有真实对比图 -->
     <div class="ex-card" onclick="openExModal('✨ 动漫风','/samples/anime-before.jpg','/samples/anime-after.png')">
       <div class="ex-before-after">
         <div class="ex-half before" style="padding:0;overflow:hidden;">
@@ -728,14 +750,28 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
       <div class="ex-label"><span class="ex-name">动漫风</span><span class="ex-tag">超好看</span></div>
     </div>
 
-    <div class="ex-card" onclick="openExModal('🎨 漫画风','','')">
-      <div class="ex-before-after"><div class="ex-half before">👦</div><div class="ex-half after-cartoon">🎨</div></div>
+    <div class="ex-card" onclick="openExModal('🎨 漫画风','/samples/cartoon-before.jpg','/samples/cartoon-after.png')">
+      <div class="ex-before-after">
+        <div class="ex-half before" style="padding:0;overflow:hidden;">
+          <img src="/samples/cartoon-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+        <div class="ex-half after-cartoon" style="padding:0;overflow:hidden;">
+          <img src="/samples/cartoon-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+      </div>
       <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
       <div class="ex-label"><span class="ex-name">漫画风</span><span class="ex-tag">有腔调</span></div>
     </div>
 
-    <div class="ex-card" onclick="openExModal('🖼️ 油画风','','')">
-      <div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-oil">🖼️</div></div>
+    <div class="ex-card" onclick="openExModal('🖼️ 油画风','/samples/oil-before.jpg','/samples/oil-after.png')">
+      <div class="ex-before-after">
+        <div class="ex-half before" style="padding:0;overflow:hidden;">
+          <img src="/samples/oil-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+        <div class="ex-half after-oil" style="padding:0;overflow:hidden;">
+          <img src="/samples/oil-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+      </div>
       <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
       <div class="ex-label"><span class="ex-name">油画风</span><span class="ex-tag">最惊艳</span></div>
     </div>
@@ -1432,15 +1468,19 @@ async function handleGen(){
   const wrapper = document.getElementById('compWrapper');
   const clip = document.getElementById('compClip');
   const handle = document.getElementById('compHandle');
+  const afterInner = document.getElementById('compAfterInner');
   let dragging = false;
   function setPos(clientX){
     const rect = wrapper.getBoundingClientRect();
     let pct = (clientX - rect.left) / rect.width;
-    pct = Math.max(0.04, Math.min(0.96, pct));
+    pct = Math.max(0.03, Math.min(0.97, pct));
     clip.style.width = (pct*100)+'%';
     handle.style.left = (pct*100)+'%';
-    const inner = clip.querySelector('.comparison-after-inner');
-    if(inner) inner.style.width = rect.width+'px';
+    afterInner.style.width = rect.width+'px';
+  }
+  function syncWidth(){
+    const rect = wrapper.getBoundingClientRect();
+    afterInner.style.width = rect.width+'px';
   }
   wrapper.addEventListener('mousedown', e => { dragging=true; setPos(e.clientX); });
   window.addEventListener('mousemove', e => { if(dragging) setPos(e.clientX); });
@@ -1448,11 +1488,8 @@ async function handleGen(){
   wrapper.addEventListener('touchstart', e => { dragging=true; setPos(e.touches[0].clientX); }, {passive:true});
   window.addEventListener('touchmove', e => { if(dragging) setPos(e.touches[0].clientX); }, {passive:true});
   window.addEventListener('touchend', () => { dragging=false; });
-  setTimeout(() => {
-    const rect = wrapper.getBoundingClientRect();
-    const inner = clip.querySelector('.comparison-after-inner');
-    if(inner) inner.style.width = rect.width+'px';
-  }, 100);
+  window.addEventListener('resize', syncWidth);
+  setTimeout(syncWidth, 100);
 })();
 
 // ===== STAR RATING =====
