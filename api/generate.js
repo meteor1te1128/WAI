@@ -16,10 +16,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: '请上传图片' });
   }
 
-  // ─── 风格映射 ───────────────────────────────────────────────
-  // 前五个：flux-kontext-apps/face-to-many-kontext（接受 URL）
-  // 第六个：zsxkib/flux-pulid — FLUX.1-dev 底座，NeurIPS 2024，保脸精度最高
-  //         接受 main_face_image（URL 或 base64 均可，这里传 URL）
   const styleMap = {
     '🌿 吉卜力风': {
       style: 'Anime',
@@ -43,8 +39,8 @@ export default async function handler(req, res) {
     },
     '🎨 漫画风': {
       style: 'Graphic Novel',
-      prompt: 'graphic novel portrait, bold ink outlines, dynamic comic book shading, vivid saturated colors, professional western comic art style, cinematic composition',
-      negative_prompt: 'realistic, photo, ugly, blurry, bad anatomy, nsfw, horror, anime',
+      prompt: 'Japanese manga portrait, clean bold ink outlines, bright cheerful colors, soft cel shading, white or light pastel background, cute shoujo manga style, clear bright lighting, vibrant and colorful illustration',
+      negative_prompt: 'realistic, photo, ugly, blurry, bad anatomy, nsfw, dark background, black background, gloomy, horror, western comic, dark shadows, low key lighting',
     },
     '🖼️ 油画风': {
       style: 'Watercolor',
@@ -70,8 +66,7 @@ export default async function handler(req, res) {
 
   const selected = styleMap[resolvedStyle];
 
-  // ─── 上传图片到 Supabase Storage，拿公开 URL ───────────────
-  // face-to-many-kontext 只接受 URL，不接受 base64
+  // 上传图片到 Supabase Storage，拿公开 URL
   const pureBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
   const imgBuffer = Buffer.from(pureBase64, 'base64');
 
@@ -98,7 +93,7 @@ export default async function handler(req, res) {
 
   const imageUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/uploads/${fileName}`;
 
-  // ─── 调用模型 ────────────────────────────────────────────
+  // 调用模型
   try {
     const startRes = await fetch(
       'https://api.replicate.com/v1/models/flux-kontext-apps/face-to-many-kontext/predictions',
