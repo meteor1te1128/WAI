@@ -97,7 +97,7 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .upload-zone p{font-size:13px;color:var(--text-faint);font-weight:300;}
 .section-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:12px;}
 
-/* STYLE ROW — FIX: left arrow now always works */
+/* STYLE ROW */
 .style-row-wrap{position:relative;margin-bottom:22px;}
 .style-row{display:flex;gap:10px;overflow-x:auto;overflow-y:visible;padding-bottom:2px;padding-top:4px;}
 .style-row::-webkit-scrollbar{display:none;}
@@ -310,7 +310,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .history-scroll::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.3);border-radius:2px;}
 .history-card{flex-shrink:0;width:130px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 14px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;scroll-snap-align:start;}
 .history-card:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 12px 28px rgba(139,92,246,0.2);}
-/* 历史卡片有两个按钮区域 */
 .history-card-thumb{position:relative;cursor:pointer;}
 .history-card-thumb img{width:100%;height:100px;object-fit:cover;display:block;}
 .history-card-thumb .hc-preview-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0);transition:background 0.2s;font-size:22px;opacity:0;}
@@ -547,7 +546,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   <div class="history-scroll" id="historyGrid"></div>
 </div>
 
-<!-- STATS — 改成真实感数字 -->
+<!-- STATS -->
 <div class="stats-row">
   <div class="stat-card"><span class="stat-n">12,847</span><span class="stat-d">已生成图片</span></div>
   <div class="stat-card"><span class="stat-n">~15秒</span><span class="stat-d">平均生成时间</span></div>
@@ -572,7 +571,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
 </div>
 
-<!-- EXAMPLES -->
+<!-- EXAMPLES — 动漫风格子换成真实对比图 -->
 <div class="section" id="examples">
   <div class="section-title">样例 <span class="grad">展示</span></div>
   <div class="section-desc">真实用户丢进来的照片，AI 一键变身，效果都是真的</div>
@@ -580,7 +579,19 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
     <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-ghibli">🌊</div></div><div class="ex-label"><span class="ex-name">吉卜力风</span><span class="ex-tag">最梦幻</span></div></div>
     <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👨</div><div class="ex-half after-clay">🧸</div></div><div class="ex-label"><span class="ex-name">黏土风</span><span class="ex-tag">最火爆</span></div></div>
     <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧑</div><div class="ex-half after-pixel">👾</div></div><div class="ex-label"><span class="ex-name">像素风</span><span class="ex-tag">复古</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👧</div><div class="ex-half after-anime">✨</div></div><div class="ex-label"><span class="ex-name">动漫风</span><span class="ex-tag">超好看</span></div></div>
+    <!-- ↓↓↓ 动漫风：换成真实对比图 ↓↓↓ -->
+    <div class="ex-card">
+      <div class="ex-before-after">
+        <div class="ex-half before" style="padding:0;overflow:hidden;">
+          <img src="/samples/anime-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+        <div class="ex-half after-anime" style="padding:0;overflow:hidden;">
+          <img src="/samples/anime-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
+        </div>
+      </div>
+      <div class="ex-label"><span class="ex-name">动漫风</span><span class="ex-tag">超好看</span></div>
+    </div>
+    <!-- ↑↑↑ 动漫风结束 ↑↑↑ -->
     <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👦</div><div class="ex-half after-cartoon">🎨</div></div><div class="ex-label"><span class="ex-name">漫画风</span><span class="ex-tag">有腔调</span></div></div>
     <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-oil">🖼️</div></div><div class="ex-label"><span class="ex-name">油画风</span><span class="ex-tag">最惊艳</span></div></div>
   </div>
@@ -598,13 +609,12 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
 </div>
 
-<!-- FEEDBACK — 登录才能评论 -->
+<!-- FEEDBACK -->
 <div class="section" id="feedback">
   <div class="section-title">来 <span class="grad">唠两句</span></div>
   <div class="section-desc">bug、想法、还是纯粹想夸一句——都可以扔进来</div>
   <div class="feedback-board">
     <div class="feedback-input-row" id="fbInputArea">
-      <!-- 未登录时显示提示，登录后显示输入框 -->
       <div class="fb-login-tip" id="fbLoginTip">
         💬 <a onclick="openAuthModal()">登录 / 注册</a> 后才能发评论，这样评论含金量更高～
       </div>
@@ -716,7 +726,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
 </div>
 
-<!-- FOOTER — 加了联系我们 -->
+<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">W<span class="purple">AI</span></div>
@@ -739,7 +749,7 @@ document.querySelectorAll('.h1-char').forEach(el => {
   el.setAttribute('data-char', el.textContent);
 });
 
-// ===== STYLE ROW ARROWS — FIX: 左箭头现在正常工作 =====
+// ===== STYLE ROW ARROWS =====
 (function(){
   const row = document.getElementById('styleRow');
   const fadeR = document.getElementById('styleRowFade');
@@ -753,7 +763,6 @@ document.querySelectorAll('.h1-char').forEach(el => {
     fadeL.classList.toggle('visible', !atStart);
   }
   row.addEventListener('scroll', checkScroll, {passive:true});
-  // 初始检查
   setTimeout(checkScroll, 300);
 
   window.styleRowScroll = function(dir){
@@ -764,7 +773,6 @@ document.querySelectorAll('.h1-char').forEach(el => {
     } else {
       row.scrollTo({left: Math.min(maxScroll, row.scrollLeft + step), behavior:'smooth'});
     }
-    // 滚动后稍微延迟再检查状态
     setTimeout(checkScroll, 350);
   };
 })();
@@ -835,7 +843,6 @@ function renderFreeCount(){
     }
     return;
   }
-  // free
   for(let i = 0; i < FREE_TOTAL; i++){
     const d = document.createElement('div');
     d.className = 'count-dot' + (i >= freeLeft ? ' used' : '') + (i === freeLeft-1 && freeLeft > 0 ? ' active' : '');
@@ -903,13 +910,12 @@ function openLightbox(type){
 function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
 
-// ===== DOWNLOAD — FIX: 真正下载二进制，不再打不开 =====
+// ===== DOWNLOAD =====
 async function downloadImageFromUrl(url, filename){
   try {
     const response = await fetch(url);
     if(!response.ok) throw new Error('fetch failed');
     const blob = await response.blob();
-    // 确保 MIME 正确
     const mimeType = blob.type || 'image/png';
     const fixedBlob = new Blob([blob], {type: mimeType});
     const blobUrl = URL.createObjectURL(fixedBlob);
@@ -921,7 +927,6 @@ async function downloadImageFromUrl(url, filename){
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
   } catch(e) {
-    // 降级：在新标签打开
     window.open(url, '_blank');
   }
 }
@@ -940,7 +945,7 @@ const SUPABASE_URL = 'https://fcotuoaxkaffnslgvtwq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjb3R1b2F4a2FmZm5zbGd2dHdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDU4NzksImV4cCI6MjA5MzcyMTg3OX0.GkAFv1uJhm8GKT0SSSVqm_K_uryCHSEzp8gcEf-FtzY';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ===== HISTORY — FIX: 可以预览图片再决定是否下载 =====
+// ===== HISTORY =====
 async function loadHistory(){
   if(!currentUser) return;
   try {
@@ -1091,7 +1096,6 @@ async function handleGen(){
   btn.disabled = true;
 
   const selectedPill = document.querySelector('.style-pill.on');
-  // 用 data-style 属性传 key，完全避开 emoji 编码问题
   const styleKey = selectedPill ? selectedPill.dataset.style : '🌿 吉卜力风';
 
   let d = 0;
@@ -1130,7 +1134,6 @@ async function handleGen(){
     res.innerHTML = `<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" class="result-revealed">`;
     currentAnimeUrl = imageUrl;
 
-    // 保存到 Supabase
     await fetch(`${SUPABASE_URL}/rest/v1/generations`, {
       method: 'POST',
       headers: {
@@ -1247,7 +1250,7 @@ function setRating(val){
 }
 buildStars();
 
-// ===== FEEDBACK — FIX: 必须登录才能评论，Pro/Max 有标识 =====
+// ===== FEEDBACK =====
 const seedFeedback = [
   {name:'柠檬茶不加糖', plan:null, text:'希望能加个批量上传功能，一次传多张就好了！', tag:'idea', time:'2分钟前', stars:4.5},
   {name:'匿名用户', plan:null, text:'像素风有时候脸会有点模糊，其他几个风格都很好', tag:'bug', time:'18分钟前', stars:3.5},
@@ -1493,13 +1496,10 @@ function switchUpgradeMax(el, price, period, amount, interval){
 }
 
 function renderUpgradeModal(){
-  const proCard = document.getElementById('upgradeProCard');
-  const maxCard = document.getElementById('upgradeMaxCard');
-  const status = document.getElementById('upgradeSubStatus');
   const proBtn = document.getElementById('upgradeProBtnBottom');
   const maxBtn = document.getElementById('upgradeMaxBtnBottom');
+  const status = document.getElementById('upgradeSubStatus');
   const btnRow = document.getElementById('upgradeBtnRow');
-  [proCard,maxCard].forEach(c=>c?.classList.remove('subscribed'));
   proBtn.disabled=false; proBtn.textContent='解锁 Pro ✦';
   maxBtn.disabled=false; maxBtn.textContent='解锁 Max ✦';
   status.style.display='none'; btnRow.style.display='grid';
