@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAI — AI 一键变身，5 种风格随便选</title>
+<title>WAI — Transform Your Photo into Anime with AI · 6 Styles</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
@@ -54,7 +54,6 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);over
 canvas#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
 .wrap{position:relative;z-index:1;}
 
-/* NAV */
 nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;background:var(--nav-bg);border-bottom:1px solid var(--nav-border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);position:sticky;top:0;z-index:10;transition:background var(--transition),border-color var(--transition);}
 .nav-left{display:flex;align-items:center;gap:12px;}
 .logo{font-size:19px;font-weight:800;letter-spacing:-0.5px;color:var(--text);}
@@ -67,7 +66,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 3
 .nav-btn{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:20px;padding:9px 22px;color:#fff;font-size:13px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.15s;box-shadow:0 4px 16px rgba(139,92,246,0.3);}
 .nav-btn:hover{opacity:0.88;transform:scale(1.03);}
 
-/* HERO */
 .hero{padding:60px 32px 40px;text-align:center;max-width:700px;margin:0 auto;}
 .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);color:#7c3aed;font-size:12px;font-weight:600;padding:6px 16px;border-radius:20px;margin-bottom:24px;animation:fadeUp 0.6s ease both;}
 .badge-dot{width:6px;height:6px;border-radius:50%;background:#8b5cf6;animation:pulse 1.8s ease-in-out infinite;}
@@ -84,7 +82,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .sub-tag:hover{color:#8b5cf6;transform:scale(1.15) translateY(-1px);}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-/* MAIN CARD */
 .card{max-width:620px;margin:0 auto 28px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:24px;padding:28px;backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);box-shadow:0 0 0 1px rgba(255,255,255,0.06) inset,0 20px 60px rgba(139,92,246,0.1),0 4px 16px rgba(0,0,0,0.06);animation:fadeUp 0.8s 0.3s ease both;transition:background var(--transition),border-color var(--transition);}
 .upload-zone{border:1.5px dashed rgba(139,92,246,0.35);border-radius:16px;padding:40px 24px;text-align:center;cursor:pointer;transition:all 0.25s;margin-bottom:22px;position:relative;overflow:hidden;background:rgba(139,92,246,0.02);}
 .upload-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(139,92,246,0.07) 0%,transparent 70%);opacity:0;transition:opacity 0.25s;}
@@ -97,7 +94,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .upload-zone p{font-size:13px;color:var(--text-faint);font-weight:300;}
 .section-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:12px;}
 
-/* STYLE ROW */
 .style-row-wrap{position:relative;margin-bottom:22px;}
 .style-row{display:flex;gap:10px;overflow-x:auto;overflow-y:visible;padding-bottom:2px;padding-top:4px;}
 .style-row::-webkit-scrollbar{display:none;}
@@ -118,9 +114,7 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .gen-btn:hover{transform:scale(1.01);opacity:0.93;}
 .gen-btn:hover::after{transform:translateX(100%);}
 .gen-btn:active{transform:scale(0.99);}
-.hint{text-align:center;font-size:12px;color:var(--text-faint);font-weight:300;}
 
-/* FREE COUNT */
 .free-count-bar{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;}
 .free-count-dots{display:flex;gap:5px;}
 .count-dot{width:10px;height:10px;border-radius:50%;background:rgba(139,92,246,0.2);border:1.5px solid rgba(139,92,246,0.3);transition:all 0.4s;}
@@ -128,7 +122,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .count-dot.active{background:#8b5cf6;border-color:#8b5cf6;box-shadow:0 0 6px rgba(139,92,246,0.5);}
 .free-count-text{font-size:12px;color:var(--text-faint);}
 
-/* RESULTS */
 .results{max-width:620px;margin:0 auto 28px;animation:fadeUp 0.8s 0.4s ease both;}
 .results-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px;padding:0 4px;}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -144,7 +137,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .img-zoom-hint{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.45);color:#fff;font-size:10px;padding:3px 7px;border-radius:6px;pointer-events:none;opacity:0;transition:opacity 0.2s;}
 .img-card:hover .img-zoom-hint{opacity:1;}
 
-/* LIGHTBOX */
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;padding:20px;}
 .lightbox.open{opacity:1;pointer-events:all;}
 .lightbox-img{max-width:90vw;max-height:85vh;border-radius:16px;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,0.6);transform:scale(0.95);transition:transform 0.2s;}
@@ -155,26 +147,15 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .lightbox-actions{position:absolute;bottom:24px;right:24px;}
 .lightbox-dl{background:linear-gradient(135deg,#8b5cf6,#ec4899);border:none;border-radius:10px;padding:8px 16px;color:#fff;font-size:12px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
 
-/* COMPARISON SLIDER */
 .comparison-section{max-width:620px;margin:0 auto 48px;}
 .comparison-label{font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-faint);margin-bottom:14px;}
-.comparison-wrapper{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--card-border);box-shadow:0 8px 32px rgba(139,92,246,0.12);cursor:ew-resize;user-select:none;touch-action:pan-y;}
-.comparison-before{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f0eff5 0%,#e8e6f0 100%);z-index:1;}
-.comparison-after{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.35),rgba(236,72,153,0.2)),#1a0e2e;z-index:1;}
-[data-theme="dark"] .comparison-before{background:linear-gradient(135deg,#1e1a2e 0%,#2a243c 100%);}
-.comparison-clip{position:absolute;top:0;left:0;height:100%;z-index:2;overflow:hidden;}
-.comparison-after-inner{width:620px;height:100%;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.5),rgba(236,72,153,0.3)),#1a0e2e;}
-.comp-face-before{font-size:72px;filter:grayscale(30%);}
-.comp-face-after{font-size:72px;filter:drop-shadow(0 0 20px rgba(139,92,246,0.8));}
 .comp-overlay-text{position:absolute;bottom:14px;font-size:11px;font-weight:600;letter-spacing:0.5px;padding:4px 12px;border-radius:20px;pointer-events:none;}
 .comp-before-label{left:14px;background:rgba(0,0,0,0.35);color:#fff;z-index:5;}
 .comp-after-label{right:14px;background:rgba(139,92,246,0.7);color:#fff;z-index:5;}
 .comp-handle{position:absolute;top:0;height:100%;width:3px;background:linear-gradient(180deg,rgba(139,92,246,0.9),rgba(236,72,153,0.9));z-index:6;transform:translateX(-50%);cursor:ew-resize;}
 .comp-handle-circle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);border:2px solid rgba(255,255,255,0.6);box-shadow:0 4px 16px rgba(139,92,246,0.5);display:flex;align-items:center;justify-content:center;}
 .comp-arrows{display:flex;gap:2px;color:#fff;font-size:11px;font-weight:700;}
-.comparison-height{height:200px;position:relative;}
 
-/* STATS */
 .stats-row{max-width:620px;margin:0 auto 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
 .stat-card{background:var(--white-card);border:1px solid var(--border);border-radius:16px;padding:20px 14px;text-align:center;box-shadow:0 2px 12px var(--stat-shadow);transition:transform 0.2s,background var(--transition);}
 .stat-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(139,92,246,0.2);}
@@ -182,13 +163,11 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .stat-card:hover .stat-n{filter:drop-shadow(0 0 8px rgba(139,92,246,0.6));}
 .stat-d{font-size:12px;color:var(--text-faint);font-weight:300;}
 
-/* SECTIONS */
 .section{max-width:620px;margin:0 auto 48px;}
 .section-title{font-size:24px;font-weight:800;letter-spacing:-0.8px;margin-bottom:6px;color:var(--text);}
 .section-title .grad{background:linear-gradient(90deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .section-desc{font-size:14px;color:var(--section-desc);font-weight:300;margin-bottom:24px;}
 
-/* EXAMPLES */
 .examples-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
 .ex-card{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 16px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;position:relative;}
 .ex-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(139,92,246,0.15);}
@@ -200,7 +179,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .ex-half.after-pixel{background:radial-gradient(ellipse at 40% 50%,rgba(6,182,212,0.25),rgba(139,92,246,0.15)),#eafaff;}
 .ex-half.after-anime{background:radial-gradient(ellipse at 40% 50%,rgba(245,158,11,0.2),rgba(236,72,153,0.12)),#fff8ee;}
 .ex-half.after-cartoon{background:radial-gradient(ellipse at 40% 50%,rgba(139,92,246,0.25),rgba(236,72,153,0.12)),#f5f0ff;}
-.ex-half.after-dark{background:radial-gradient(ellipse at 40% 50%,rgba(55,48,163,0.3),rgba(17,24,39,0.2)),#e8e8f5;}
 .ex-half.after-oil{background:radial-gradient(ellipse at 40% 50%,rgba(180,120,40,0.3),rgba(120,60,20,0.2)),#f5e6c8;}
 [data-theme="dark"] .ex-half.after-ghibli{background:radial-gradient(ellipse at 40% 50%,rgba(16,185,129,0.25),rgba(139,92,246,0.15)),#0a1f15;}
 [data-theme="dark"] .ex-half.after-clay{background:radial-gradient(ellipse at 40% 50%,rgba(251,113,133,0.25),rgba(251,207,232,0.15)),#1f0a10;}
@@ -214,7 +192,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .ex-card:hover .ex-card-hover-hint{background:rgba(0,0,0,0.28);opacity:1;}
 .ex-card-hover-hint span{background:rgba(255,255,255,0.15);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:12px;font-weight:700;padding:7px 16px;border-radius:20px;}
 
-/* EXAMPLE COMPARISON MODAL */
 .ex-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;backdrop-filter:blur(8px);}
 .ex-modal-overlay.open{opacity:1;pointer-events:all;}
 .ex-modal-box{background:var(--white-card);border-radius:24px;padding:24px;max-width:560px;width:100%;transform:translateY(12px);transition:transform 0.2s,background var(--transition);}
@@ -236,7 +213,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .ex-slider-label.after{right:12px;background:rgba(139,92,246,0.75);color:#fff;}
 .ex-modal-hint{text-align:center;font-size:12px;color:var(--text-faint);margin-top:12px;}
 
-/* REVIEWS */
 .reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .review-card{background:var(--white-card);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 4px 16px rgba(0,0,0,0.05);transition:transform 0.2s,background var(--transition);}
 .review-card:hover{transform:translateY(-2px);}
@@ -251,7 +227,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .author-name{font-size:13px;font-weight:600;color:var(--text);}
 .author-sub{font-size:11px;color:var(--text-faint);}
 
-/* PRICING */
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch;}
 .price-card{background:var(--white-card);border:1px solid var(--border);border-radius:24px;padding:28px 24px 24px;box-shadow:0 4px 16px rgba(0,0,0,0.04);transition:transform 0.25s,box-shadow 0.25s,background var(--transition);display:flex;flex-direction:column;position:relative;}
 .price-card:hover{transform:translateY(-4px);box-shadow:0 20px 48px rgba(139,92,246,0.13);}
@@ -278,7 +253,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .mtab small{display:block;font-size:9px;font-weight:500;color:#10b981;margin-top:1px;}
 @media(max-width:640px){.pricing-grid{grid-template-columns:1fr;}}
 
-/* STAR RATING */
 .star-rating-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .star-rating-label{font-size:12px;font-weight:600;color:var(--text-faint);letter-spacing:0.5px;}
 .star-rating{display:flex;gap:3px;cursor:pointer;}
@@ -295,7 +269,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .star-wrap.full .star-fill-full{opacity:1;}
 .star-value-display{font-size:13px;font-weight:700;color:#f59e0b;min-width:24px;}
 
-/* FEEDBACK */
 .feedback-board{background:var(--fb-board);border:1px solid var(--card-border);border-radius:20px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.06);transition:background var(--transition);}
 .feedback-input-row{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
 .fb-input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--input-border);font-family:'Outfit',sans-serif;font-size:13px;color:var(--text);background:var(--input-bg);outline:none;transition:border-color 0.2s,background var(--transition),color var(--transition);}
@@ -325,7 +298,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .tag-idea{background:rgba(139,92,246,0.08);color:#7c3aed;border:1px solid rgba(139,92,246,0.2);}
 .tag-praise{background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);}
 
-/* HISTORY */
 .history-section{max-width:620px;margin:0 auto 32px;animation:fadeUp 0.5s ease both;}
 .history-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px;}
 .history-title{font-size:14px;font-weight:700;color:var(--text);}
@@ -351,7 +323,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .hc-btn.dl{background:rgba(16,185,129,0.1);color:#059669;}
 .hc-btn.dl:hover{background:rgba(16,185,129,0.2);}
 
-/* ALL HISTORY MODAL */
 .ah-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;backdrop-filter:blur(8px);}
 .ah-modal-overlay.open{opacity:1;pointer-events:all;}
 .ah-modal-box{background:var(--white-card);border-radius:24px;padding:24px;width:100%;max-width:660px;max-height:85vh;display:flex;flex-direction:column;transform:translateY(12px);transition:transform 0.2s,background var(--transition);}
@@ -390,7 +361,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .ah-empty{text-align:center;padding:40px;color:var(--text-faint);font-size:13px;grid-column:1/-1;}
 @media(max-width:600px){.ah-grid{grid-template-columns:repeat(3,1fr);}}
 
-/* UPGRADE MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;backdrop-filter:blur(4px);}
 .modal-overlay.open{opacity:1;pointer-events:all;}
 .modal-box{background:var(--white-card);border:1px solid var(--card-border);border-radius:20px;padding:28px;max-width:500px;width:100%;max-height:70vh;overflow-y:auto;transform:translateY(10px);transition:transform 0.2s,background var(--transition);}
@@ -422,7 +392,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .umtab.on{background:var(--white-card);color:#7c3aed;box-shadow:0 1px 6px rgba(139,92,246,0.18);}
 .umtab small{display:block;font-size:9px;color:#10b981;}
 
-/* AUTH */
 .auth-tabs{display:flex;gap:0;margin-bottom:22px;border-bottom:1px solid var(--border);}
 .auth-tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:600;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Outfit',sans-serif;}
 .auth-tab.on{color:#8b5cf6;border-bottom-color:#8b5cf6;}
@@ -452,7 +421,6 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .member-banner-desc{font-size:12px;color:var(--text-muted);font-weight:400;}
 .member-banner-manage{font-size:11px;color:#8b5cf6;font-weight:600;white-space:nowrap;cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;padding:0;}
 
-/* FOOTER */
 footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divider);margin-top:16px;}
 .footer-inner{max-width:620px;margin:0 auto;}
 .footer-brand{font-size:16px;font-weight:800;letter-spacing:-0.5px;color:var(--text);margin-bottom:6px;}
@@ -505,176 +473,170 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 <canvas id="bg"></canvas>
 <div class="wrap">
 
-<!-- NAV -->
 <nav>
   <div class="nav-left">
     <div class="logo">W<span class="purple">AI</span></div>
-    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="切换夜间/白天模式">☀️</button>
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle dark / light mode">☀️</button>
   </div>
   <div class="nav-auth" id="navAuth">
-    <button class="nav-btn" id="navLoginBtn" onclick="openAuthModal()">登录 / 注册</button>
+    <button class="nav-btn" id="navLoginBtn" onclick="openAuthModal()">Sign In / Sign Up</button>
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="badge"><span class="badge-dot"></span>✨ AI 变身引擎 v4.0 已就绪</div>
+  <div class="badge"><span class="badge-dot"></span>✨ AI Transform Engine v4.0 Ready</div>
   <h1 id="heroTitle">
     <span class="h1-word">
-      <span class="h1-char">把</span><span class="h1-char">你</span><span class="h1-char">的</span><span class="h1-char">脸</span>
+      <span class="h1-char">T</span><span class="h1-char">u</span><span class="h1-char">r</span><span class="h1-char">n</span>
+      <span class="h1-char"> </span>
+      <span class="h1-char">Y</span><span class="h1-char">o</span><span class="h1-char">u</span><span class="h1-char">r</span>
+      <span class="h1-char"> </span>
+      <span class="h1-char">P</span><span class="h1-char">h</span><span class="h1-char">o</span><span class="h1-char">t</span><span class="h1-char">o</span>
     </span>
     <br>
     <span class="h1-word">
-      <span class="h1-char">变</span><span class="h1-char">成</span>
-    </span><span class="grad">动漫角色</span>
+      <span class="h1-char">I</span><span class="h1-char">n</span><span class="h1-char">t</span><span class="h1-char">o</span>
+    </span> <span class="grad">Anime Art</span>
   </h1>
-  <p class="sub">丢一张自拍进来，约 15 秒后你就是变身达人了✨<br>
-    <span class="sub-tag">🌿 吉卜力</span> · <span class="sub-tag">🧸 黏土风</span> · <span class="sub-tag">👾 像素风</span> · <span class="sub-tag">✨ 动漫风</span> · <span class="sub-tag">🎨 漫画风</span> · <span class="sub-tag">🖼️ 油画风</span>
-    &nbsp;6 种风格随便选
+  <p class="sub">Drop a selfie in, get your anime transformation in ~15 seconds ✨<br>
+    <span class="sub-tag">🌿 Ghibli</span> · <span class="sub-tag">🧸 Clay</span> · <span class="sub-tag">👾 Pixel</span> · <span class="sub-tag">✨ Anime</span> · <span class="sub-tag">🎨 Pixar</span> · <span class="sub-tag">🖼️ Oil Paint</span>
+    &nbsp;6 styles to choose from
   </p>
 </section>
 
-<!-- UPLOAD CARD -->
 <div class="card">
   <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handleFileChange(this)">
   <div class="member-banner" id="memberBanner">
     <div class="member-banner-left">
       <span class="member-banner-badge" id="memberBadgeText">PRO</span>
-      <span class="member-banner-desc" id="memberBannerDesc">变身券不设上限，随便造 ✦</span>
+      <span class="member-banner-desc" id="memberBannerDesc">Unlimited transforms ✦</span>
       <span id="memberExpire" style="font-size:11px;color:var(--text-muted);margin-left:6px;"></span>
     </div>
-    <button class="member-banner-manage" onclick="openUpgradeModal()">管理订阅 →</button>
+    <button class="member-banner-manage" onclick="openUpgradeModal()">Manage Plan →</button>
   </div>
   <div class="upload-zone" id="uz" onclick="document.getElementById('fileInput').click()">
     <div class="upload-icon-wrap"><i class="ti ti-upload"></i></div>
-    <h3>把照片拖进来，或者点这里</h3>
-    <p>JPG / PNG / WEBP 都行 · 最大 20MB</p>
+    <h3>Drop your photo here, or click to upload</h3>
+    <p>JPG / PNG / WEBP · Max 20MB</p>
   </div>
-  <div class="section-label">选择风格</div>
+  <div class="section-label">Choose a Style</div>
   <div class="style-row-wrap" id="styleRowWrap">
     <div class="style-row-fade-left" id="styleRowFadeLeft">
       <span class="style-row-arrow style-row-arrow-left" onclick="styleRowScroll(-1)">‹</span>
     </div>
     <div class="style-row" id="styleRow">
-      <div class="style-pill on" data-style="🌿 吉卜力风" onclick="pick(this)"><span>🌿</span>吉卜力风</div>
-      <div class="style-pill" data-style="🧸 黏土风" onclick="pick(this)"><span>🧸</span>黏土风</div>
-      <div class="style-pill" data-style="👾 像素风" onclick="pick(this)"><span>👾</span>像素风</div>
-      <div class="style-pill" data-style="✨ 动漫风" onclick="pick(this)"><span>✨</span>动漫风</div>
-      <div class="style-pill" data-style="🎨 皮克斯风" onclick="pick(this)"><span>🎨</span>皮克斯风</div>
-      <div class="style-pill" data-style="🖼️ 油画风" onclick="pick(this)"><span>🖼️</span>油画风</div>
+      <div class="style-pill on" data-style="🌿 Ghibli" onclick="pick(this)"><span>🌿</span>Ghibli</div>
+      <div class="style-pill" data-style="🧸 Clay" onclick="pick(this)"><span>🧸</span>Clay</div>
+      <div class="style-pill" data-style="👾 Pixel Art" onclick="pick(this)"><span>👾</span>Pixel Art</div>
+      <div class="style-pill" data-style="✨ Anime" onclick="pick(this)"><span>✨</span>Anime</div>
+      <div class="style-pill" data-style="🎨 Pixar" onclick="pick(this)"><span>🎨</span>Pixar</div>
+      <div class="style-pill" data-style="🖼️ Oil Paint" onclick="pick(this)"><span>🖼️</span>Oil Paint</div>
     </div>
     <div class="style-row-fade-right" id="styleRowFade">
       <span class="style-row-arrow style-row-arrow-right" onclick="styleRowScroll(1)">›</span>
     </div>
   </div>
-  <button class="gen-btn" id="genBtn" onclick="handleGen()">✦ 一键变身</button>
+  <button class="gen-btn" id="genBtn" onclick="handleGen()">✦ Transform Now</button>
   <div class="free-count-bar" id="freeCountBar">
     <div class="free-count-dots" id="freeCountDots"></div>
     <span class="free-count-text" id="freeCountText"></span>
   </div>
 </div>
 
-<!-- RESULTS -->
 <div class="results">
-  <div class="results-label">预览对比</div>
+  <div class="results-label">Preview</div>
   <div class="pair">
     <div class="img-card" onclick="openLightbox('original')">
-      <div class="img-placeholder" id="originalPreview"><i class="ti ti-user img-icon"></i><span>上传照片后显示</span></div>
-      <div class="img-footer"><span class="img-title">原始照片</span></div>
-      <span class="img-zoom-hint">🔍 点击放大</span>
+      <div class="img-placeholder" id="originalPreview"><i class="ti ti-user img-icon"></i><span>Upload a photo to preview</span></div>
+      <div class="img-footer"><span class="img-title">Original</span></div>
+      <span class="img-zoom-hint">🔍 Click to enlarge</span>
     </div>
     <div class="img-card" onclick="openLightbox('anime')">
-      <div class="img-placeholder anime-side" id="animeResult"><i class="ti ti-sparkles img-icon"></i><span>生成后显示</span></div>
+      <div class="img-placeholder anime-side" id="animeResult"><i class="ti ti-sparkles img-icon"></i><span>Result appears here</span></div>
       <div class="img-footer">
-        <span class="img-title">变身版本</span>
-        <button class="dl-btn" onclick="event.stopPropagation();downloadAnime()"><i class="ti ti-download"></i> 下载</button>
+        <span class="img-title">Transformed</span>
+        <button class="dl-btn" onclick="event.stopPropagation();downloadAnime()"><i class="ti ti-download"></i> Download</button>
       </div>
-      <span class="img-zoom-hint">🔍 点击放大</span>
+      <span class="img-zoom-hint">🔍 Click to enlarge</span>
     </div>
   </div>
 </div>
 
-<!-- EXAMPLE COMPARISON MODAL -->
 <div class="ex-modal-overlay" id="exModal" onclick="if(event.target===this)closeExModal()">
   <div class="ex-modal-box">
     <div class="ex-modal-header">
-      <div class="ex-modal-title" id="exModalTitle">动漫风 对比</div>
+      <div class="ex-modal-title" id="exModalTitle">Anime Comparison</div>
       <button class="ex-modal-close" onclick="closeExModal()">✕</button>
     </div>
     <div class="ex-slider-wrap" id="exSliderWrap">
-      <div class="ex-slider-before"><img id="exSliderBefore" src="" alt="原图"></div>
+      <div class="ex-slider-before"><img id="exSliderBefore" src="" alt="Before"></div>
       <div class="ex-slider-clip" id="exSliderClip" style="width:50%">
         <div class="ex-slider-after-inner" id="exSliderAfterInner">
-          <img id="exSliderAfter" src="" alt="变身后">
+          <img id="exSliderAfter" src="" alt="After">
         </div>
       </div>
-      <span class="ex-slider-label before">原始照片</span>
-      <span class="ex-slider-label after">变身版本</span>
+      <span class="ex-slider-label before">Original</span>
+      <span class="ex-slider-label after">Transformed</span>
       <div class="ex-slider-handle" id="exSliderHandle" style="left:50%">
         <div class="ex-slider-circle">◀▶</div>
       </div>
     </div>
-    <div class="ex-modal-hint">← 左右拖动对比变身效果 →</div>
+    <div class="ex-modal-hint">← Drag to compare before & after →</div>
   </div>
 </div>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
   <img class="lightbox-img" id="lightboxImg" src="" alt="">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
   <div class="lightbox-label" id="lightboxLabel"></div>
   <div class="lightbox-actions">
-    <button class="lightbox-dl" id="lightboxDl" onclick="downloadFromLightbox()"><i class="ti ti-download"></i> 下载原图</button>
+    <button class="lightbox-dl" id="lightboxDl" onclick="downloadFromLightbox()"><i class="ti ti-download"></i> Download</button>
   </div>
 </div>
 
-<!-- HISTORY -->
 <div class="history-section" id="historySection" style="display:none;">
   <div class="history-header">
     <div>
-      <div class="history-title">✦ 我的变身历史</div>
-      <span class="history-subtitle">最近 6 条 · 点预览查看 · 点下载保存</span>
+      <div class="history-title">✦ My Transform History</div>
+      <span class="history-subtitle">Last 6 · Click to preview · Click to download</span>
     </div>
-    <button class="history-view-all" onclick="openAllHistory()">查看全部 →</button>
+    <button class="history-view-all" onclick="openAllHistory()">View All →</button>
   </div>
   <div class="history-scroll" id="historyGrid"></div>
 </div>
 
-<!-- ALL HISTORY MODAL -->
 <div class="ah-modal-overlay" id="ahModal" onclick="if(event.target===this)closeAllHistory()">
   <div class="ah-modal-box">
     <div class="ah-modal-header">
-      <div class="ah-modal-title">✦ 全部变身历史</div>
+      <div class="ah-modal-title">✦ Full Transform History</div>
       <button class="ah-modal-close" onclick="closeAllHistory()">✕</button>
     </div>
     <div class="ah-filter-row" id="ahFilterRow">
-      <button class="ah-filter-btn on" data-style="全部" onclick="ahSetFilter(this)">全部</button>
-      <button class="ah-filter-btn" data-style="🌿 吉卜力风" onclick="ahSetFilter(this)">🌿 吉卜力</button>
-      <button class="ah-filter-btn" data-style="🧸 黏土风" onclick="ahSetFilter(this)">🧸 黏土</button>
-      <button class="ah-filter-btn" data-style="👾 像素风" onclick="ahSetFilter(this)">👾 像素</button>
-      <button class="ah-filter-btn" data-style="✨ 动漫风" onclick="ahSetFilter(this)">✨ 动漫</button>
-      <button class="ah-filter-btn" data-style="🎨 皮克斯风" onclick="ahSetFilter(this)">🎨 皮克斯</button>
-      <button class="ah-filter-btn" data-style="🖼️ 油画风" onclick="ahSetFilter(this)">🖼️ 油画</button>
+      <button class="ah-filter-btn on" data-style="All" onclick="ahSetFilter(this)">All</button>
+      <button class="ah-filter-btn" data-style="🌿 Ghibli" onclick="ahSetFilter(this)">🌿 Ghibli</button>
+      <button class="ah-filter-btn" data-style="🧸 Clay" onclick="ahSetFilter(this)">🧸 Clay</button>
+      <button class="ah-filter-btn" data-style="👾 Pixel Art" onclick="ahSetFilter(this)">👾 Pixel</button>
+      <button class="ah-filter-btn" data-style="✨ Anime" onclick="ahSetFilter(this)">✨ Anime</button>
+      <button class="ah-filter-btn" data-style="🎨 Pixar" onclick="ahSetFilter(this)">🎨 Pixar</button>
+      <button class="ah-filter-btn" data-style="🖼️ Oil Paint" onclick="ahSetFilter(this)">🖼️ Oil Paint</button>
     </div>
     <div class="ah-grid" id="ahGrid"></div>
     <div class="ah-pagination">
       <button class="ah-page-btn" id="ahPrevBtn" onclick="ahChangePage(-1)">‹</button>
-      <span class="ah-page-info" id="ahPageInfo">第 1 页</span>
+      <span class="ah-page-info" id="ahPageInfo">Page 1</span>
       <button class="ah-page-btn" id="ahNextBtn" onclick="ahChangePage(1)">›</button>
     </div>
   </div>
 </div>
 
-<!-- STATS -->
 <div class="stats-row">
-  <div class="stat-card"><span class="stat-n">12,847</span><span class="stat-d">已生成图片</span></div>
-  <div class="stat-card"><span class="stat-n">~15秒</span><span class="stat-d">平均生成时间</span></div>
-  <div class="stat-card"><span class="stat-n">6种</span><span class="stat-d">独家风格</span></div>
+  <div class="stat-card"><span class="stat-n">12,847</span><span class="stat-d">Images Generated</span></div>
+  <div class="stat-card"><span class="stat-n">~15s</span><span class="stat-d">Average Time</span></div>
+  <div class="stat-card"><span class="stat-n">6</span><span class="stat-d">Unique Styles</span></div>
 </div>
 
-<!-- BEFORE/AFTER -->
 <div class="comparison-section">
-  <div class="comparison-label">👆 拖一下看看变身效果 · 动漫风</div>
+  <div class="comparison-label">👆 Drag to see the transformation · Anime Style</div>
   <div class="comparison-wrapper" id="compWrapper" style="height:420px;position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--card-border);box-shadow:0 8px 32px rgba(139,92,246,0.12);cursor:ew-resize;user-select:none;touch-action:pan-y;">
     <div style="position:absolute;inset:0;z-index:1;">
       <img src="/samples/hero-before.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
@@ -684,21 +646,20 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
         <img src="/samples/hero-after.png" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;">
       </div>
     </div>
-    <span class="comp-overlay-text comp-before-label">原始照片</span>
-    <span class="comp-overlay-text comp-after-label">✨ 动漫风</span>
+    <span class="comp-overlay-text comp-before-label">Original</span>
+    <span class="comp-overlay-text comp-after-label">✨ Anime</span>
     <div class="comp-handle" id="compHandle" style="left:50%;">
       <div class="comp-handle-circle"><div class="comp-arrows">◀▶</div></div>
     </div>
   </div>
 </div>
 
-<!-- EXAMPLES -->
 <div class="section" id="examples">
-  <div class="section-title">样例 <span class="grad">展示</span></div>
-  <div class="section-desc">真实用户丢进来的照片，AI 一键变身，效果都是真的 · 点击卡片拖动对比</div>
+  <div class="section-title">Style <span class="grad">Gallery</span></div>
+  <div class="section-desc">Real photos transformed by AI · Click any card to compare before & after</div>
   <div class="examples-grid">
 
-    <div class="ex-card" onclick="openExModal('🌿 吉卜力风','/samples/ghibli-before.jpg','/samples/ghibli-after.png')">
+    <div class="ex-card" onclick="openExModal('🌿 Ghibli','/samples/ghibli-before.jpg','/samples/ghibli-after.png')">
       <div class="ex-before-after">
         <div class="ex-half before" style="padding:0;overflow:hidden;">
           <img src="/samples/ghibli-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
@@ -707,11 +668,11 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
           <img src="/samples/ghibli-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
         </div>
       </div>
-      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
-      <div class="ex-label"><span class="ex-name">吉卜力风</span><span class="ex-tag">最梦幻</span></div>
+      <div class="ex-card-hover-hint"><span>🔍 Compare</span></div>
+      <div class="ex-label"><span class="ex-name">Ghibli</span><span class="ex-tag">Dreamy</span></div>
     </div>
 
-    <div class="ex-card" onclick="openExModal('🧸 黏土风','/samples/clay-before.jpg','/samples/clay-after.png')">
+    <div class="ex-card" onclick="openExModal('🧸 Clay','/samples/clay-before.jpg','/samples/clay-after.png')">
       <div class="ex-before-after">
         <div class="ex-half before" style="padding:0;overflow:hidden;">
           <img src="/samples/clay-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
@@ -720,11 +681,11 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
           <img src="/samples/clay-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
         </div>
       </div>
-      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
-      <div class="ex-label"><span class="ex-name">黏土风</span><span class="ex-tag">最火爆</span></div>
+      <div class="ex-card-hover-hint"><span>🔍 Compare</span></div>
+      <div class="ex-label"><span class="ex-name">Clay</span><span class="ex-tag">Trending</span></div>
     </div>
 
-    <div class="ex-card" onclick="openExModal('👾 像素风','/samples/pixel-before.jpg','/samples/pixel-after.png')">
+    <div class="ex-card" onclick="openExModal('👾 Pixel Art','/samples/pixel-before.jpg','/samples/pixel-after.png')">
       <div class="ex-before-after">
         <div class="ex-half before" style="padding:0;overflow:hidden;">
           <img src="/samples/pixel-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
@@ -733,11 +694,11 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
           <img src="/samples/pixel-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
         </div>
       </div>
-      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
-      <div class="ex-label"><span class="ex-name">像素风</span><span class="ex-tag">复古</span></div>
+      <div class="ex-card-hover-hint"><span>🔍 Compare</span></div>
+      <div class="ex-label"><span class="ex-name">Pixel Art</span><span class="ex-tag">Retro</span></div>
     </div>
 
-    <div class="ex-card" onclick="openExModal('✨ 动漫风','/samples/anime-before.jpg','/samples/anime-after.png')">
+    <div class="ex-card" onclick="openExModal('✨ Anime','/samples/anime-before.jpg','/samples/anime-after.png')">
       <div class="ex-before-after">
         <div class="ex-half before" style="padding:0;overflow:hidden;">
           <img src="/samples/anime-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
@@ -746,11 +707,11 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
           <img src="/samples/anime-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
         </div>
       </div>
-      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
-      <div class="ex-label"><span class="ex-name">动漫风</span><span class="ex-tag">最惊艳</span></div>
+      <div class="ex-card-hover-hint"><span>🔍 Compare</span></div>
+      <div class="ex-label"><span class="ex-name">Anime</span><span class="ex-tag">Stunning</span></div>
     </div>
 
-    <div class="ex-card" onclick="openExModal('🎨 皮克斯风','/samples/cartoon-before.jpg','/samples/cartoon-after.png')">
+    <div class="ex-card" onclick="openExModal('🎨 Pixar','/samples/cartoon-before.jpg','/samples/cartoon-after.png')">
       <div class="ex-before-after">
         <div class="ex-half before" style="padding:0;overflow:hidden;">
           <img src="/samples/cartoon-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
@@ -759,11 +720,11 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
           <img src="/samples/cartoon-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
         </div>
       </div>
-      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
-      <div class="ex-label"><span class="ex-name">皮克斯风</span><span class="ex-tag">有腔调</span></div>
+      <div class="ex-card-hover-hint"><span>🔍 Compare</span></div>
+      <div class="ex-label"><span class="ex-name">Pixar</span><span class="ex-tag">Stylish</span></div>
     </div>
 
-    <div class="ex-card" onclick="openExModal('🖼️ 油画风','/samples/oil-before.jpg','/samples/oil-after.png')">
+    <div class="ex-card" onclick="openExModal('🖼️ Oil Paint','/samples/oil-before.jpg','/samples/oil-after.png')">
       <div class="ex-before-after">
         <div class="ex-half before" style="padding:0;overflow:hidden;">
           <img src="/samples/oil-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
@@ -772,166 +733,159 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
           <img src="/samples/oil-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
         </div>
       </div>
-      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
-      <div class="ex-label"><span class="ex-name">油画风</span><span class="ex-tag">超好看</span></div>
+      <div class="ex-card-hover-hint"><span>🔍 Compare</span></div>
+      <div class="ex-label"><span class="ex-name">Oil Paint</span><span class="ex-tag">Beautiful</span></div>
     </div>
 
   </div>
 </div>
 
-<!-- REVIEWS -->
 <div class="section" id="reviews">
-  <div class="section-title">用户 <span class="grad">好评</span></div>
-  <div class="section-desc">真实用户的反馈，不信你看看 👀</div>
+  <div class="section-title">What Users <span class="grad">Are Saying</span></div>
+  <div class="section-desc">Real feedback from real users 👀</div>
   <div class="reviews-grid">
-    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">黏土风太绝了！圆圆的脸发出去朋友都说好可爱，直接设成头像了，连我妈都问我哪里做的哈哈。</div><div class="review-author"><div class="avatar av1">小</div><div><div class="author-name">小雨</div><div class="author-sub">设计师 · 上海</div></div></div></div>
-    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">吉卜力风简直爱了！感觉自己穿越到了宫崎骏的世界，发小红书互动率直接翻倍，好多人问哪里做的。</div><div class="review-author"><div class="avatar av2">阿</div><div><div class="author-name">阿Ken</div><div class="author-sub">内容创作者 · 广州</div></div></div></div>
-    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">Pro版真的值！五种风格都试了一遍，动漫风是我最爱，无水印直接发帖，粉丝互动率肉眼可见地涨。</div><div class="review-author"><div class="avatar av3">M</div><div><div class="author-name">Miku_art</div><div class="author-sub">插画师 · 成都</div></div></div></div>
-    <div class="review-card"><div class="review-stars">★★★★☆</div><div class="review-text">试了好几个同类工具，WAI 脸部保留是最准的，换了漫画风还是能认出是我，不像其他的感觉换了个人。</div><div class="review-author"><div class="avatar av4">Z</div><div><div class="author-name">ZephyrLee</div><div class="author-sub">游戏玩家 · 北京</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">The Clay style is absolutely adorable! My friends went crazy over it when I set it as my profile pic. Even my mom asked where I got it done lol.</div><div class="review-author"><div class="avatar av1">S</div><div><div class="author-name">Sophie</div><div class="author-sub">Designer · London</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">Obsessed with the Ghibli style! Feels like I stepped into a Studio Ghibli film. Posted it on Instagram and engagement went through the roof.</div><div class="review-author"><div class="avatar av2">A</div><div><div class="author-name">Alex K</div><div class="author-sub">Content Creator · NYC</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">Pro plan is totally worth it! Tried all six styles, Anime is my favourite. No watermark, high-res downloads — my followers love the content.</div><div class="review-author"><div class="avatar av3">M</div><div><div class="author-name">Miku_art</div><div class="author-sub">Illustrator · Tokyo</div></div></div></div>
+    <div class="review-card"><div class="review-stars">★★★★☆</div><div class="review-text">Tried several similar tools — WAI preserves your face the best. You can still clearly tell it's you after the transformation, unlike other apps.</div><div class="review-author"><div class="avatar av4">Z</div><div><div class="author-name">ZephyrLee</div><div class="author-sub">Gamer · Sydney</div></div></div></div>
   </div>
 </div>
 
-<!-- FEEDBACK -->
 <div class="section" id="feedback">
-  <div class="section-title">来 <span class="grad">唠两句</span></div>
-  <div class="section-desc">bug、想法、还是纯粹想夸一句——都可以扔进来</div>
+  <div class="section-title">Share Your <span class="grad">Thoughts</span></div>
+  <div class="section-desc">Bug reports, feature ideas, or just want to say hi — drop it here</div>
   <div class="feedback-board">
     <div class="feedback-input-row" id="fbInputArea">
       <div class="fb-login-tip" id="fbLoginTip">
-        💬 <a onclick="openAuthModal()">登录 / 注册</a> 后才能发评论，这样评论含金量更高～
+        💬 <a onclick="openAuthModal()">Sign in</a> to leave a comment
       </div>
-      <input class="fb-input" id="fbName" placeholder="叫我什么好（可不填）" maxlength="20" style="display:none">
+      <input class="fb-input" id="fbName" placeholder="Your name (optional)" maxlength="20" style="display:none">
       <div class="star-rating-row" id="fbStarRow" style="display:none">
-        <span class="star-rating-label">评分</span>
+        <span class="star-rating-label">Rating</span>
         <div class="star-rating" id="starRating"></div>
         <span class="star-value-display" id="starValueDisplay">—</span>
       </div>
-      <textarea class="fb-textarea" id="fbText" placeholder="这风格绝了！/ 哎这里有bug / 能不能加个xx风格～" style="display:none"></textarea>
-      <button class="fb-submit" id="fbSubmitBtn" onclick="submitFeedback()" style="display:none">投出去 →</button>
+      <textarea class="fb-textarea" id="fbText" placeholder="Love this style! / Found a bug / Can you add X style?" style="display:none"></textarea>
+      <button class="fb-submit" id="fbSubmitBtn" onclick="submitFeedback()" style="display:none">Submit →</button>
     </div>
     <div class="fb-divider"></div>
     <div class="fb-list" id="fbList"></div>
   </div>
 </div>
 
-<!-- UPGRADE MODAL -->
 <div class="modal-overlay" id="modalUpgrade" onclick="if(event.target===this)closeUpgradeModal()">
   <div class="modal-box" style="max-width:480px;">
     <div class="modal-header">
-      <div class="modal-title">✦ 解锁更多变身能力</div>
+      <div class="modal-title">✦ Unlock More Transforms</div>
       <button class="modal-close" onclick="closeUpgradeModal()">✕</button>
     </div>
     <div class="upgrade-plans">
       <div class="upgrade-card featured" id="upgradeProCard">
-        <div class="upgrade-card-badge">🔥 最受欢迎</div>
+        <div class="upgrade-card-badge">🔥 Most Popular</div>
         <div class="upgrade-card-name">PRO</div>
-        <div class="upgrade-card-price">$9.9<span>/月</span></div>
-        <div class="upgrade-card-desc">每天变身 10 次，轻量够用</div>
+        <div class="upgrade-card-price">$9.9<span>/mo</span></div>
+        <div class="upgrade-card-desc">10 transforms per day, light use</div>
         <ul class="upgrade-card-features">
-          <li><i class="ti ti-check"></i>变身券每天 10 张</li>
-          <li><i class="ti ti-check"></i>5 种风格全解锁</li>
-          <li><i class="ti ti-check"></i>无水印 · 2K 高清</li>
-          <li><i class="ti ti-check"></i>30 天历史记录</li>
+          <li><i class="ti ti-check"></i>10 transforms / day</li>
+          <li><i class="ti ti-check"></i>All 6 styles unlocked</li>
+          <li><i class="ti ti-check"></i>No watermark · 2K HD</li>
+          <li><i class="ti ti-check"></i>30-day history</li>
         </ul>
       </div>
       <div class="upgrade-card" id="upgradeMaxCard">
         <div class="upgrade-card-name">MAX</div>
-        <div class="upgrade-card-price" id="upgradeMaxPrice">$29<span>/月</span></div>
-        <div class="upgrade-card-desc">无限变身，发小红书接单都够用</div>
+        <div class="upgrade-card-price" id="upgradeMaxPrice">$29<span>/mo</span></div>
+        <div class="upgrade-card-desc">Unlimited transforms, perfect for creators</div>
         <div class="upgrade-max-tabs">
-          <button class="umtab on" onclick="switchUpgradeMax(this,'29','/月',2900,'month')">月付<small>&nbsp;</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'69','/季',6900,'quarter')">季付<small>省$18</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'119','/半年',11900,'halfyear')">半年<small>省$55</small></button>
-          <button class="umtab" onclick="switchUpgradeMax(this,'1','/年',100,'year')">年付<small>省$149</small></button>
+          <button class="umtab on" onclick="switchUpgradeMax(this,'29','/mo',2900,'month')">Monthly<small>&nbsp;</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'69','/3mo',6900,'quarter')">3 Months<small>Save $18</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'119','/6mo',11900,'halfyear')">6 Months<small>Save $55</small></button>
+          <button class="umtab" onclick="switchUpgradeMax(this,'199','/yr',19900,'year')">Yearly<small>Save $149</small></button>
         </div>
         <ul class="upgrade-card-features">
-          <li><i class="ti ti-infinity"></i>变身券无限张</li>
-          <li><i class="ti ti-photo"></i>4K 超清输出</li>
-          <li><i class="ti ti-history"></i>永久历史记录</li>
-          <li><i class="ti ti-shield-check"></i>商业授权</li>
+          <li><i class="ti ti-infinity"></i>Unlimited transforms</li>
+          <li><i class="ti ti-photo"></i>4K ultra-HD output</li>
+          <li><i class="ti ti-history"></i>Lifetime history</li>
+          <li><i class="ti ti-shield-check"></i>Commercial license</li>
         </ul>
       </div>
     </div>
     <div id="upgradeSubStatus" style="display:none;text-align:center;margin-top:14px;font-size:12px;color:#8b5cf6;font-weight:600;"></div>
     <div id="upgradeBtnRow" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;">
-      <button class="upgrade-card-btn fill" id="upgradeProBtnBottom" onclick="handleSubscribeFromModal('pro')" style="border-radius:12px;padding:12px;font-size:13px;">解锁 Pro ✦</button>
-      <button class="upgrade-card-btn fill" id="upgradeMaxBtnBottom" onclick="handleSubscribeFromModal('max')" style="border-radius:12px;padding:12px;font-size:13px;">解锁 Max ✦</button>
+      <button class="upgrade-card-btn fill" id="upgradeProBtnBottom" onclick="handleSubscribeFromModal('pro')" style="border-radius:12px;padding:12px;font-size:13px;">Get Pro ✦</button>
+      <button class="upgrade-card-btn fill" id="upgradeMaxBtnBottom" onclick="handleSubscribeFromModal('max')" style="border-radius:12px;padding:12px;font-size:13px;">Get Max ✦</button>
     </div>
   </div>
 </div>
 
-<!-- AUTH MODAL -->
 <div class="modal-overlay" id="modalAuth" onclick="if(event.target===this)closeAuthModal()">
   <div class="modal-box" style="max-width:380px;">
     <div class="modal-header">
-      <div class="modal-title" id="authModalTitle">👋 欢迎回来</div>
+      <div class="modal-title" id="authModalTitle">👋 Welcome Back</div>
       <button class="modal-close" onclick="closeAuthModal()">✕</button>
     </div>
     <div class="auth-tabs">
-      <button class="auth-tab on" id="tabLogin" onclick="switchAuthTab('login')">登录</button>
-      <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">注册</button>
+      <button class="auth-tab on" id="tabLogin" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Sign Up</button>
     </div>
-    <input class="auth-input" id="authEmail" type="email" placeholder="邮箱地址">
-    <input class="auth-input" id="authPassword" type="password" placeholder="密码（至少 6 位）">
-    <button class="auth-submit" id="authSubmitBtn" onclick="handleAuth()">登录</button>
+    <input class="auth-input" id="authEmail" type="email" placeholder="Email address">
+    <input class="auth-input" id="authPassword" type="password" placeholder="Password (min 6 characters)">
+    <button class="auth-submit" id="authSubmitBtn" onclick="handleAuth()">Sign In</button>
     <div class="auth-msg" id="authMsg"></div>
-    <div class="auth-divider">或者</div>
+    <div class="auth-divider">or</div>
     <button class="auth-google" onclick="handleGoogleLogin()">
       <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      使用 Google 账号登录
+      Continue with Google
     </button>
   </div>
 </div>
 
-<!-- TOS / PRIVACY -->
 <div class="modal-overlay" id="modalTos" onclick="if(event.target===this)closeModal('tos')">
   <div class="modal-box">
     <div class="modal-header"><div class="modal-title">Terms of Service</div><button class="modal-close" onclick="closeModal('tos')">✕</button></div>
     <div class="modal-body">
-      <h3>1. 服务说明</h3><p>WAI 提供 AI 驱动的动漫风格图像转换服务。使用本服务即表示您同意以下条款。</p>
-      <h3>2. 用户内容</h3><p>您上传的图片仅用于生成变身图像，不会被用于训练模型或分享给第三方。请勿上传涉及他人隐私的照片。</p>
-      <h3>3. 免费与付费服务</h3><p>免费用户每天可使用 3 次生成。付费用户享受更多次数、无水印及高清下载。</p>
-      <h3>4. 禁止行为</h3><p>禁止使用本服务生成任何违法、有害或侵权内容。违规账号将被立即封禁。</p>
-      <p style="margin-top:16px;font-size:11px;color:var(--text-faint);">最后更新：2026年1月</p>
-    </div>
-  </div>
-</div>
-<div class="modal-overlay" id="modalPrivacy" onclick="if(event.target===this)closeModal('privacy')">
-  <div class="modal-box">
-    <div class="modal-header"><div class="modal-title">Privacy Policy</div><button class="modal-close" onclick="closeModal('privacy')">✕</button></div>
-    <div class="modal-body">
-      <h3>1. 数据收集</h3><p>我们收集您上传的图片（仅用于处理）、使用次数统计以及可选的留言内容。</p>
-      <h3>2. 数据使用</h3><p>您的图片在生成完成后会在服务器端自动删除，不会被永久存储或用于其他目的。</p>
-      <h3>3. Cookie</h3><p>本站不使用跟踪 Cookie，仅使用 localStorage 保存您的偏好设置。</p>
-      <p style="margin-top:16px;font-size:11px;color:var(--text-faint);">最后更新：2026年1月</p>
+      <h3>1. Service</h3><p>WAI provides AI-powered image style transformation. By using this service you agree to these terms.</p>
+      <h3>2. User Content</h3><p>Photos you upload are used solely to generate transformed images. They are not used for model training or shared with third parties. Do not upload photos of others without consent.</p>
+      <h3>3. Free & Paid Plans</h3><p>Free users get 3 transforms per day. Paid users enjoy higher limits, no watermarks, and HD downloads.</p>
+      <h3>4. Prohibited Use</h3><p>Do not use this service to generate illegal, harmful, or infringing content. Accounts in violation will be suspended immediately.</p>
+      <p style="margin-top:16px;font-size:11px;color:var(--text-faint);">Last updated: January 2026</p>
     </div>
   </div>
 </div>
 
-<!-- FOOTER -->
+<div class="modal-overlay" id="modalPrivacy" onclick="if(event.target===this)closeModal('privacy')">
+  <div class="modal-box">
+    <div class="modal-header"><div class="modal-title">Privacy Policy</div><button class="modal-close" onclick="closeModal('privacy')">✕</button></div>
+    <div class="modal-body">
+      <h3>1. Data Collection</h3><p>We collect your uploaded images (for processing only), usage statistics, and optional feedback comments.</p>
+      <h3>2. Data Usage</h3><p>Your images are automatically deleted from our servers after processing. They are never stored permanently or used for any other purpose.</p>
+      <h3>3. Cookies</h3><p>We do not use tracking cookies. We only use localStorage to save your preferences.</p>
+      <p style="margin-top:16px;font-size:11px;color:var(--text-faint);">Last updated: January 2026</p>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">W<span class="purple">AI</span></div>
-    <div class="footer-tagline">AI 一键变身 · 6 种风格随便选 · Powered by Flux Kontext & PuLID</div>
+    <div class="footer-tagline">AI Photo Transformation · 6 Styles · Powered by Flux Kontext & PuLID</div>
     <div class="footer-links">
       <a href="#" onclick="openModal('tos');return false;">Terms of Service</a>
       <span class="footer-sep">·</span>
       <a href="#" onclick="openModal('privacy');return false;">Privacy Policy</a>
     </div>
-    <div class="footer-contact">有问题？联系我们：<a href="mailto:tingyuyanfeng@gmail.com">tingyuyanfeng@gmail.com</a></div>
+    <div class="footer-contact">Questions? Contact us: <a href="mailto:tingyuyanfeng@gmail.com">tingyuyanfeng@gmail.com</a></div>
     <div class="footer-copy">© 2026 WAI · All rights reserved</div>
   </div>
 </footer>
 
-</div><!-- end .wrap -->
+</div>
 
 <script>
-// ===== HERO CHAR HOVER =====
 document.querySelectorAll('.h1-char').forEach(el => {
   el.setAttribute('data-char', el.textContent);
 });
 
-// ===== STYLE ROW ARROWS =====
 (function(){
   const row = document.getElementById('styleRow');
   const fadeR = document.getElementById('styleRowFade');
@@ -954,7 +908,6 @@ document.querySelectorAll('.h1-char').forEach(el => {
   };
 })();
 
-// ===== THEME =====
 let darkMode = false;
 function toggleTheme(){
   darkMode = !darkMode;
@@ -971,21 +924,20 @@ function toggleTheme(){
   }
 })();
 
-// ===== FREE COUNT =====
 const FREE_TOTAL = 3;
 const PRO_DAILY = 10;
 
-function getBeijing4amTimestamp(){
+function getResetTimestamp(){
   const now = new Date();
-  const beijingNow = new Date(now.getTime() + 8*60*60*1000);
-  const h = beijingNow.getUTCHours();
-  const resetDay = new Date(beijingNow);
+  const utc = new Date(now.getTime() + 8*60*60*1000);
+  const h = utc.getUTCHours();
+  const resetDay = new Date(utc);
   if(h < 4) resetDay.setUTCDate(resetDay.getUTCDate() - 1);
   return resetDay.toISOString().slice(0,10);
 }
 
 function initFreeCount(){
-  const today = getBeijing4amTimestamp();
+  const today = getResetTimestamp();
   const savedDay = localStorage.getItem('waiFreeDay');
   if(savedDay !== today){
     localStorage.setItem('waiFreeLeft', FREE_TOTAL);
@@ -1002,18 +954,18 @@ function renderFreeCount(){
   const textEl = document.getElementById('freeCountText');
   dotsEl.innerHTML = '';
   if(currentPlan === 'max'){
-    textEl.textContent = '∞ 变身券无限，想造多少造多少 ✦';
+    textEl.textContent = '∞ Unlimited transforms ✦';
     textEl.style.color = '#8b5cf6';
     return;
   }
   if(currentPlan === 'pro'){
-    const today = getBeijing4amTimestamp();
+    const today = getResetTimestamp();
     if(localStorage.getItem('waiFreeDay') !== today) localStorage.setItem('waiProUsed','0');
     const used = parseInt(localStorage.getItem('waiProUsed')||'0');
     const left = Math.max(0, PRO_DAILY - used);
     textEl.style.color = '';
-    if(left <= 0) textEl.textContent = '今天 10 张变身券用完啦，凌晨 4 点续杯 (´;ω;`)';
-    else textEl.textContent = '变身券剩余：' + left + ' / 10 张';
+    if(left <= 0) textEl.textContent = "Today's 10 transforms used up — resets at midnight UTC+8";
+    else textEl.textContent = 'Transforms left today: ' + left + ' / 10';
     return;
   }
   for(let i = 0; i < FREE_TOTAL; i++){
@@ -1023,15 +975,13 @@ function renderFreeCount(){
   }
   textEl.style.color = '';
   if(freeLeft <= 0){
-    const lines = ['今天的变身配额已用完，明天再来继续造 (≧▽≦)','三次机会都用完啦！明天刷新，追番去吧 (´;ω;`)','变身券售罄！休息一下，明天继续变身 ✦'];
-    textEl.textContent = lines[Math.floor(Math.random()*lines.length)];
+    textEl.textContent = "You've used all 3 free transforms today — come back tomorrow!";
   } else {
-    textEl.textContent = '今天还能变身 ' + freeLeft + ' 次';
+    textEl.textContent = freeLeft + ' free transform' + (freeLeft === 1 ? '' : 's') + ' remaining today';
   }
 }
 document.getElementById('freeCountText').textContent = '';
 
-// ===== BACKGROUND =====
 const canvas = document.getElementById('bg');
 const ctx = canvas.getContext('2d');
 function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -1056,7 +1006,6 @@ function drawBg(){
 }
 drawBg();
 
-// ===== LIGHTBOX =====
 let currentAnimeUrl = null;
 let lightboxCurrentUrl = null;
 
@@ -1068,13 +1017,13 @@ function openLightbox(type){
   if(type === 'original'){
     if(!uploadedImageBase64) return;
     img.src = uploadedImageBase64;
-    label.textContent = '原始照片';
+    label.textContent = 'Original';
     dlBtn.style.display = 'none';
     lightboxCurrentUrl = null;
   } else {
     if(!currentAnimeUrl) return;
     img.src = currentAnimeUrl;
-    label.textContent = '变身版本';
+    label.textContent = 'Transformed';
     dlBtn.style.display = '';
     lightboxCurrentUrl = currentAnimeUrl;
   }
@@ -1082,21 +1031,15 @@ function openLightbox(type){
 }
 function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
 
-// ===== EXAMPLE COMPARISON MODAL =====
 function openExModal(title, beforeSrc, afterSrc){
-  // 没有真实图片的风格暂时不弹出
-  if(!beforeSrc || !afterSrc){
-    return;
-  }
-  document.getElementById('exModalTitle').textContent = title + ' 对比';
+  if(!beforeSrc || !afterSrc) return;
+  document.getElementById('exModalTitle').textContent = title + ' Comparison';
   document.getElementById('exSliderBefore').src = beforeSrc;
   const afterImg = document.getElementById('exSliderAfter');
   afterImg.src = afterSrc;
-  // 重置到50%
   document.getElementById('exSliderClip').style.width = '50%';
   document.getElementById('exSliderHandle').style.left = '50%';
   document.getElementById('exModal').classList.add('open');
-  // 等 modal 打开后再同步宽度
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       const wrap = document.getElementById('exSliderWrap');
@@ -1111,10 +1054,7 @@ function openExModal(title, beforeSrc, afterSrc){
     });
   });
 }
-
-function closeExModal(){
-  document.getElementById('exModal').classList.remove('open');
-}
+function closeExModal(){ document.getElementById('exModal').classList.remove('open'); }
 
 (function(){
   const wrap = document.getElementById('exSliderWrap');
@@ -1122,14 +1062,12 @@ function closeExModal(){
   const handle = document.getElementById('exSliderHandle');
   const afterInner = document.getElementById('exSliderAfterInner');
   let dragging = false;
-
   function syncWidth(){
     const w = wrap.offsetWidth;
     afterInner.style.width = w + 'px';
     const img = document.getElementById('exSliderAfter');
     if(img) img.style.width = w + 'px';
   }
-
   function setPos(clientX){
     const rect = wrap.getBoundingClientRect();
     let pct = (clientX - rect.left) / rect.width;
@@ -1138,7 +1076,6 @@ function closeExModal(){
     handle.style.left = (pct * 100) + '%';
     syncWidth();
   }
-
   wrap.addEventListener('mousedown', e => { dragging = true; setPos(e.clientX); });
   window.addEventListener('mousemove', e => { if(dragging) setPos(e.clientX); });
   window.addEventListener('mouseup', () => { dragging = false; });
@@ -1148,7 +1085,6 @@ function closeExModal(){
   window.addEventListener('resize', syncWidth);
 })();
 
-// ===== DOWNLOAD =====
 async function downloadImageFromUrl(url, filename){
   try {
     const response = await fetch(url);
@@ -1164,39 +1100,30 @@ async function downloadImageFromUrl(url, filename){
     setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
   } catch(e) { window.open(url, '_blank'); }
 }
+async function downloadAnime(){ if(!currentAnimeUrl) return; await downloadImageFromUrl(currentAnimeUrl, 'wai-result.png'); }
+async function downloadFromLightbox(){ if(!lightboxCurrentUrl) return; await downloadImageFromUrl(lightboxCurrentUrl, 'wai-result.png'); }
 
-async function downloadAnime(){
-  if(!currentAnimeUrl) return;
-  await downloadImageFromUrl(currentAnimeUrl, 'wai-result.png');
-}
-async function downloadFromLightbox(){
-  if(!lightboxCurrentUrl) return;
-  await downloadImageFromUrl(lightboxCurrentUrl, 'wai-result.png');
-}
-
-// ===== SUPABASE =====
 const SUPABASE_URL = 'https://fcotuoaxkaffnslgvtwq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjb3R1b2F4a2FmZm5zbGd2dHdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDU4NzksImV4cCI6MjA5MzcyMTg3OX0.GkAFv1uJhm8GKT0SSSVqm_K_uryCHSEzp8gcEf-FtzY';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ===== HISTORY =====
 let allHistoryData = [];
 
 function historyCardHTML(item){
   return `
     <div class="history-card">
-      <div class="history-card-thumb" onclick="previewHistoryItem('${item.anime_url}','${item.style||'变身'}')">
-        <img src="${item.anime_url}" alt="${item.style||'变身'}" loading="lazy"
-          onerror="this.parentElement.innerHTML='<div style=height:100px;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:12px>加载失败</div>'">
+      <div class="history-card-thumb" onclick="previewHistoryItem('${item.anime_url}','${item.style||'Transform'}')">
+        <img src="${item.anime_url}" alt="${item.style||'Transform'}" loading="lazy"
+          onerror="this.parentElement.innerHTML='<div style=height:100px;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:12px>Failed to load</div>'">
         <div class="hc-preview-btn">🔍</div>
       </div>
       <div class="history-card-label">
-        <span class="history-card-style">${item.style||'变身'}</span>
+        <span class="history-card-style">${item.style||'Transform'}</span>
         <span class="history-card-time">${timeAgo(item.created_at)}</span>
       </div>
       <div class="history-card-actions">
-        <button class="hc-btn preview" onclick="previewHistoryItem('${item.anime_url}','${item.style||'变身'}')">预览</button>
-        <button class="hc-btn dl" onclick="downloadHistoryItem('${item.anime_url}')">下载</button>
+        <button class="hc-btn preview" onclick="previewHistoryItem('${item.anime_url}','${item.style||'Transform'}')">Preview</button>
+        <button class="hc-btn dl" onclick="downloadHistoryItem('${item.anime_url}')">Save</button>
       </div>
     </div>`;
 }
@@ -1209,7 +1136,6 @@ async function loadHistory(){
     if(Array.isArray(data) && data.length > 0){
       allHistoryData = data;
       document.getElementById('historySection').style.display = '';
-      // 主页只显示最近6条
       const grid = document.getElementById('historyGrid');
       grid.innerHTML = data.slice(0, 6).map(historyCardHTML).join('');
     } else {
@@ -1219,22 +1145,18 @@ async function loadHistory(){
   } catch(e){ console.log('History load failed:', e); }
 }
 
-// ===== ALL HISTORY MODAL =====
-let ahCurrentFilter = '全部';
+let ahCurrentFilter = 'All';
 let ahCurrentPage = 1;
 const AH_PAGE_SIZE = 12;
 
 function openAllHistory(){
-  ahCurrentFilter = '全部';
+  ahCurrentFilter = 'All';
   ahCurrentPage = 1;
-  document.querySelectorAll('.ah-filter-btn').forEach(b => b.classList.toggle('on', b.dataset.style === '全部'));
+  document.querySelectorAll('.ah-filter-btn').forEach(b => b.classList.toggle('on', b.dataset.style === 'All'));
   renderAhGrid();
   document.getElementById('ahModal').classList.add('open');
 }
-
-function closeAllHistory(){
-  document.getElementById('ahModal').classList.remove('open');
-}
+function closeAllHistory(){ document.getElementById('ahModal').classList.remove('open'); }
 
 function ahSetFilter(btn){
   ahCurrentFilter = btn.dataset.style;
@@ -1245,63 +1167,52 @@ function ahSetFilter(btn){
 }
 
 function ahChangePage(dir){
-  const filtered = ahCurrentFilter === '全部'
-    ? allHistoryData
-    : allHistoryData.filter(i => i.style === ahCurrentFilter);
+  const filtered = ahCurrentFilter === 'All' ? allHistoryData : allHistoryData.filter(i => i.style === ahCurrentFilter);
   const totalPages = Math.max(1, Math.ceil(filtered.length / AH_PAGE_SIZE));
   ahCurrentPage = Math.max(1, Math.min(totalPages, ahCurrentPage + dir));
   renderAhGrid();
 }
 
 function renderAhGrid(){
-  const filtered = ahCurrentFilter === '全部'
-    ? allHistoryData
-    : allHistoryData.filter(i => i.style === ahCurrentFilter);
+  const filtered = ahCurrentFilter === 'All' ? allHistoryData : allHistoryData.filter(i => i.style === ahCurrentFilter);
   const totalPages = Math.max(1, Math.ceil(filtered.length / AH_PAGE_SIZE));
   const start = (ahCurrentPage - 1) * AH_PAGE_SIZE;
   const page = filtered.slice(start, start + AH_PAGE_SIZE);
-
   const grid = document.getElementById('ahGrid');
   if(page.length === 0){
-    grid.innerHTML = `<div class="ah-empty">这个风格还没有记录哦，去试试吧 ✨</div>`;
+    grid.innerHTML = `<div class="ah-empty">No results for this style yet — go try it! ✨</div>`;
   } else {
     grid.innerHTML = page.map(item => `
       <div class="ah-card">
-        <div class="ah-card-thumb" onclick="previewHistoryItem('${item.anime_url}','${item.style||'变身'}')">
-          <img src="${item.anime_url}" alt="${item.style||'变身'}" loading="lazy"
-            onerror="this.style.display='none'">
+        <div class="ah-card-thumb" onclick="previewHistoryItem('${item.anime_url}','${item.style||'Transform'}')">
+          <img src="${item.anime_url}" alt="${item.style||'Transform'}" loading="lazy" onerror="this.style.display='none'">
           <div class="ah-card-thumb-hint">🔍</div>
         </div>
         <div class="ah-card-info">
-          <span class="ah-card-style">${item.style||'变身'}</span>
+          <span class="ah-card-style">${item.style||'Transform'}</span>
           <span class="ah-card-time">${timeAgo(item.created_at)}</span>
         </div>
         <div class="ah-card-actions">
-          <button class="ah-btn preview" onclick="previewHistoryItem('${item.anime_url}','${item.style||'变身'}')">预览</button>
-          <button class="ah-btn dl" onclick="downloadHistoryItem('${item.anime_url}')">下载</button>
+          <button class="ah-btn preview" onclick="previewHistoryItem('${item.anime_url}','${item.style||'Transform'}')">Preview</button>
+          <button class="ah-btn dl" onclick="downloadHistoryItem('${item.anime_url}')">Save</button>
         </div>
       </div>
     `).join('');
   }
-
-  document.getElementById('ahPageInfo').textContent = `第 ${ahCurrentPage} / ${totalPages} 页`;
+  document.getElementById('ahPageInfo').textContent = `Page ${ahCurrentPage} / ${totalPages}`;
   document.getElementById('ahPrevBtn').disabled = ahCurrentPage <= 1;
   document.getElementById('ahNextBtn').disabled = ahCurrentPage >= totalPages;
 }
 
 function previewHistoryItem(url, label){
   const lb = document.getElementById('lightbox');
-  const img = document.getElementById('lightboxImg');
-  const labelEl = document.getElementById('lightboxLabel');
-  const dlBtn = document.getElementById('lightboxDl');
-  img.src = url; labelEl.textContent = label;
-  dlBtn.style.display = ''; lightboxCurrentUrl = url;
+  document.getElementById('lightboxImg').src = url;
+  document.getElementById('lightboxLabel').textContent = label;
+  document.getElementById('lightboxDl').style.display = '';
+  lightboxCurrentUrl = url;
   lb.classList.add('open');
 }
-
-async function downloadHistoryItem(url){
-  await downloadImageFromUrl(url, 'wai-result.png');
-}
+async function downloadHistoryItem(url){ await downloadImageFromUrl(url, 'wai-result.png'); }
 
 function timeAgo(dateStr){
   if(!dateStr) return '';
@@ -1309,31 +1220,29 @@ function timeAgo(dateStr){
   const m = Math.floor(diff/60000);
   const h = Math.floor(m/60);
   const d = Math.floor(h/24);
-  if(d > 0) return d+'天前';
-  if(h > 0) return h+'小时前';
-  if(m > 0) return m+'分钟前';
-  return '刚刚';
+  if(d > 0) return d+'d ago';
+  if(h > 0) return h+'h ago';
+  if(m > 0) return m+'m ago';
+  return 'Just now';
 }
 
-// ===== STYLE PICKER =====
 function pick(el){
   document.querySelectorAll('.style-pill').forEach(p => p.classList.remove('on'));
   el.classList.add('on');
 }
 
-// ===== UPLOAD =====
 let uploadedImageBase64 = null;
 
 function handleFileChange(input){
   const file = input.files[0];
   if(!file) return;
-  if(file.size > 20*1024*1024){ alert('图片有点太大啦，要 20MB 以内才行哦'); return; }
+  if(file.size > 20*1024*1024){ alert('Image too large — please keep it under 20MB'); return; }
   const reader = new FileReader();
   reader.onload = function(e){
     uploadedImageBase64 = e.target.result;
     const uz = document.getElementById('uz');
-    uz.querySelector('h3').textContent = '已选择：' + file.name;
-    uz.querySelector('p').textContent = '点击可重新选择';
+    uz.querySelector('h3').textContent = 'Selected: ' + file.name;
+    uz.querySelector('p').textContent = 'Click to change';
     uz.style.borderColor = 'rgba(139,92,246,0.7)';
     document.getElementById('originalPreview').innerHTML =
       `<img src="${uploadedImageBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:0;">`;
@@ -1356,27 +1265,22 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 
-// ===== GENERATE =====
 let busy = false;
 
-function getDailyLimit(){
-  if(currentPlan === 'max') return Infinity;
-  if(currentPlan === 'pro') return PRO_DAILY;
-  return FREE_TOTAL;
-}
+function getDailyLimit(){ if(currentPlan==='max') return Infinity; if(currentPlan==='pro') return PRO_DAILY; return FREE_TOTAL; }
 function getUsedToday(){
-  const today = getBeijing4amTimestamp();
+  const today = getResetTimestamp();
   if(localStorage.getItem('waiFreeDay') !== today) return 0;
-  if(currentPlan === 'pro') return parseInt(localStorage.getItem('waiProUsed')||'0');
+  if(currentPlan==='pro') return parseInt(localStorage.getItem('waiProUsed')||'0');
   return FREE_TOTAL - parseInt(localStorage.getItem('waiFreeLeft')||FREE_TOTAL);
 }
 function incrementUsed(){
-  const today = getBeijing4amTimestamp();
-  if(currentPlan === 'pro'){
+  const today = getResetTimestamp();
+  if(currentPlan==='pro'){
     const used = parseInt(localStorage.getItem('waiProUsed')||'0');
     localStorage.setItem('waiProUsed', used+1);
     localStorage.setItem('waiFreeDay', today);
-  } else if(currentPlan === 'free'){
+  } else if(currentPlan==='free'){
     freeLeft = Math.max(0, freeLeft-1);
     localStorage.setItem('waiFreeLeft', freeLeft);
     localStorage.setItem('waiFreeDay', today);
@@ -1386,13 +1290,13 @@ function incrementUsed(){
 
 async function handleGen(){
   if(busy) return;
-  if(!uploadedImageBase64){ alert('还没有上传照片哦！先把照片丢进来嘛 (｀・ω・´)'); return; }
+  if(!uploadedImageBase64){ alert('Please upload a photo first!'); return; }
   if(currentPlan !== 'max'){
     const limit = getDailyLimit();
     const used = getUsedToday();
     if(used >= limit){
-      if(currentPlan === 'pro') alert('今天 10 张变身券全烧完啦 (´;ω;`) 凌晨 4 点刷新，或者升级 Max 无限造 ✦');
-      else alert('今天的配额烧完啦！每天凌晨 4:00（北京时间）刷新 (≧▽≦) 或者升级 Pro ～ ✦');
+      if(currentPlan==='pro') alert("You've used all 10 transforms for today. Resets at midnight UTC+8, or upgrade to Max for unlimited ✦");
+      else alert("You've used all 3 free transforms today. Come back tomorrow, or upgrade for more ✦");
       return;
     }
   }
@@ -1406,10 +1310,10 @@ async function handleGen(){
   btn.disabled = true;
 
   const selectedPill = document.querySelector('.style-pill.on');
-  const styleKey = selectedPill ? selectedPill.dataset.style : '🌿 吉卜力风';
+  const styleKey = selectedPill ? selectedPill.dataset.style : '🌿 Ghibli';
 
   let d = 0;
-  const iv = setInterval(() => { d=(d+1)%4; btn.textContent='⏳ AI 正在变身中'+'.'.repeat(d); }, 400);
+  const iv = setInterval(() => { d=(d+1)%4; btn.textContent='⏳ AI is transforming'+'.'.repeat(d); }, 400);
   btn.classList.add('breathing');
 
   let startData;
@@ -1420,7 +1324,7 @@ async function handleGen(){
       body: JSON.stringify({ imageBase64: uploadedImageBase64, style: styleKey, userId: currentUser?.id || getOrCreateUserId() }),
     });
     startData = await startRes.json();
-    if(!startData.predictionId) throw new Error(startData.error || '启动失败');
+    if(!startData.predictionId) throw new Error(startData.error || 'Failed to start');
 
     let imageUrl = null;
     for(let i = 0; i < 40; i++){
@@ -1428,13 +1332,13 @@ async function handleGen(){
       const pollRes = await fetch(`/api/status?id=${startData.predictionId}&tmpFile=${encodeURIComponent(startData.tmpFile||'')}&plan=${currentPlan}`);
       const pollData = await pollRes.json();
       if(pollData.status === 'succeeded'){ imageUrl = pollData.imageUrl; break; }
-      else if(pollData.status === 'failed') throw new Error(pollData.error || '生成失败');
+      else if(pollData.status === 'failed') throw new Error(pollData.error || 'Generation failed');
     }
-    if(!imageUrl) throw new Error('生成超时，请重试');
+    if(!imageUrl) throw new Error('Timed out — please try again');
 
     clearInterval(iv);
     btn.classList.remove('breathing');
-    btn.textContent = '✓ 变身完成！点击重新生成';
+    btn.textContent = '✓ Done! Click to transform again';
     btn.style.opacity = '1';
     btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
     btn.style.boxShadow = '0 8px 28px rgba(5,150,105,0.3)';
@@ -1464,24 +1368,23 @@ async function handleGen(){
   } catch(err){
     clearInterval(iv);
     btn.classList.remove('breathing');
-    btn.textContent = '✦ 一键变身';
+    btn.textContent = '✦ Transform Now';
     btn.style.opacity = '1'; btn.style.background = ''; btn.style.boxShadow = '';
     btn.disabled = false;
 
     const reached = startData && startData.predictionId;
     if(!reached){
-      if(currentPlan === 'free'){ freeLeft = Math.min(FREE_TOTAL, freeLeft+1); localStorage.setItem('waiFreeLeft', freeLeft); }
-      else if(currentPlan === 'pro'){ const u=parseInt(localStorage.getItem('waiProUsed')||'1'); localStorage.setItem('waiProUsed', Math.max(0,u-1)); }
+      if(currentPlan==='free'){ freeLeft = Math.min(FREE_TOTAL, freeLeft+1); localStorage.setItem('waiFreeLeft', freeLeft); }
+      else if(currentPlan==='pro'){ const u=parseInt(localStorage.getItem('waiProUsed')||'1'); localStorage.setItem('waiProUsed', Math.max(0,u-1)); }
       renderFreeCount();
-      alert('网络出了点问题，次数已退回，请重试 (｀・ω・´)');
+      alert('Network error — your credit has been refunded. Please try again.');
     } else {
-      alert('这次变身没成功 (´•ω•`) 可能是照片角度问题，换张正脸照片试试');
+      alert('Transform failed — try a clearer front-facing photo and try again.');
     }
   }
   busy = false;
 }
 
-// ===== COMPARISON SLIDER =====
 (function(){
   const wrapper = document.getElementById('compWrapper');
   const clip = document.getElementById('compClip');
@@ -1496,10 +1399,7 @@ async function handleGen(){
     handle.style.left = (pct*100)+'%';
     afterInner.style.width = rect.width+'px';
   }
-  function syncWidth(){
-    const rect = wrapper.getBoundingClientRect();
-    afterInner.style.width = rect.width+'px';
-  }
+  function syncWidth(){ afterInner.style.width = wrapper.getBoundingClientRect().width+'px'; }
   wrapper.addEventListener('mousedown', e => { dragging=true; setPos(e.clientX); });
   window.addEventListener('mousemove', e => { if(dragging) setPos(e.clientX); });
   window.addEventListener('mouseup', () => { dragging=false; });
@@ -1510,7 +1410,6 @@ async function handleGen(){
   setTimeout(syncWidth, 100);
 })();
 
-// ===== STAR RATING =====
 let currentRating = 0;
 function buildStars(){
   const container = document.getElementById('starRating');
@@ -1558,17 +1457,16 @@ function updateStarDisplay(val){
 function setRating(val){ currentRating = val; updateStarDisplay(val); }
 buildStars();
 
-// ===== FEEDBACK =====
 const seedFeedback = [
-  {name:'柠檬茶不加糖', plan:null, text:'希望能加个批量上传功能，一次传多张就好了！', tag:'idea', time:'2分钟前', stars:4.5},
-  {name:'匿名用户', plan:null, text:'像素风有时候脸会有点模糊，其他几个风格都很好', tag:'bug', time:'18分钟前', stars:3.5},
-  {name:'Aki_design', plan:'PRO', text:'黏土风真的太可爱了，已经给全家人都做了一遍哈哈', tag:'praise', time:'1小时前', stars:5},
-  {name:'夜风', plan:'MAX', text:'能不能支持全身照？现在只能用脸部特写，想要全身变身效果', tag:'idea', time:'3小时前', stars:4},
+  {name:'LemonTea', plan:null, text:'Would love a batch upload feature — upload multiple photos at once!', tag:'idea', time:'2m ago', stars:4.5},
+  {name:'Anonymous', plan:null, text:'Pixel Art style can get a bit blurry sometimes, but the other styles look great', tag:'bug', time:'18m ago', stars:3.5},
+  {name:'Aki_design', plan:'PRO', text:'Clay style is SO cute, I made one for everyone in my family haha', tag:'praise', time:'1h ago', stars:5},
+  {name:'NightWind', plan:'MAX', text:'Can you support full-body photos? Right now it works best with close-up face shots', tag:'idea', time:'3h ago', stars:4},
 ];
 const tagMap = {
-  bug:{label:'Bug 反馈',cls:'tag-bug'},
-  idea:{label:'功能建议',cls:'tag-idea'},
-  praise:{label:'好评',cls:'tag-praise'}
+  bug:{label:'Bug Report',cls:'tag-bug'},
+  idea:{label:'Feature Idea',cls:'tag-idea'},
+  praise:{label:'Praise',cls:'tag-praise'}
 };
 
 function starsToHTML(val){
@@ -1588,12 +1486,12 @@ function renderFeedback(list){
     <div class="fb-item">
       <div class="fb-item-header">
         <span class="fb-item-name">
-          ${f.name||'匿名用户'}
+          ${f.name||'Anonymous'}
           ${f.plan ? `<span class="fb-item-plan">${f.plan}</span>` : ''}
         </span>
         <span class="fb-item-time">${f.time}</span>
       </div>
-      ${f.stars ? `<div class="fb-item-stars">${starsToHTML(f.stars)} <span style="font-size:11px;color:var(--text-faint);vertical-align:middle;margin-left:2px">${f.stars}分</span></div>` : ''}
+      ${f.stars ? `<div class="fb-item-stars">${starsToHTML(f.stars)} <span style="font-size:11px;color:var(--text-faint);vertical-align:middle;margin-left:2px">${f.stars} stars</span></div>` : ''}
       <div class="fb-item-text">${f.text}</div>
       <span class="fb-item-tag ${tagMap[f.tag].cls}">${tagMap[f.tag].label}</span>
     </div>
@@ -1624,8 +1522,8 @@ function renderFeedbackUI(){
 }
 
 function guessTag(text){
-  if(/bug|问题|崩|错误|变形|奇怪|卡|慢/i.test(text)) return 'bug';
-  if(/希望|建议|能不能|加个|支持|功能/i.test(text)) return 'idea';
+  if(/bug|issue|broken|error|weird|slow|crash/i.test(text)) return 'bug';
+  if(/wish|suggest|feature|add|support|could you/i.test(text)) return 'idea';
   return 'praise';
 }
 
@@ -1637,8 +1535,8 @@ function submitFeedback(){
   if(!text) return;
   const plan = currentPlan !== 'free' ? currentPlan.toUpperCase() : null;
   feedbacks = [{
-    name: nameEl.value.trim() || (currentUser.email?.split('@')[0] || '用户'),
-    plan, text, tag: guessTag(text), time: '刚刚', stars: currentRating || null
+    name: nameEl.value.trim() || (currentUser.email?.split('@')[0] || 'User'),
+    plan, text, tag: guessTag(text), time: 'Just now', stars: currentRating || null
   }, ...feedbacks];
   renderFeedback(feedbacks);
   nameEl.value = ''; textEl.value = '';
@@ -1646,7 +1544,6 @@ function submitFeedback(){
   document.getElementById('fbList').scrollTop = 0;
 }
 
-// ===== AUTH =====
 let currentUser = null;
 let currentPlan = 'free';
 let currentPeriodEnd = null;
@@ -1699,13 +1596,13 @@ async function refreshUserPlan(){
 function renderNavAuth(){
   const nav = document.getElementById('navAuth');
   if(!currentUser){
-    nav.innerHTML = `<button class="nav-btn" onclick="openAuthModal()">登录 / 注册</button>`;
+    nav.innerHTML = `<button class="nav-btn" onclick="openAuthModal()">Sign In / Sign Up</button>`;
   } else {
     const email = currentUser.email || '';
     const short = email.length > 14 ? email.slice(0,14)+'…' : email;
-    const upgradeBtn = currentPlan !== 'max' ? `<button class="nav-upgrade" onclick="openUpgradeModal()">✦ 升级</button>` : '';
+    const upgradeBtn = currentPlan !== 'max' ? `<button class="nav-upgrade" onclick="openUpgradeModal()">✦ Upgrade</button>` : '';
     const badge = currentPlan !== 'free' ? `<span class="nav-plan-badge" onclick="openUpgradeModal()">${currentPlan.toUpperCase()}</span>` : '';
-    nav.innerHTML = `${upgradeBtn}${badge}<span class="nav-user">${short}</span><button class="nav-logout" onclick="handleLogout()">退出</button>`;
+    nav.innerHTML = `${upgradeBtn}${badge}<span class="nav-user">${short}</span><button class="nav-logout" onclick="handleLogout()">Sign Out</button>`;
   }
 }
 
@@ -1716,12 +1613,12 @@ function renderPricingByPlan(){
   const badgeEl = document.getElementById('memberBadgeText');
   if(badgeEl) badgeEl.textContent = currentPlan.toUpperCase();
   const descEl = document.getElementById('memberBannerDesc');
-  if(descEl) descEl.textContent = currentPlan==='max' ? '变身券无限张，随便造 ✦' : '变身券每天 10 张，享受无水印 ✦';
+  if(descEl) descEl.textContent = currentPlan==='max' ? 'Unlimited transforms ✦' : '10 transforms per day, no watermark ✦';
   const expEl = document.getElementById('memberExpire');
   if(expEl && currentPeriodEnd){
     const end = new Date(currentPeriodEnd);
     const days = Math.ceil((end-new Date())/(1000*60*60*24));
-    expEl.textContent = `· 到期 ${end.getFullYear()}-${String(end.getMonth()+1).padStart(2,'0')}-${String(end.getDate()).padStart(2,'0')}（剩 ${days} 天）`;
+    expEl.textContent = `· Expires ${end.getFullYear()}-${String(end.getMonth()+1).padStart(2,'0')}-${String(end.getDate()).padStart(2,'0')} (${days} days left)`;
   }
 }
 
@@ -1730,7 +1627,7 @@ function openAuthModal(){
   document.getElementById('modalAuth').classList.add('open');
   document.getElementById('authMsg').textContent = '';
   document.getElementById('authSubmitBtn').disabled = false;
-  document.getElementById('authSubmitBtn').textContent = authMode==='login'?'登录':'注册';
+  document.getElementById('authSubmitBtn').textContent = authMode==='login'?'Sign In':'Sign Up';
 }
 function closeAuthModal(){ document.getElementById('modalAuth').classList.remove('open'); }
 
@@ -1738,8 +1635,8 @@ function switchAuthTab(mode){
   authMode = mode;
   document.getElementById('tabLogin').classList.toggle('on', mode==='login');
   document.getElementById('tabSignup').classList.toggle('on', mode==='signup');
-  document.getElementById('authSubmitBtn').textContent = mode==='login'?'登录':'注册';
-  document.getElementById('authModalTitle').textContent = mode==='login'?'👋 欢迎回来':'✨ 创建账号';
+  document.getElementById('authSubmitBtn').textContent = mode==='login'?'Sign In':'Sign Up';
+  document.getElementById('authModalTitle').textContent = mode==='login'?'👋 Welcome Back':'✨ Create Account';
   document.getElementById('authMsg').textContent = '';
 }
 
@@ -1751,25 +1648,29 @@ async function handleAuth(){
   const password = document.getElementById('authPassword').value;
   const btn = document.getElementById('authSubmitBtn');
   const msg = document.getElementById('authMsg');
-  if(!email || !password){ msg.textContent='邮箱和密码都要填哦！'; _authInProgress=false; return; }
-  if(password.length < 6){ msg.textContent='密码至少要 6 位哦'; _authInProgress=false; return; }
-  btn.disabled=true; btn.textContent='处理中...'; msg.textContent='';
+  if(!email || !password){ msg.textContent='Please enter your email and password'; _authInProgress=false; return; }
+  if(password.length < 6){ msg.textContent='Password must be at least 6 characters'; _authInProgress=false; return; }
+  btn.disabled=true; btn.textContent='Processing...'; msg.textContent='';
   try {
     const result = authMode==='login'
       ? await _supabase.auth.signInWithPassword({email, password})
       : await _supabase.auth.signUp({email, password});
     if(result.error){
-      const errMap={'Invalid login credentials':'邮箱或密码不对哦，再想想？','User already registered':'这个邮箱已经注册啦！快去登录吧','Email not confirmed':'先去邮箱点一下确认链接哦 ✉️'};
+      const errMap={
+        'Invalid login credentials':'Incorrect email or password',
+        'User already registered':'This email is already registered — please sign in',
+        'Email not confirmed':'Please confirm your email first ✉️'
+      };
       msg.textContent = errMap[result.error.message] || result.error.message;
-      btn.disabled=false; btn.textContent=authMode==='login'?'登录':'注册';
+      btn.disabled=false; btn.textContent=authMode==='login'?'Sign In':'Sign Up';
     } else if(authMode==='signup' && !result.data.session){
       msg.className='auth-msg ok';
-      msg.textContent='📬 注册成功！去邮箱点一下确认链接，马上就能变身啦～';
-      btn.disabled=false; btn.textContent='注册';
+      msg.textContent='Account created! Check your email to confirm, then sign in.';
+      btn.disabled=false; btn.textContent='Sign Up';
     }
   } catch(e){
-    msg.textContent='网络错误，请稍后重试';
-    btn.disabled=false; btn.textContent=authMode==='login'?'登录':'注册';
+    msg.textContent='Network error — please try again';
+    btn.disabled=false; btn.textContent=authMode==='login'?'Sign In':'Sign Up';
   } finally { _authInProgress=false; }
 }
 
@@ -1782,14 +1683,10 @@ async function handleLogout(){
   renderNavAuth(); renderPricingByPlan(); renderFreeCount(); renderFeedbackUI();
 }
 
-// ===== UPGRADE =====
 let upgradeMaxAmount = 2900;
 let upgradeMaxInterval = 'month';
 
-function openUpgradeModal(){
-  renderUpgradeModal();
-  document.getElementById('modalUpgrade').classList.add('open');
-}
+function openUpgradeModal(){ renderUpgradeModal(); document.getElementById('modalUpgrade').classList.add('open'); }
 function closeUpgradeModal(){ document.getElementById('modalUpgrade').classList.remove('open'); }
 
 function switchUpgradeMax(el, price, period, amount, interval){
@@ -1804,16 +1701,16 @@ function renderUpgradeModal(){
   const maxBtn = document.getElementById('upgradeMaxBtnBottom');
   const status = document.getElementById('upgradeSubStatus');
   const btnRow = document.getElementById('upgradeBtnRow');
-  proBtn.disabled=false; proBtn.textContent='解锁 Pro ✦';
-  maxBtn.disabled=false; maxBtn.textContent='解锁 Max ✦';
+  proBtn.disabled=false; proBtn.textContent='Get Pro ✦';
+  maxBtn.disabled=false; maxBtn.textContent='Get Max ✦';
   status.style.display='none'; btnRow.style.display='grid';
   if(currentPlan==='pro'){
-    proBtn.disabled=true; proBtn.textContent='已是 Pro 啦 ✦';
-    status.style.display='block'; status.textContent='你已经是 Pro 用户了，可以升级到 Max 解锁无限变身 ✦';
+    proBtn.disabled=true; proBtn.textContent='Already on Pro ✦';
+    status.style.display='block'; status.textContent='You are on Pro — upgrade to Max for unlimited transforms ✦';
   } else if(currentPlan==='max'){
-    proBtn.disabled=true; proBtn.textContent='已包含 ✦';
-    maxBtn.textContent='切换周期 / 续费 ✦';
-    status.style.display='block'; status.textContent='✦ 你已是 Max 传奇玩家！可选更长周期续费省更多～';
+    proBtn.disabled=true; proBtn.textContent='Included ✦';
+    maxBtn.textContent='Add More Time ✦';
+    status.style.display='block'; status.textContent='✦ You are on Max — pick a longer period to extend your access!';
   }
 }
 
@@ -1821,7 +1718,7 @@ async function handleSubscribeFromModal(plan){
   if(!currentUser){ closeUpgradeModal(); openAuthModal(); return; }
   const btn = plan==='pro' ? document.getElementById('upgradeProBtnBottom') : document.getElementById('upgradeMaxBtnBottom');
   const orig = btn.textContent;
-  btn.disabled=true; btn.textContent='跳转中...';
+  btn.disabled=true; btn.textContent='Redirecting...';
   try {
     const res = await fetch('/api/create-checkout',{
       method:'POST', headers:{'Content-Type':'application/json'},
@@ -1829,8 +1726,8 @@ async function handleSubscribeFromModal(plan){
     });
     const data = await res.json();
     if(data.url) window.location.href = data.url;
-    else{ alert('出错了：'+(data.error||'请稍后重试')); btn.disabled=false; btn.textContent=orig; }
-  } catch(e){ alert('网络错误，请稍后重试'); btn.disabled=false; btn.textContent=orig; }
+    else{ alert('Error: '+(data.error||'Please try again')); btn.disabled=false; btn.textContent=orig; }
+  } catch(e){ alert('Network error — please try again'); btn.disabled=false; btn.textContent=orig; }
 }
 
 function checkPaymentResult(){
@@ -1839,9 +1736,9 @@ function checkPaymentResult(){
     setTimeout(async () => {
       await refreshUserPlan();
       renderNavAuth(); renderPricingByPlan(); renderFreeCount();
-      alert('🎉 订阅成功！权益已激活，快去变身吧～ (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧');
+      alert('🎉 Payment successful! Your plan is now active — go transform! (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧');
     }, 1500);
-    window.history.replaceState({},'',' /');
+    window.history.replaceState({},'','/');
   } else if(params.get('payment')==='cancel'){
     window.history.replaceState({},'','/');
   }
@@ -1851,12 +1748,11 @@ window.addEventListener('pageshow', e => {
   if(e.persisted){
     const proBtn=document.getElementById('upgradeProBtnBottom');
     const maxBtn=document.getElementById('upgradeMaxBtnBottom');
-    if(proBtn && !proBtn.textContent.includes('已')){ proBtn.disabled=false; proBtn.textContent='解锁 Pro ✦'; }
-    if(maxBtn && !maxBtn.textContent.includes('已')){ maxBtn.disabled=false; maxBtn.textContent='解锁 Max ✦'; }
+    if(proBtn && !proBtn.textContent.includes('Already')){ proBtn.disabled=false; proBtn.textContent='Get Pro ✦'; }
+    if(maxBtn && !maxBtn.textContent.includes('Included')){ maxBtn.disabled=false; maxBtn.textContent='Get Max ✦'; }
   }
 });
 
-// ===== MODALS =====
 function openModal(type){ document.getElementById('modal'+type.charAt(0).toUpperCase()+type.slice(1)).classList.add('open'); }
 function closeModal(type){ document.getElementById('modal'+type.charAt(0).toUpperCase()+type.slice(1)).classList.remove('open'); }
 document.addEventListener('keydown', e => {
@@ -1867,7 +1763,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ===== INIT =====
 initAuth().then(() => {
   setTimeout(() => {
     renderNavAuth(); renderPricingByPlan(); renderFreeCount(); renderFeedbackUI();
