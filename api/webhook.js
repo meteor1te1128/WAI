@@ -12,7 +12,6 @@ function getRawBody(req) {
 }
 
 async function verifySignature(rawBody, sigHeader, secret) {
-  // 解析 Stripe 签名头: t=timestamp,v1=signature
   const parts = {};
   sigHeader.split(',').forEach(item => {
     const [key, value] = item.split('=');
@@ -24,10 +23,8 @@ async function verifySignature(rawBody, sigHeader, secret) {
     return false;
   }
 
-  // 构造签名负载
   const signedPayload = `${parts.t}.${rawBody.toString()}`;
 
-  // 用 HMAC-SHA256 计算期望签名
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
     'raw',
@@ -50,8 +47,8 @@ async function verifySignature(rawBody, sigHeader, secret) {
   return isValid;
 }
 
-async function upsertSubscription(data, extendMonths = 0) {
-  console.log('Upserting to Supabase:', JSON.stringify(data), 'extendMonths:', extendMonths);
+async function upsertSubscription(data) {
+  console.log('Upserting to Supabase:', JSON.stringify(data));
   const baseUrl = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_KEY;
   const headers = {
@@ -61,29 +58,14 @@ async function upsertSubscription(data, extendMonths = 0) {
   };
 
   try {
-    // 先查是否已有该用户的订阅记录
     const checkRes = await fetch(
-      `${baseUrl}/rest/v1/subscriptions?user_id=eq.${data.user_id}&select=id,current_period_end,plan&limit=1`,
+      `${baseUrl}/rest/v1/subscriptions?user_id=eq.${data.user_id}&select=id&limit=1`,
       { headers }
     );
     const existing = await checkRes.json();
     console.log('Existing records:', JSON.stringify(existing));
 
     if (Array.isArray(existing) && existing.length > 0) {
-      // 已有记录 → 计算新的到期时间
-      let newEnd = data.current_period_end;
-
-      if (extendMonths > 0) {
-        // 叠加模式：在当前到期时间基础上加月份
-        const currentEnd = existing[0].current_period_end;
-        const base = (currentEnd && new Date(currentEnd) > new Date())
-          ? new Date(currentEnd)  // 还没到期，在到期时间基础上延长
-          : new Date();           // 已过期，从现在开始算
-        base.setMonth(base.getMonth() + extendMonths);
-        newEnd = base.toISOString();
-        console.log('Extended period end to:', newEnd);
-      }
-
       console.log('Updating existing record for user:', data.user_id);
       const updateRes = await fetch(
         `${baseUrl}/rest/v1/subscriptions?user_id=eq.${data.user_id}`,
@@ -95,7 +77,7 @@ async function upsertSubscription(data, extendMonths = 0) {
             status: data.status,
             stripe_customer_id: data.stripe_customer_id,
             stripe_subscription_id: data.stripe_subscription_id,
-            current_period_end: newEnd,
+            current_period_end: data.current_period_end,
           }),
         }
       );
@@ -105,7 +87,6 @@ async function upsertSubscription(data, extendMonths = 0) {
         console.log('Supabase PATCH success');
       }
     } else {
-      // 没有记录 → POST 插入
       console.log('Inserting new record for user:', data.user_id);
       const insertRes = await fetch(
         `${baseUrl}/rest/v1/subscriptions`,
@@ -158,7 +139,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'No signature' });
   }
 
-  // 验证签名
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!webhookSecret) {
     console.error('STRIPE_WEBHOOK_SECRET not set!');
@@ -178,6 +158,7 @@ export default async function handler(req, res) {
 
   try {
     switch (event.type) {
+
       case 'checkout.session.completed': {
         const session = event.data.object;
         console.log('Session metadata:', JSON.stringify(session.metadata));
@@ -192,39 +173,38 @@ export default async function handler(req, res) {
           console.error('No supabase_user_id in metadata!');
           break;
         }
-        if (!session.subscription) {
-          console.error('No subscription ID in session!');
-          break;
-        }
 
-        const subscription = await getStripeSubscription(session.subscription);
-        if (!subscription) break;
-
-        // 根据 interval 计算叠加月数
         const intervalToMonths = { month: 1, quarter: 3, halfyear: 6, year: 12 };
         const extendMonths = intervalToMonths[interval] || 1;
 
-        // current_period_end 可能为 null，用叠加月数作为默认值
-        const periodEnd = subscription.current_period_end
-          ? new Date(subscription.current_period_end * 1000).toISOString()
-          : new Date(Date.now() + extendMonths * 30 * 24 * 60 * 60 * 1000).toISOString();
+        let periodEnd;
+        if (session.subscription) {
+          const subscription = await getStripeSubscription(session.subscription);
+          periodEnd = subscription?.current_period_end
+            ? new Date(subscription.current_period_end * 1000).toISOString()
+            : new Date(Date.now() + extendMonths * 30 * 24 * 60 * 60 * 1000).toISOString();
+        } else {
+          console.log('subscription not yet attached, using fallback period end');
+          periodEnd = new Date(Date.now() + extendMonths * 30 * 24 * 60 * 60 * 1000).toISOString();
+        }
 
         await upsertSubscription({
           user_id: userId,
           plan,
           status: 'active',
           stripe_customer_id: session.customer,
-          stripe_subscription_id: session.subscription,
+          stripe_subscription_id: session.subscription || null,
           current_period_end: periodEnd,
-        }, extendMonths);
-        console.log(`✅ ${plan} 订阅激活 (${interval}, +${extendMonths}月)：user ${userId}`);
+        });
+        console.log(`✅ ${plan} 订阅激活 (${interval})：user ${userId}`);
         break;
       }
 
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object;
-        if (invoice.billing_reason !== 'subscription_cycle') {
-          console.log('Skipping non-cycle invoice');
+
+        if (!['subscription_create', 'subscription_cycle'].includes(invoice.billing_reason)) {
+          console.log('Skipping invoice, billing_reason:', invoice.billing_reason);
           break;
         }
 
@@ -244,9 +224,11 @@ export default async function handler(req, res) {
           status: 'active',
           stripe_customer_id: invoice.customer,
           stripe_subscription_id: invoice.subscription,
-          current_period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : new Date(Date.now() + 30*24*60*60*1000).toISOString(),
+          current_period_end: subscription.current_period_end
+            ? new Date(subscription.current_period_end * 1000).toISOString()
+            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
         });
-        console.log(`🔄 续费成功：user ${userId}`);
+        console.log(`🔄 ${invoice.billing_reason === 'subscription_create' ? '首次付款' : '续费'}成功：user ${userId}`);
         break;
       }
 
@@ -264,7 +246,9 @@ export default async function handler(req, res) {
           status: 'past_due',
           stripe_customer_id: invoice.customer,
           stripe_subscription_id: invoice.subscription,
-          current_period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : new Date(Date.now() + 30*24*60*60*1000).toISOString(),
+          current_period_end: subscription.current_period_end
+            ? new Date(subscription.current_period_end * 1000).toISOString()
+            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
         });
         console.log(`⚠️ 付款失败：user ${userId}`);
         break;
@@ -281,7 +265,9 @@ export default async function handler(req, res) {
           status: 'cancelled',
           stripe_customer_id: subscription.customer,
           stripe_subscription_id: subscription.id,
-          current_period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : new Date(Date.now() + 30*24*60*60*1000).toISOString(),
+          current_period_end: subscription.current_period_end
+            ? new Date(subscription.current_period_end * 1000).toISOString()
+            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
         });
         console.log(`❌ 订阅取消：user ${userId}`);
         break;
