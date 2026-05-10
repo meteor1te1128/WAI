@@ -37,10 +37,10 @@ export default async function handler(req, res) {
       prompt: 'Japanese anime portrait, big bright expressive eyes, clean sharp lineart, vibrant cel shading, professional manga illustration, dramatic lighting, detailed hair',
       negative_prompt: 'realistic, photo, 3d, ugly, blurry, bad anatomy, nsfw, western cartoon',
     },
-    '🎨 漫画风': {
-      style: 'Graphic Novel',
-      prompt: 'Japanese manga portrait, clean bold ink outlines, bright cheerful colors, soft cel shading, white or light pastel background, cute shoujo manga style, clear bright lighting, vibrant and colorful illustration',
-      negative_prompt: 'realistic, photo, ugly, blurry, bad anatomy, nsfw, dark background, black background, gloomy, horror, western comic, dark shadows, low key lighting',
+    '🎨 皮克斯风': {
+      style: 'Anime',
+      prompt: 'Pixar 3D animation style portrait, high quality Disney Pixar movie character, smooth glossy skin, big expressive eyes, soft studio lighting, vivid cheerful colors, detailed hair, clean bright background, cinematic 3D render, cute and charming face',
+      negative_prompt: 'realistic, photo, 2d, flat, ugly, blurry, bad anatomy, nsfw, dark, horror, sketch, painting',
     },
     '🖼️ 油画风': {
       style: 'Watercolor',
