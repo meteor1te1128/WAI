@@ -1091,9 +1091,17 @@ async function handleGen(){
   btn.disabled = true;
 
   const selectedPill = document.querySelector('.style-pill.on');
-  const styleText = selectedPill ? selectedPill.textContent.trim() : '🌿 吉卜力风';
-  // 把 emoji 开头的 pill 文字转成 generate.js styleMap 的 key
-  const styleKey = selectedPill ? selectedPill.textContent.trim() : '🌿 吉卜力风';
+  const pillText = selectedPill ? selectedPill.textContent.trim() : '';
+  // pill 的 textContent 是 "🌿吉卜力风"（无空格），要映射到 generate.js 的 key
+  const pillStyleMap = {
+    '🌿吉卜力风': '🌿 吉卜力风',
+    '🧸黏土风':   '🧸 黏土风',
+    '👾像素风':   '👾 像素风',
+    '✨动漫风':   '✨ 动漫风',
+    '🎨漫画风':   '🎨 漫画风',
+    '🖼️油画风':  '🖼️ 油画风',
+  };
+  const styleKey = pillStyleMap[pillText] || '🌿 吉卜力风';
 
   let d = 0;
   const iv = setInterval(() => { d=(d+1)%4; btn.textContent='⏳ AI 正在变身中'+'.'.repeat(d); }, 400);
