@@ -190,7 +190,7 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 
 /* EXAMPLES */
 .examples-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.ex-card{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 16px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;}
+.ex-card{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--white-card);box-shadow:0 4px 16px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;position:relative;}
 .ex-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(139,92,246,0.15);}
 .ex-before-after{display:grid;grid-template-columns:1fr 1fr;}
 .ex-half{height:110px;display:flex;align-items:center;justify-content:center;font-size:28px;}
@@ -210,6 +210,31 @@ h1{font-size:46px;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bo
 .ex-label{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--divider);}
 .ex-name{font-size:12px;font-weight:600;color:var(--text);}
 .ex-tag{font-size:10px;color:#8b5cf6;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);padding:3px 8px;border-radius:6px;font-weight:600;}
+.ex-card-hover-hint{position:absolute;inset:0;background:rgba(0,0,0,0);border-radius:16px;display:flex;align-items:center;justify-content:center;opacity:0;transition:all 0.2s;z-index:2;pointer-events:none;}
+.ex-card:hover .ex-card-hover-hint{background:rgba(0,0,0,0.28);opacity:1;}
+.ex-card-hover-hint span{background:rgba(255,255,255,0.15);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.3);color:#fff;font-size:12px;font-weight:700;padding:7px 16px;border-radius:20px;}
+
+/* EXAMPLE COMPARISON MODAL */
+.ex-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;backdrop-filter:blur(8px);}
+.ex-modal-overlay.open{opacity:1;pointer-events:all;}
+.ex-modal-box{background:var(--white-card);border-radius:24px;padding:24px;max-width:560px;width:100%;transform:translateY(12px);transition:transform 0.2s,background var(--transition);}
+.ex-modal-overlay.open .ex-modal-box{transform:translateY(0);}
+.ex-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.ex-modal-title{font-size:16px;font-weight:800;color:var(--text);}
+.ex-modal-close{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:transparent;cursor:pointer;color:var(--text-muted);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.ex-modal-close:hover{background:rgba(139,92,246,0.08);color:#8b5cf6;}
+.ex-slider-wrap{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--card-border);cursor:ew-resize;user-select:none;touch-action:pan-y;height:360px;}
+.ex-slider-before{position:absolute;inset:0;z-index:1;}
+.ex-slider-before img{width:100%;height:100%;object-fit:cover;display:block;}
+.ex-slider-clip{position:absolute;top:0;left:0;height:100%;z-index:2;overflow:hidden;}
+.ex-slider-after-inner{height:100%;display:flex;}
+.ex-slider-after-inner img{height:100%;object-fit:cover;display:block;}
+.ex-slider-handle{position:absolute;top:0;height:100%;width:3px;background:linear-gradient(180deg,rgba(139,92,246,0.9),rgba(236,72,153,0.9));z-index:6;transform:translateX(-50%);cursor:ew-resize;}
+.ex-slider-circle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);border:2px solid rgba(255,255,255,0.7);box-shadow:0 4px 16px rgba(139,92,246,0.5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
+.ex-slider-label{position:absolute;bottom:12px;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;pointer-events:none;z-index:7;}
+.ex-slider-label.before{left:12px;background:rgba(0,0,0,0.4);color:#fff;}
+.ex-slider-label.after{right:12px;background:rgba(139,92,246,0.75);color:#fff;}
+.ex-modal-hint{text-align:center;font-size:12px;color:var(--text-faint);margin-top:12px;}
 
 /* REVIEWS */
 .reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -421,6 +446,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   .reviews-grid{grid-template-columns:1fr;}
   .pricing-grid{grid-template-columns:1fr;}
   footer{padding:28px 16px 24px;}
+  .ex-slider-wrap{height:260px;}
 }
 </style>
 </head>
@@ -527,6 +553,30 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
 </div>
 
+<!-- EXAMPLE COMPARISON MODAL -->
+<div class="ex-modal-overlay" id="exModal" onclick="if(event.target===this)closeExModal()">
+  <div class="ex-modal-box">
+    <div class="ex-modal-header">
+      <div class="ex-modal-title" id="exModalTitle">动漫风 对比</div>
+      <button class="ex-modal-close" onclick="closeExModal()">✕</button>
+    </div>
+    <div class="ex-slider-wrap" id="exSliderWrap">
+      <div class="ex-slider-before"><img id="exSliderBefore" src="" alt="原图"></div>
+      <div class="ex-slider-clip" id="exSliderClip" style="width:50%">
+        <div class="ex-slider-after-inner" id="exSliderAfterInner">
+          <img id="exSliderAfter" src="" alt="变身后">
+        </div>
+      </div>
+      <span class="ex-slider-label before">原始照片</span>
+      <span class="ex-slider-label after">变身版本</span>
+      <div class="ex-slider-handle" id="exSliderHandle" style="left:50%">
+        <div class="ex-slider-circle">◀▶</div>
+      </div>
+    </div>
+    <div class="ex-modal-hint">← 左右拖动对比变身效果 →</div>
+  </div>
+</div>
+
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
   <img class="lightbox-img" id="lightboxImg" src="" alt="">
@@ -571,16 +621,32 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
   </div>
 </div>
 
-<!-- EXAMPLES — 动漫风格子换成真实对比图 -->
+<!-- EXAMPLES -->
 <div class="section" id="examples">
   <div class="section-title">样例 <span class="grad">展示</span></div>
-  <div class="section-desc">真实用户丢进来的照片，AI 一键变身，效果都是真的</div>
+  <div class="section-desc">真实用户丢进来的照片，AI 一键变身，效果都是真的 · 点击卡片拖动对比</div>
   <div class="examples-grid">
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-ghibli">🌊</div></div><div class="ex-label"><span class="ex-name">吉卜力风</span><span class="ex-tag">最梦幻</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👨</div><div class="ex-half after-clay">🧸</div></div><div class="ex-label"><span class="ex-name">黏土风</span><span class="ex-tag">最火爆</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">🧑</div><div class="ex-half after-pixel">👾</div></div><div class="ex-label"><span class="ex-name">像素风</span><span class="ex-tag">复古</span></div></div>
-    <!-- ↓↓↓ 动漫风：换成真实对比图 ↓↓↓ -->
-    <div class="ex-card">
+
+    <div class="ex-card" onclick="openExModal('🌿 吉卜力风','','')">
+      <div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-ghibli">🌊</div></div>
+      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
+      <div class="ex-label"><span class="ex-name">吉卜力风</span><span class="ex-tag">最梦幻</span></div>
+    </div>
+
+    <div class="ex-card" onclick="openExModal('🧸 黏土风','','')">
+      <div class="ex-before-after"><div class="ex-half before">👨</div><div class="ex-half after-clay">🧸</div></div>
+      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
+      <div class="ex-label"><span class="ex-name">黏土风</span><span class="ex-tag">最火爆</span></div>
+    </div>
+
+    <div class="ex-card" onclick="openExModal('👾 像素风','','')">
+      <div class="ex-before-after"><div class="ex-half before">🧑</div><div class="ex-half after-pixel">👾</div></div>
+      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
+      <div class="ex-label"><span class="ex-name">像素风</span><span class="ex-tag">复古</span></div>
+    </div>
+
+    <!-- 动漫风：有真实对比图 -->
+    <div class="ex-card" onclick="openExModal('✨ 动漫风','/samples/anime-before.jpg','/samples/anime-after.png')">
       <div class="ex-before-after">
         <div class="ex-half before" style="padding:0;overflow:hidden;">
           <img src="/samples/anime-before.jpg" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
@@ -589,11 +655,22 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
           <img src="/samples/anime-after.png" style="width:100%;height:110px;object-fit:cover;object-position:top center;display:block;">
         </div>
       </div>
+      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
       <div class="ex-label"><span class="ex-name">动漫风</span><span class="ex-tag">超好看</span></div>
     </div>
-    <!-- ↑↑↑ 动漫风结束 ↑↑↑ -->
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👦</div><div class="ex-half after-cartoon">🎨</div></div><div class="ex-label"><span class="ex-name">漫画风</span><span class="ex-tag">有腔调</span></div></div>
-    <div class="ex-card"><div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-oil">🖼️</div></div><div class="ex-label"><span class="ex-name">油画风</span><span class="ex-tag">最惊艳</span></div></div>
+
+    <div class="ex-card" onclick="openExModal('🎨 漫画风','','')">
+      <div class="ex-before-after"><div class="ex-half before">👦</div><div class="ex-half after-cartoon">🎨</div></div>
+      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
+      <div class="ex-label"><span class="ex-name">漫画风</span><span class="ex-tag">有腔调</span></div>
+    </div>
+
+    <div class="ex-card" onclick="openExModal('🖼️ 油画风','','')">
+      <div class="ex-before-after"><div class="ex-half before">👩</div><div class="ex-half after-oil">🖼️</div></div>
+      <div class="ex-card-hover-hint"><span>🔍 拖动对比</span></div>
+      <div class="ex-label"><span class="ex-name">油画风</span><span class="ex-tag">最惊艳</span></div>
+    </div>
+
   </div>
 </div>
 
@@ -755,7 +832,6 @@ document.querySelectorAll('.h1-char').forEach(el => {
   const fadeR = document.getElementById('styleRowFade');
   const fadeL = document.getElementById('styleRowFadeLeft');
   if(!row) return;
-
   function checkScroll(){
     const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 4;
     const atStart = row.scrollLeft <= 4;
@@ -764,15 +840,11 @@ document.querySelectorAll('.h1-char').forEach(el => {
   }
   row.addEventListener('scroll', checkScroll, {passive:true});
   setTimeout(checkScroll, 300);
-
   window.styleRowScroll = function(dir){
     const step = 140;
     const maxScroll = row.scrollWidth - row.clientWidth;
-    if(dir < 0){
-      row.scrollTo({left: Math.max(0, row.scrollLeft - step), behavior:'smooth'});
-    } else {
-      row.scrollTo({left: Math.min(maxScroll, row.scrollLeft + step), behavior:'smooth'});
-    }
+    if(dir < 0) row.scrollTo({left: Math.max(0, row.scrollLeft - step), behavior:'smooth'});
+    else row.scrollTo({left: Math.min(maxScroll, row.scrollLeft + step), behavior:'smooth'});
     setTimeout(checkScroll, 350);
   };
 })();
@@ -824,7 +896,6 @@ function renderFreeCount(){
   const dotsEl = document.getElementById('freeCountDots');
   const textEl = document.getElementById('freeCountText');
   dotsEl.innerHTML = '';
-
   if(currentPlan === 'max'){
     textEl.textContent = '∞ 变身券无限，想造多少造多少 ✦';
     textEl.style.color = '#8b5cf6';
@@ -836,11 +907,8 @@ function renderFreeCount(){
     const used = parseInt(localStorage.getItem('waiProUsed')||'0');
     const left = Math.max(0, PRO_DAILY - used);
     textEl.style.color = '';
-    if(left <= 0){
-      textEl.textContent = '今天 10 张变身券用完啦，凌晨 4 点续杯 (´;ω;`)';
-    } else {
-      textEl.textContent = '变身券剩余：' + left + ' / 10 张';
-    }
+    if(left <= 0) textEl.textContent = '今天 10 张变身券用完啦，凌晨 4 点续杯 (´;ω;`)';
+    else textEl.textContent = '变身券剩余：' + left + ' / 10 张';
     return;
   }
   for(let i = 0; i < FREE_TOTAL; i++){
@@ -908,7 +976,54 @@ function openLightbox(type){
   lb.classList.add('open');
 }
 function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
-document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+
+// ===== EXAMPLE COMPARISON MODAL =====
+function openExModal(title, beforeSrc, afterSrc){
+  // 没有真实图片的风格暂时不弹出
+  if(!beforeSrc || !afterSrc){
+    return;
+  }
+  document.getElementById('exModalTitle').textContent = title + ' 对比';
+  document.getElementById('exSliderBefore').src = beforeSrc;
+  const afterImg = document.getElementById('exSliderAfter');
+  afterImg.src = afterSrc;
+  // 重置到50%
+  document.getElementById('exSliderClip').style.width = '50%';
+  document.getElementById('exSliderHandle').style.left = '50%';
+  document.getElementById('exModal').classList.add('open');
+  setTimeout(() => {
+    const wrap = document.getElementById('exSliderWrap');
+    document.getElementById('exSliderAfterInner').style.width = wrap.offsetWidth + 'px';
+  }, 50);
+}
+
+function closeExModal(){
+  document.getElementById('exModal').classList.remove('open');
+}
+
+(function(){
+  const wrap = document.getElementById('exSliderWrap');
+  const clip = document.getElementById('exSliderClip');
+  const handle = document.getElementById('exSliderHandle');
+  const afterInner = document.getElementById('exSliderAfterInner');
+  let dragging = false;
+
+  function setPos(clientX){
+    const rect = wrap.getBoundingClientRect();
+    let pct = (clientX - rect.left) / rect.width;
+    pct = Math.max(0.03, Math.min(0.97, pct));
+    clip.style.width = (pct * 100) + '%';
+    handle.style.left = (pct * 100) + '%';
+    afterInner.style.width = rect.width + 'px';
+  }
+
+  wrap.addEventListener('mousedown', e => { dragging = true; setPos(e.clientX); });
+  window.addEventListener('mousemove', e => { if(dragging) setPos(e.clientX); });
+  window.addEventListener('mouseup', () => { dragging = false; });
+  wrap.addEventListener('touchstart', e => { dragging = true; setPos(e.touches[0].clientX); }, {passive:true});
+  window.addEventListener('touchmove', e => { if(dragging) setPos(e.touches[0].clientX); }, {passive:true});
+  window.addEventListener('touchend', () => { dragging = false; });
+})();
 
 // ===== DOWNLOAD =====
 async function downloadImageFromUrl(url, filename){
@@ -920,15 +1035,11 @@ async function downloadImageFromUrl(url, filename){
     const fixedBlob = new Blob([blob], {type: mimeType});
     const blobUrl = URL.createObjectURL(fixedBlob);
     const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
+    a.href = blobUrl; a.download = filename;
+    document.body.appendChild(a); a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
-  } catch(e) {
-    window.open(url, '_blank');
-  }
+  } catch(e) { window.open(url, '_blank'); }
 }
 
 async function downloadAnime(){
@@ -982,10 +1093,8 @@ function previewHistoryItem(url, label){
   const img = document.getElementById('lightboxImg');
   const labelEl = document.getElementById('lightboxLabel');
   const dlBtn = document.getElementById('lightboxDl');
-  img.src = url;
-  labelEl.textContent = label;
-  dlBtn.style.display = '';
-  lightboxCurrentUrl = url;
+  img.src = url; labelEl.textContent = label;
+  dlBtn.style.display = ''; lightboxCurrentUrl = url;
   lb.classList.add('open');
 }
 
@@ -1244,10 +1353,7 @@ function updateStarDisplay(val){
   });
   document.getElementById('starValueDisplay').textContent = val ? val+'★' : '—';
 }
-function setRating(val){
-  currentRating = val;
-  updateStarDisplay(val);
-}
+function setRating(val){ currentRating = val; updateStarDisplay(val); }
 buildStars();
 
 // ===== FEEDBACK =====
@@ -1330,11 +1436,7 @@ function submitFeedback(){
   const plan = currentPlan !== 'free' ? currentPlan.toUpperCase() : null;
   feedbacks = [{
     name: nameEl.value.trim() || (currentUser.email?.split('@')[0] || '用户'),
-    plan,
-    text,
-    tag: guessTag(text),
-    time: '刚刚',
-    stars: currentRating || null
+    plan, text, tag: guessTag(text), time: '刚刚', stars: currentRating || null
   }, ...feedbacks];
   renderFeedback(feedbacks);
   nameEl.value = ''; textEl.value = '';
@@ -1556,7 +1658,11 @@ window.addEventListener('pageshow', e => {
 function openModal(type){ document.getElementById('modal'+type.charAt(0).toUpperCase()+type.slice(1)).classList.add('open'); }
 function closeModal(type){ document.getElementById('modal'+type.charAt(0).toUpperCase()+type.slice(1)).classList.remove('open'); }
 document.addEventListener('keydown', e => {
-  if(e.key==='Escape'){ closeModal('Tos'); closeModal('Privacy'); closeAuthModal(); closeUpgradeModal(); closeLightbox(); }
+  if(e.key==='Escape'){
+    closeModal('Tos'); closeModal('Privacy');
+    closeAuthModal(); closeUpgradeModal();
+    closeLightbox(); closeExModal();
+  }
 });
 
 // ===== INIT =====
