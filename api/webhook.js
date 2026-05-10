@@ -24,7 +24,6 @@ async function verifySignature(rawBody, sigHeader, secret) {
   }
 
   const signedPayload = `${parts.t}.${rawBody.toString()}`;
-
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
     'raw',
@@ -40,9 +39,7 @@ async function verifySignature(rawBody, sigHeader, secret) {
 
   const isValid = expected === parts.v1;
   if (!isValid) {
-    console.error('Signature mismatch!');
-    console.error('Expected:', expected);
-    console.error('Received:', parts.v1);
+    console.error('Signature mismatch! Expected:', expected, 'Received:', parts.v1);
   }
   return isValid;
 }
@@ -59,11 +56,23 @@ async function upsertSubscription(data) {
 
   try {
     const checkRes = await fetch(
-      `${baseUrl}/rest/v1/subscriptions?user_id=eq.${data.user_id}&select=id&limit=1`,
+      `${baseUrl}/rest/v1/subscriptions?user_id=eq.${data.user_id}&select=id,current_period_end&limit=1`,
       { headers }
     );
     const existing = await checkRes.json();
     console.log('Existing records:', JSON.stringify(existing));
+
+    // 叠加时间：如果已有未过期记录，在原到期时间基础上加；否则从现在开始算
+    let newPeriodEnd = data.current_period_end;
+    if (data.extend_months && Array.isArray(existing) && existing.length > 0) {
+      const currentEnd = existing[0].current_period_end;
+      const base = (currentEnd && new Date(currentEnd) > new Date())
+        ? new Date(currentEnd)
+        : new Date();
+      base.setMonth(base.getMonth() + data.extend_months);
+      newPeriodEnd = base.toISOString();
+      console.log('Extended period end to:', newPeriodEnd);
+    }
 
     if (Array.isArray(existing) && existing.length > 0) {
       console.log('Updating existing record for user:', data.user_id);
@@ -74,17 +83,17 @@ async function upsertSubscription(data) {
           headers,
           body: JSON.stringify({
             plan: data.plan,
-            status: data.status,
+            status: 'active',
             stripe_customer_id: data.stripe_customer_id,
-            stripe_subscription_id: data.stripe_subscription_id,
-            current_period_end: data.current_period_end,
+            stripe_subscription_id: null,
+            current_period_end: newPeriodEnd,
           }),
         }
       );
       if (!updateRes.ok) {
         console.error('Supabase PATCH failed:', updateRes.status, await updateRes.text());
       } else {
-        console.log('Supabase PATCH success');
+        console.log('Supabase PATCH success, new period end:', newPeriodEnd);
       }
     } else {
       console.log('Inserting new record for user:', data.user_id);
@@ -93,7 +102,14 @@ async function upsertSubscription(data) {
         {
           method: 'POST',
           headers,
-          body: JSON.stringify(data),
+          body: JSON.stringify({
+            user_id: data.user_id,
+            plan: data.plan,
+            status: 'active',
+            stripe_customer_id: data.stripe_customer_id,
+            stripe_subscription_id: null,
+            current_period_end: newPeriodEnd,
+          }),
         }
       );
       if (!insertRes.ok) {
@@ -105,17 +121,6 @@ async function upsertSubscription(data) {
   } catch (e) {
     console.error('upsertSubscription error:', e);
   }
-}
-
-async function getStripeSubscription(subscriptionId) {
-  const res = await fetch(`https://api.stripe.com/v1/subscriptions/${subscriptionId}`, {
-    headers: { 'Authorization': `Bearer ${process.env.STRIPE_SECRET_KEY}` },
-  });
-  if (!res.ok) {
-    console.error('Stripe fetch subscription failed:', res.status, await res.text());
-    return null;
-  }
-  return res.json();
 }
 
 export default async function handler(req, res) {
@@ -162,114 +167,36 @@ export default async function handler(req, res) {
       case 'checkout.session.completed': {
         const session = event.data.object;
         console.log('Session metadata:', JSON.stringify(session.metadata));
-        console.log('Session subscription:', session.subscription);
-        console.log('Session customer:', session.customer);
 
-        const userId = session.metadata?.supabase_user_id;
-        const plan = session.metadata?.plan || 'pro';
-        const interval = session.metadata?.interval || 'month';
+        // 只处理一次性付款
+        if (session.mode !== 'payment') {
+          console.log('Skipping non-payment session, mode:', session.mode);
+          break;
+        }
+
+        const userId   = session.metadata?.supabase_user_id;
+        const plan     = session.metadata?.plan || 'pro';
+        const months   = parseInt(session.metadata?.months || '1');
 
         if (!userId) {
           console.error('No supabase_user_id in metadata!');
           break;
         }
 
-        const intervalToMonths = { month: 1, quarter: 3, halfyear: 6, year: 12 };
-        const extendMonths = intervalToMonths[interval] || 1;
-
-        let periodEnd;
-        if (session.subscription) {
-          const subscription = await getStripeSubscription(session.subscription);
-          periodEnd = subscription?.current_period_end
-            ? new Date(subscription.current_period_end * 1000).toISOString()
-            : new Date(Date.now() + extendMonths * 30 * 24 * 60 * 60 * 1000).toISOString();
-        } else {
-          console.log('subscription not yet attached, using fallback period end');
-          periodEnd = new Date(Date.now() + extendMonths * 30 * 24 * 60 * 60 * 1000).toISOString();
-        }
+        // 计算到期时间（会在 upsertSubscription 里叠加）
+        const periodEnd = new Date();
+        periodEnd.setMonth(periodEnd.getMonth() + months);
 
         await upsertSubscription({
           user_id: userId,
           plan,
           status: 'active',
           stripe_customer_id: session.customer,
-          stripe_subscription_id: session.subscription || null,
-          current_period_end: periodEnd,
+          current_period_end: periodEnd.toISOString(),
+          extend_months: months,
         });
-        console.log(`✅ ${plan} 订阅激活 (${interval})：user ${userId}`);
-        break;
-      }
 
-      case 'invoice.payment_succeeded': {
-        const invoice = event.data.object;
-
-        if (!['subscription_create', 'subscription_cycle'].includes(invoice.billing_reason)) {
-          console.log('Skipping invoice, billing_reason:', invoice.billing_reason);
-          break;
-        }
-
-        const subscription = await getStripeSubscription(invoice.subscription);
-        if (!subscription) break;
-
-        const userId = subscription.metadata?.supabase_user_id;
-        const plan = subscription.metadata?.plan || 'pro';
-        if (!userId) {
-          console.error('No supabase_user_id in subscription metadata');
-          break;
-        }
-
-        await upsertSubscription({
-          user_id: userId,
-          plan,
-          status: 'active',
-          stripe_customer_id: invoice.customer,
-          stripe_subscription_id: invoice.subscription,
-          current_period_end: subscription.current_period_end
-            ? new Date(subscription.current_period_end * 1000).toISOString()
-            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        });
-        console.log(`🔄 ${invoice.billing_reason === 'subscription_create' ? '首次付款' : '续费'}成功：user ${userId}`);
-        break;
-      }
-
-      case 'invoice.payment_failed': {
-        const invoice = event.data.object;
-        const subscription = await getStripeSubscription(invoice.subscription);
-        if (!subscription) break;
-
-        const userId = subscription.metadata?.supabase_user_id;
-        if (!userId) break;
-
-        await upsertSubscription({
-          user_id: userId,
-          plan: subscription.metadata?.plan || 'pro',
-          status: 'past_due',
-          stripe_customer_id: invoice.customer,
-          stripe_subscription_id: invoice.subscription,
-          current_period_end: subscription.current_period_end
-            ? new Date(subscription.current_period_end * 1000).toISOString()
-            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        });
-        console.log(`⚠️ 付款失败：user ${userId}`);
-        break;
-      }
-
-      case 'customer.subscription.deleted': {
-        const subscription = event.data.object;
-        const userId = subscription.metadata?.supabase_user_id;
-        if (!userId) break;
-
-        await upsertSubscription({
-          user_id: userId,
-          plan: subscription.metadata?.plan || 'pro',
-          status: 'cancelled',
-          stripe_customer_id: subscription.customer,
-          stripe_subscription_id: subscription.id,
-          current_period_end: subscription.current_period_end
-            ? new Date(subscription.current_period_end * 1000).toISOString()
-            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        });
-        console.log(`❌ 订阅取消：user ${userId}`);
+        console.log(`✅ ${plan} 激活 (+${months}个月)：user ${userId}`);
         break;
       }
 
