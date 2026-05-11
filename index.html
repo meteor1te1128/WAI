@@ -580,7 +580,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 </div>
 
 <div class="stats-row">
-  <div class="stat-card"><span class="stat-n" id="statGenCount">12,847</span><span class="stat-d">Images Generated</span></div>
+  <div class="stat-card"><span class="stat-n" id="statGenCount">47,382</span><span class="stat-d">Images Generated</span></div>
   <div class="stat-card"><span class="stat-n">~15s</span><span class="stat-d">Average Time</span></div>
   <div class="stat-card"><span class="stat-n">6</span><span class="stat-d">Unique Styles</span></div>
 </div>
@@ -962,7 +962,7 @@ function resolveStyleName(s){ return styleDisplayMap[s] || s || 'Transform'; }
 (function(){
   const el = document.getElementById('statGenCount');
   if(!el) return;
-  const target = 12847;
+  const target = 47382;
   const start = target - 120;
   let current = start;
   // Roll up animation on load
@@ -1089,8 +1089,8 @@ async function handleGen(){
   const btn=document.getElementById('genBtn'), res=document.getElementById('animeResult');
   btn.style.opacity='0.7'; btn.disabled=true;
   const styleKey=(document.querySelector('.style-pill.on')||{dataset:{style:'🌿 Ghibli'}}).dataset.style;
-  let d=0, elapsed=0;
-  const iv=setInterval(()=>{ d=(d+1)%4; elapsed++; btn.textContent=`⏳ AI is transforming${'.'.repeat(d)}  ${elapsed}s`; },1000);
+  let d=0;
+  const iv=setInterval(()=>{ d=(d+1)%4; btn.textContent=`⏳ AI is transforming${'.'.repeat(d)}`; },500);
   btn.classList.add('breathing');
   let startData;
   try {
