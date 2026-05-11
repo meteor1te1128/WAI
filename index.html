@@ -1166,7 +1166,13 @@ function updateStarDisplay(val){ previewStars(val); document.getElementById('sta
 function setRating(val){ currentRating=val; updateStarDisplay(val); }
 buildStars();
 
-const seedFeedback = [];
+// Seed comments — always shown at the bottom, never deleted
+const seedFeedback = [
+  {name:'LemonTea',plan:null,text:'Would love a batch upload feature — upload multiple photos at once!',tag:'idea',time:'May 3',stars:4.5},
+  {name:'Anonymous',plan:null,text:'Pixel Art style can get a bit blurry sometimes, but the other styles look great',tag:'bug',time:'Apr 29',stars:3.5},
+  {name:'Aki_design',plan:'PRO',text:'Clay style is SO cute, I made one for everyone in my family haha',tag:'praise',time:'Apr 21',stars:5},
+  {name:'NightWind',plan:'MAX',text:'Can you support full-body photos? Right now it works best with close-up face shots',tag:'idea',time:'Apr 14',stars:4},
+];
 
 const tagMap={bug:{label:'Bug Report',cls:'tag-bug'},idea:{label:'Feature Idea',cls:'tag-idea'},praise:{label:'Praise',cls:'tag-praise'}};
 
@@ -1181,14 +1187,40 @@ function starsToHTML(val){
   return html+'</span>';
 }
 
-function renderFeedback(list){
-  if(list.length === 0){
+function feedbackItemHTML(f){
+  const timeStr = f.created_at ? timeAgo(f.created_at) : (f.time || '');
+  return `<div class="fb-item">
+    <div class="fb-item-header">
+      <span class="fb-item-name">${f.name||'Anonymous'}${f.plan?`<span class="fb-item-plan">${f.plan}</span>`:''}</span>
+      <span class="fb-item-time">${timeStr}</span>
+    </div>
+    ${f.stars?`<div class="fb-item-stars">${starsToHTML(f.stars)} <span style="font-size:11px;color:var(--text-faint);vertical-align:middle;margin-left:2px">${f.stars} stars</span></div>`:''}
+    <div class="fb-item-text">${f.text}</div>
+    <span class="fb-item-tag ${tagMap[f.tag]?.cls||'tag-praise'}">${tagMap[f.tag]?.label||'Praise'}</span>
+  </div>`;
+}
+
+function renderFeedback(dbList){
+  // db comments on top, seed comments always at bottom
+  const all = [...dbList, ...seedFeedback];
+  if(all.length === 0){
     document.getElementById('fbList').innerHTML = `<div style="text-align:center;padding:28px 0;color:var(--text-faint);font-size:13px;">No comments yet — be the first to share your thoughts ✨</div>`;
     return;
   }
-  document.getElementById('fbList').innerHTML=list.map(f=>`<div class="fb-item"><div class="fb-item-header"><span class="fb-item-name">${f.name||'Anonymous'}${f.plan?`<span class="fb-item-plan">${f.plan}</span>`:''}</span><span class="fb-item-time">${f.time}</span></div>${f.stars?`<div class="fb-item-stars">${starsToHTML(f.stars)} <span style="font-size:11px;color:var(--text-faint);vertical-align:middle;margin-left:2px">${f.stars} stars</span></div>`:''}<div class="fb-item-text">${f.text}</div><span class="fb-item-tag ${tagMap[f.tag].cls}">${tagMap[f.tag].label}</span></div>`).join('');
+  document.getElementById('fbList').innerHTML = all.map(feedbackItemHTML).join('');
 }
-let feedbacks=[...seedFeedback]; renderFeedback(feedbacks);
+
+let dbComments = [];
+
+async function loadComments(){
+  try {
+    const rows = await (await fetch(
+      `${SUPABASE_URL}/rest/v1/comments?select=*&order=created_at.desc&limit=50`,
+      {headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`}}
+    )).json();
+    if(Array.isArray(rows)){ dbComments = rows; renderFeedback(dbComments); }
+  } catch(e){ console.log('Comments load failed:', e); }
+}
 
 function renderFeedbackUI(){
   const tip=document.getElementById('fbLoginTip'),nameInput=document.getElementById('fbName'),starRow=document.getElementById('fbStarRow'),textarea=document.getElementById('fbText'),submitBtn=document.getElementById('fbSubmitBtn');
@@ -1198,12 +1230,34 @@ function renderFeedbackUI(){
 
 function guessTag(text){ return /bug|issue|broken|error|weird|slow|crash/i.test(text)?'bug':/wish|suggest|feature|add|support|could you/i.test(text)?'idea':'praise'; }
 
-function submitFeedback(){
+async function submitFeedback(){
   if(!currentUser){ openAuthModal(); return; }
   const nameEl=document.getElementById('fbName'),textEl=document.getElementById('fbText'),text=textEl.value.trim();
   if(!text) return;
-  feedbacks=[{name:nameEl.value.trim()||(currentUser.email?.split('@')[0]||'User'),plan:currentPlan!=='free'?currentPlan.toUpperCase():null,text,tag:guessTag(text),time:'Just now',stars:currentRating||null},...feedbacks];
-  renderFeedback(feedbacks); nameEl.value=''; textEl.value=''; currentRating=0; updateStarDisplay(0); document.getElementById('fbList').scrollTop=0;
+  const submitBtn=document.getElementById('fbSubmitBtn');
+  submitBtn.disabled=true; submitBtn.textContent='Posting...';
+  const entry = {
+    user_id: currentUser.id,
+    name: nameEl.value.trim() || (currentUser.email?.split('@')[0]||'User'),
+    plan: currentPlan!=='free'?currentPlan.toUpperCase():null,
+    text,
+    tag: guessTag(text),
+    stars: currentRating||null,
+  };
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/comments`,{
+      method:'POST',
+      headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify(entry),
+    });
+    nameEl.value=''; textEl.value=''; currentRating=0; updateStarDisplay(0);
+    await loadComments();
+    document.getElementById('fbList').scrollTop=0;
+  } catch(e){
+    alert('Failed to post comment, please try again.');
+  } finally {
+    submitBtn.disabled=false; submitBtn.textContent='Submit →';
+  }
 }
 
 let currentUser=null, currentPlan='free', currentPeriodEnd=null, authMode='login';
@@ -1211,11 +1265,12 @@ function getOrCreateUserId(){ let uid=localStorage.getItem('waiUserId'); if(!uid
 
 async function initAuth(){
   const{data:{session}}=await _supabase.auth.getSession();
-  if(session?.user){ currentUser=session.user; await refreshUserPlan().catch(()=>{}); renderNavAuth(); renderFreeCount(); renderFeedbackUI(); checkPaymentResult(); loadHistory(); }
+  if(session?.user){ currentUser=session.user; await refreshUserPlan().catch(()=>{}); renderNavAuth(); renderFreeCount(); renderFeedbackUI(); checkPaymentResult(); loadHistory(); loadComments(); }
+  else { loadComments(); } // load comments for logged-out users too
   _supabase.auth.onAuthStateChange(async(event,session)=>{
     currentUser=session?.user||null;
-    if(currentUser){ closeAuthModal(); await refreshUserPlan().catch(()=>{}); checkPaymentResult(); loadHistory(); }
-    else { currentPlan='free'; currentPeriodEnd=null; document.getElementById('historySection').style.display='none'; }
+    if(currentUser){ closeAuthModal(); await refreshUserPlan().catch(()=>{}); checkPaymentResult(); loadHistory(); loadComments(); }
+    else { currentPlan='free'; currentPeriodEnd=null; document.getElementById('historySection').style.display='none'; loadComments(); }
     renderNavAuth(); renderFreeCount(); renderPricingByPlan(); renderFeedbackUI();
   });
 }
