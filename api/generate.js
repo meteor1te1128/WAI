@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   try {
     const subRes = await fetch(
       `${process.env.SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${authedUser.id}&select=plan,status,current_period_end&order=current_period_end.desc&limit=1`,
-      { headers: { 'apikey': process.env.SUPABASE_ANON_KEY, 'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}` } }
+      { headers: { 'apikey': process.env.SUPABASE_ANON_KEY, 'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}` } }
     );
     const subs = await subRes.json();
     if (subs.length && subs[0].status === 'active' && new Date(subs[0].current_period_end) > new Date()) {
@@ -76,7 +76,6 @@ export default async function handler(req, res) {
       }
     } catch(e) { console.error('Count check failed:', e); }
   }
-  // ────────────────────────────────────────────────────────────────────────────
   // ────────────────────────────────────────────────────────────────────────────
 
   if (!imageBase64) {
