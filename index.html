@@ -1114,7 +1114,9 @@ async function handleGen(){
     res.style.background=''; res.innerHTML=`<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" class="result-revealed">`;
     currentAnimeUrl=imageUrl;
     if(window.bumpGenCount) window.bumpGenCount();
-    await fetch(`${SUPABASE_URL}/rest/v1/generations`,{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({user_id:currentUser?currentUser.id:getOrCreateUserId(),anime_url:imageUrl,style:styleKey})});
+    const { data: { session: genSession } } = await _supabase.auth.getSession();
+    const genToken = genSession?.access_token || SUPABASE_ANON_KEY;
+    await fetch(`${SUPABASE_URL}/rest/v1/generations`,{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${genToken}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({user_id:currentUser?currentUser.id:getOrCreateUserId(),anime_url:imageUrl,style:styleKey})});
     setTimeout(loadHistory,1500);
   } catch(err){
     clearInterval(iv); btn.classList.remove('breathing'); btn.textContent='✦ Transform Now';
@@ -1211,10 +1213,6 @@ function feedbackItemHTML(f){
 function renderFeedback(dbList){
   // db comments on top, seed comments always at bottom
   const all = [...dbList, ...seedFeedback];
-  if(all.length === 0){
-    document.getElementById('fbList').innerHTML = `<div style="text-align:center;padding:28px 0;color:var(--text-faint);font-size:13px;">No comments yet — be the first to share your thoughts ✨</div>`;
-    return;
-  }
   document.getElementById('fbList').innerHTML = all.map(feedbackItemHTML).join('');
 }
 
@@ -1253,9 +1251,11 @@ async function submitFeedback(){
     stars: currentRating||null,
   };
   try {
+    const { data: { session } } = await _supabase.auth.getSession();
+    const accessToken = session?.access_token || SUPABASE_ANON_KEY;
     await fetch(`${SUPABASE_URL}/rest/v1/comments`,{
       method:'POST',
-      headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`,'Content-Type':'application/json','Prefer':'return=minimal'},
+      headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${accessToken}`,'Content-Type':'application/json','Prefer':'return=minimal'},
       body:JSON.stringify(entry),
     });
     nameEl.value=''; textEl.value=''; currentRating=0; updateStarDisplay(0);
