@@ -1089,12 +1089,14 @@ async function handleGen(){
   const btn=document.getElementById('genBtn'), res=document.getElementById('animeResult');
   btn.style.opacity='0.7'; btn.disabled=true;
   const styleKey=(document.querySelector('.style-pill.on')||{dataset:{style:'🌿 Ghibli'}}).dataset.style;
-  let d=0;
-  const iv=setInterval(()=>{ d=(d+1)%4; btn.textContent='⏳ AI is transforming'+'.'.repeat(d); },400);
+  let d=0, elapsed=0;
+  const iv=setInterval(()=>{ d=(d+1)%4; elapsed++; btn.textContent=`⏳ AI is transforming${'.'.repeat(d)}  ${elapsed}s`; },1000);
   btn.classList.add('breathing');
   let startData;
   try {
-    const startRes=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageBase64:uploadedImageBase64,style:styleKey,userId:currentUser?.id||getOrCreateUserId()})});
+    const sessionData = await _supabase.auth.getSession();
+    const accessToken = sessionData.data.session?.access_token || null;
+    const startRes=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageBase64:uploadedImageBase64,style:styleKey,userId:currentUser?.id||getOrCreateUserId(),accessToken})});
     startData=await startRes.json();
     if(!startData.predictionId) throw new Error(startData.error||'Failed to start');
     let imageUrl=null;
@@ -1164,12 +1166,8 @@ function updateStarDisplay(val){ previewStars(val); document.getElementById('sta
 function setRating(val){ currentRating=val; updateStarDisplay(val); }
 buildStars();
 
-const seedFeedback=[
-  {name:'LemonTea',plan:null,text:'Would love a batch upload feature — upload multiple photos at once!',tag:'idea',time:'2m ago',stars:4.5},
-  {name:'Anonymous',plan:null,text:'Pixel Art style can get a bit blurry sometimes, but the other styles look great',tag:'bug',time:'18m ago',stars:3.5},
-  {name:'Aki_design',plan:'PRO',text:'Clay style is SO cute, I made one for everyone in my family haha',tag:'praise',time:'1h ago',stars:5},
-  {name:'NightWind',plan:'MAX',text:'Can you support full-body photos? Right now it works best with close-up face shots',tag:'idea',time:'3h ago',stars:4},
-];
+const seedFeedback = [];
+
 const tagMap={bug:{label:'Bug Report',cls:'tag-bug'},idea:{label:'Feature Idea',cls:'tag-idea'},praise:{label:'Praise',cls:'tag-praise'}};
 
 function starsToHTML(val){
@@ -1184,6 +1182,10 @@ function starsToHTML(val){
 }
 
 function renderFeedback(list){
+  if(list.length === 0){
+    document.getElementById('fbList').innerHTML = `<div style="text-align:center;padding:28px 0;color:var(--text-faint);font-size:13px;">No comments yet — be the first to share your thoughts ✨</div>`;
+    return;
+  }
   document.getElementById('fbList').innerHTML=list.map(f=>`<div class="fb-item"><div class="fb-item-header"><span class="fb-item-name">${f.name||'Anonymous'}${f.plan?`<span class="fb-item-plan">${f.plan}</span>`:''}</span><span class="fb-item-time">${f.time}</span></div>${f.stars?`<div class="fb-item-stars">${starsToHTML(f.stars)} <span style="font-size:11px;color:var(--text-faint);vertical-align:middle;margin-left:2px">${f.stars} stars</span></div>`:''}<div class="fb-item-text">${f.text}</div><span class="fb-item-tag ${tagMap[f.tag].cls}">${tagMap[f.tag].label}</span></div>`).join('');
 }
 let feedbacks=[...seedFeedback]; renderFeedback(feedbacks);
