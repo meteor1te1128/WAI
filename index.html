@@ -1098,6 +1098,7 @@ async function handleGen(){
     const accessToken = sessionData.data.session?.access_token || null;
     const startRes=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageBase64:uploadedImageBase64,style:styleKey,userId:currentUser?.id||getOrCreateUserId(),accessToken})});
     startData=await startRes.json();
+    if(startRes.status===429){ throw new Error(startData.error||'Daily limit reached'); }
     if(!startData.predictionId) throw new Error(startData.error||'Failed to start');
     let imageUrl=null;
     for(let i=0;i<40;i++){
@@ -1119,7 +1120,14 @@ async function handleGen(){
     clearInterval(iv); btn.classList.remove('breathing'); btn.textContent='✦ Transform Now';
     btn.style.opacity='1'; btn.style.background=''; btn.style.boxShadow=''; btn.disabled=false;
     const reached=startData&&startData.predictionId;
-    if(!reached){
+    const isLimitErr = err.message?.includes('transforms for today') || err.message?.includes('transforms today');
+    if(isLimitErr){
+      // backend rejected — undo local counter increment
+      if(currentPlan==='free'){freeLeft=Math.min(FREE_TOTAL,freeLeft+1);localStorage.setItem('waiFreeLeft',freeLeft);}
+      else if(currentPlan==='pro'){localStorage.setItem('waiProUsed',Math.max(0,parseInt(localStorage.getItem('waiProUsed')||'1')-1));}
+      renderFreeCount();
+      alert(err.message);
+    } else if(!reached){
       if(currentPlan==='free'){freeLeft=Math.min(FREE_TOTAL,freeLeft+1);localStorage.setItem('waiFreeLeft',freeLeft);}
       else if(currentPlan==='pro'){localStorage.setItem('waiProUsed',Math.max(0,parseInt(localStorage.getItem('waiProUsed')||'1')-1));}
       renderFreeCount();
