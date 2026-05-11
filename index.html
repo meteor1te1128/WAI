@@ -1082,6 +1082,7 @@ function incrementUsed(){
 
 async function handleGen(){
   if(busy) return;
+  if(!currentUser){ openAuthModal(); return; }
   if(!uploadedImageBase64){ alert('Please upload a photo first!'); return; }
   if(currentPlan !== 'max'){ const used=getUsedToday(); if(used>=getDailyLimit()){ alert(currentPlan==='pro'?"You've used all 10 transforms for today. Resets at midnight UTC+8, or upgrade to Max ✦":"You've used all 3 free transforms today. Come back tomorrow, or upgrade for more ✦"); return; } }
   busy=true; incrementUsed();
@@ -1116,8 +1117,15 @@ async function handleGen(){
     clearInterval(iv); btn.classList.remove('breathing'); btn.textContent='✦ Transform Now';
     btn.style.opacity='1'; btn.style.background=''; btn.style.boxShadow=''; btn.disabled=false;
     const reached=startData&&startData.predictionId;
-    if(!reached){ if(currentPlan==='free'){freeLeft=Math.min(FREE_TOTAL,freeLeft+1);localStorage.setItem('waiFreeLeft',freeLeft);} else if(currentPlan==='pro'){localStorage.setItem('waiProUsed',Math.max(0,parseInt(localStorage.getItem('waiProUsed')||'1')-1));} renderFreeCount(); alert('Network error — your credit has been refunded. Please try again.'); }
-    else { alert('Transform failed — try a clearer front-facing photo and try again.'); }
+    if(!reached){
+      if(currentPlan==='free'){freeLeft=Math.min(FREE_TOTAL,freeLeft+1);localStorage.setItem('waiFreeLeft',freeLeft);}
+      else if(currentPlan==='pro'){localStorage.setItem('waiProUsed',Math.max(0,parseInt(localStorage.getItem('waiProUsed')||'1')-1));}
+      renderFreeCount();
+      const errMsg = currentPlan==='max'
+        ? 'Network error — please try again.'
+        : 'Network error — your credit has been refunded. Please try again.';
+      alert(errMsg);
+    } else { alert('Transform failed — try a clearer front-facing photo and try again.'); }
   }
   busy=false;
 }
