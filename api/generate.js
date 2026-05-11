@@ -35,6 +35,48 @@ export default async function handler(req, res) {
   if (!authedUser) {
     return res.status(401).json({ error: 'Session expired, please sign in again' });
   }
+
+  // ── Plan & rate limit check ─────────────────────────────────────────────────
+  let userPlan = 'free';
+  try {
+    const subRes = await fetch(
+      `${process.env.SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${authedUser.id}&select=plan,status,current_period_end&order=current_period_end.desc&limit=1`,
+      { headers: { 'apikey': process.env.SUPABASE_ANON_KEY, 'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}` } }
+    );
+    const subs = await subRes.json();
+    if (subs.length && subs[0].status === 'active' && new Date(subs[0].current_period_end) > new Date()) {
+      userPlan = subs[0].plan;
+    }
+  } catch(e) { console.error('Plan check failed:', e); }
+
+  if (userPlan !== 'max') {
+    const dailyLimit = userPlan === 'pro' ? 10 : 3;
+    // Count today's generations (UTC+8 reset at 04:00 UTC)
+    const now = new Date();
+    const utc8 = new Date(now.getTime() + 8 * 3600000);
+    const h = utc8.getUTCHours();
+    const resetDay = new Date(utc8);
+    if (h < 4) resetDay.setUTCDate(resetDay.getUTCDate() - 1);
+    const resetDateStr = resetDay.toISOString().slice(0, 10);
+    const resetTs = new Date(`${resetDateStr}T04:00:00+08:00`).toISOString();
+
+    try {
+      const countRes = await fetch(
+        `${process.env.SUPABASE_URL}/rest/v1/generations?user_id=eq.${authedUser.id}&created_at=gte.${resetTs}&select=id`,
+        { headers: { 'apikey': process.env.SUPABASE_ANON_KEY, 'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`, 'Prefer': 'count=exact', 'Range-Unit': 'items', 'Range': '0-0' } }
+      );
+      const countHeader = countRes.headers.get('content-range');
+      const total = countHeader ? parseInt(countHeader.split('/')[1]) : 0;
+      if (total >= dailyLimit) {
+        return res.status(429).json({
+          error: userPlan === 'pro'
+            ? "You've used all 10 transforms for today. Resets at midnight UTC+8."
+            : "You've used all 3 free transforms today. Come back tomorrow, or upgrade for more."
+        });
+      }
+    } catch(e) { console.error('Count check failed:', e); }
+  }
+  // ────────────────────────────────────────────────────────────────────────────
   // ────────────────────────────────────────────────────────────────────────────
 
   if (!imageBase64) {
