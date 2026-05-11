@@ -11,7 +11,32 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { imageBase64, style } = req.body;
+  const { imageBase64, style, accessToken } = req.body;
+
+  // ── Auth check ──────────────────────────────────────────────────────────────
+  if (!accessToken) {
+    return res.status(401).json({ error: 'Please sign in to continue' });
+  }
+
+  let authedUser = null;
+  try {
+    const userRes = await fetch(`${process.env.SUPABASE_URL}/auth/v1/user`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'apikey': process.env.SUPABASE_ANON_KEY,
+      },
+    });
+    const userData = await userRes.json();
+    if (userData?.id) authedUser = userData;
+  } catch (e) {
+    console.error('Auth check failed:', e);
+  }
+
+  if (!authedUser) {
+    return res.status(401).json({ error: 'Session expired, please sign in again' });
+  }
+  // ────────────────────────────────────────────────────────────────────────────
+
   if (!imageBase64) {
     return res.status(400).json({ error: 'Missing image' });
   }
