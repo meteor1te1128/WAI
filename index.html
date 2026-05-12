@@ -580,7 +580,7 @@ footer{text-align:center;padding:40px 32px 32px;border-top:1px solid var(--divid
 </div>
 
 <div class="stats-row">
-  <div class="stat-card"><span class="stat-n" id="statGenCount">47,382</span><span class="stat-d">Images Generated</span></div>
+  <div class="stat-card"><span class="stat-n" id="statGenCount">—</span><span class="stat-d">Images Generated</span></div>
   <div class="stat-card"><span class="stat-n">~15s</span><span class="stat-d">Average Time</span></div>
   <div class="stat-card"><span class="stat-n">6</span><span class="stat-d">Unique Styles</span></div>
 </div>
@@ -947,7 +947,6 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let allHistoryData = [];
 
-// Style display name mapping (Chinese legacy data → English)
 const styleDisplayMap = {
   '🌿 吉卜力风': '🌿 Ghibli',
   '🧸 黏土风':   '🧸 Clay',
@@ -958,42 +957,55 @@ const styleDisplayMap = {
 };
 function resolveStyleName(s){ return styleDisplayMap[s] || s || 'Transform'; }
 
-// Animated image counter
+// Animated image counter — fetches real count from Supabase
 (function(){
   const el = document.getElementById('statGenCount');
   if(!el) return;
-  const target = 47382;
-  const start = target - 120;
-  let current = start;
-  // Roll up animation on load
-  const duration = 1200;
-  const startTime = performance.now();
-  function rollUp(now){
-    const progress = Math.min((now - startTime) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    current = Math.round(start + (target - start) * eased);
-    el.textContent = current.toLocaleString();
-    if(progress < 1){ requestAnimationFrame(rollUp); }
-    else {
-      current = target;
+
+  async function fetchRealCount(){
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/stats?id=eq.1&select=gen_count`,
+        { headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      const rows = await res.json();
+      if(Array.isArray(rows) && rows[0]?.gen_count) return rows[0].gen_count;
+    } catch(e){}
+    return 4783;
+  }
+
+  fetchRealCount().then(target => {
+    const displayTarget = Math.max(4783, target);
+    const start = displayTarget - 80;
+    let current = start;
+    const duration = 1200;
+    const startTime = performance.now();
+    function rollUp(now){
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      current = Math.round(start + (displayTarget - start) * eased);
       el.textContent = current.toLocaleString();
-      // After roll-up, slowly increment every 8-15s
-      scheduleNextTick();
+      if(progress < 1){ requestAnimationFrame(rollUp); }
+      else {
+        current = displayTarget;
+        el.textContent = current.toLocaleString();
+        scheduleNextTick();
+      }
     }
-  }
-  requestAnimationFrame(rollUp);
-  function scheduleNextTick(){
-    const delay = 8000 + Math.random() * 7000;
-    setTimeout(()=>{
-      current += Math.random() < 0.7 ? 1 : 2;
-      el.textContent = current.toLocaleString();
-      scheduleNextTick();
-    }, delay);
-  }
-  // Expose so handleGen can call it
+    requestAnimationFrame(rollUp);
+    function scheduleNextTick(){
+      const delay = 8000 + Math.random() * 7000;
+      setTimeout(()=>{
+        current += Math.random() < 0.7 ? 1 : 2;
+        el.textContent = current.toLocaleString();
+        scheduleNextTick();
+      }, delay);
+    }
+  });
+
   window.bumpGenCount = function(){
-    current += 1;
-    el.textContent = current.toLocaleString();
+    const cur = parseInt(el.textContent.replace(/,/g,''))||0;
+    el.textContent = (cur + 1).toLocaleString();
   };
 })();
 
@@ -1114,6 +1126,12 @@ async function handleGen(){
     res.style.background=''; res.innerHTML=`<img src="${imageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:0;" class="result-revealed">`;
     currentAnimeUrl=imageUrl;
     if(window.bumpGenCount) window.bumpGenCount();
+    // Increment persistent stats counter
+    fetch(`${SUPABASE_URL}/rest/v1/rpc/increment_gen_count`, {
+      method: 'POST',
+      headers: {'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json'},
+      body: JSON.stringify({})
+    }).catch(()=>{});
     const { data: { session: genSession } } = await _supabase.auth.getSession();
     const genToken = genSession?.access_token || SUPABASE_ANON_KEY;
     await fetch(`${SUPABASE_URL}/rest/v1/generations`,{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${genToken}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({user_id:currentUser?currentUser.id:getOrCreateUserId(),anime_url:imageUrl,style:styleKey})});
@@ -1124,7 +1142,6 @@ async function handleGen(){
     const reached=startData&&startData.predictionId;
     const isLimitErr = err.message?.includes('transforms for today') || err.message?.includes('transforms today');
     if(isLimitErr){
-      // backend rejected — undo local counter increment
       if(currentPlan==='free'){freeLeft=Math.min(FREE_TOTAL,freeLeft+1);localStorage.setItem('waiFreeLeft',freeLeft);}
       else if(currentPlan==='pro'){localStorage.setItem('waiProUsed',Math.max(0,parseInt(localStorage.getItem('waiProUsed')||'1')-1));}
       renderFreeCount();
@@ -1176,7 +1193,6 @@ function updateStarDisplay(val){ previewStars(val); document.getElementById('sta
 function setRating(val){ currentRating=val; updateStarDisplay(val); }
 buildStars();
 
-// Seed comments — always shown at the bottom, never deleted
 const seedFeedback = [
   {name:'LemonTea',plan:null,text:'Would love a batch upload feature — upload multiple photos at once!',tag:'idea',time:'May 3',stars:4.5},
   {name:'Anonymous',plan:null,text:'Pixel Art style can get a bit blurry sometimes, but the other styles look great',tag:'bug',time:'Apr 29',stars:3.5},
@@ -1211,7 +1227,6 @@ function feedbackItemHTML(f){
 }
 
 function renderFeedback(dbList){
-  // db comments on top, seed comments always at bottom
   const all = [...dbList, ...seedFeedback];
   document.getElementById('fbList').innerHTML = all.map(feedbackItemHTML).join('');
 }
@@ -1274,7 +1289,7 @@ function getOrCreateUserId(){ let uid=localStorage.getItem('waiUserId'); if(!uid
 async function initAuth(){
   const{data:{session}}=await _supabase.auth.getSession();
   if(session?.user){ currentUser=session.user; await refreshUserPlan().catch(()=>{}); renderNavAuth(); renderFreeCount(); renderFeedbackUI(); checkPaymentResult(); loadHistory(); loadComments(); }
-  else { loadComments(); } // load comments for logged-out users too
+  else { loadComments(); }
   _supabase.auth.onAuthStateChange(async(event,session)=>{
     currentUser=session?.user||null;
     if(currentUser){ closeAuthModal(); await refreshUserPlan().catch(()=>{}); checkPaymentResult(); loadHistory(); loadComments(); }
@@ -1352,7 +1367,7 @@ function renderUpgradeModal(){
   const proBtn=document.getElementById('upgradeProBtnBottom');
   const maxBtn=document.getElementById('upgradeMaxBtnBottom');
   const status=document.getElementById('upgradeSubStatus');
-  const btnRow=document.getElementById('upgradeBtnRow'); // ✅ fixed: declare btnRow
+  const btnRow=document.getElementById('upgradeBtnRow');
   proBtn.disabled=false; proBtn.textContent='Get Pro ✦';
   maxBtn.disabled=false; maxBtn.textContent='Get Max ✦';
   status.style.display='none'; btnRow.style.display='grid';
